@@ -4,6 +4,7 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>juego.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -12,6 +13,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>juego.c</itemPath>
       <itemPath>main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -35,7 +37,29 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
+        <linkerTool>
+          <linkerLibItems>
+            <linkerLibStdlibItem>Mathematics</linkerLibStdlibItem>
+            <linkerOptionItem>`pkg-config --libs allegro-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_acodec-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_audio-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_color-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_dialog-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_font-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_image-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_main-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_memfile-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_physfs-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_primitives-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_ttf-5`</linkerOptionItem>
+            <linkerOptionItem>`pkg-config --libs allegro_video-5`</linkerOptionItem>
+          </linkerLibItems>
+        </linkerTool>
       </compileType>
+      <item path="juego.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="juego.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
@@ -59,6 +83,10 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="juego.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="juego.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
       </item>
     </conf>
