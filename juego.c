@@ -1,16 +1,66 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 #include "juego.h"
+#include "mundo.h"
+
+/***************************************************
+ * VELOCIDADES Y TIEMPOS DE LA RANA
+***************************************************/
+
+#define SALTO_RANA_ANCHO        CASILLA_ANCHO
+#define SALTO_RANA_ALTO         CASILLA_ALTO 
+
+#define APROX(x)                ((int)((x)+0.5))
+
+#define TIEMPO_SALTO_ANCHO      (1.0/12) // tiempo que tarda en saltar a lo ancho
+#define FRAMES_POR_SALTO_ANCHO  (APROX(TIEMPO_SALTO_ANCHO * REFRESCO))
+#define VELOCIDAD_RANA_ANCHO    (SALTO_RANA_ANCHO / FRAMES_POR_SALTO_ANCHO)
+    
+#define TIEMPO_SALTO_ALTO       (1.0/12)// tiempo que tarda en saltar a lo alto
+#define FRAMES_POR_SALTO_ALTO   (APROX(TIEMPO_SALTO_ALTO * REFRESCO))
+#define VELOCIDAD_RANA_ALTO     (SALTO_RANA_ALTO / FRAMES_POR_SALTO_ALTO)
+
+#define TIEMPO_TARDA_SALTO      (1.0/12)
+#define TARDA_SALTO             (TIEMPO_TARDA_SALTO * REFRESCO) //frames que espera entre salto y salto
+
+
+/***************************************************
+ *  DECLARACIÓN DE FUNCIONES LOCALES
+***************************************************/
+static void move_frog (void);
+
+
+/***************************************************
+ *  DEFINICIÓN DE VARIABLES GLOBALES
+***************************************************/
 
 bool key_pressed[TECLAS_MAX];
-RANA rene = {.x = RANA_ANCHO/2, .y = RANA_ALTO /2, .dx = VELOCIDAD_RANA_ANCHO, .dy = VELOCIDAD_RANA_ALTO};
+RANA rene = {.x = 8 * CASILLA_ANCHO - RANA_ALTO/2, .y = MUNDO_ALTO - RANA_ALTO/2, .dx = VELOCIDAD_RANA_ANCHO, .dy = VELOCIDAD_RANA_ALTO};
 
+
+
+/******************************************************************************************
+ ******************************************************************************************
+ * 
+ *     DEFINICIÓN DE FUNCIONES GLOBALES
+ * 
+ ******************************************************************************************
+*******************************************************************************************/
 
 void frogger (void)
+{
+    move_frog();
+    
+}
+
+
+/******************************************************************************************
+ ******************************************************************************************
+ * 
+ *     DEFINICIÓN DE FUNCIONES LOCALES
+ * 
+ ******************************************************************************************
+*******************************************************************************************/
+
+static void move_frog (void)
 {
     static unsigned int timer_up = 0, timer_down = 0, timer_right = 0, timer_left = 0;
     
@@ -18,7 +68,7 @@ void frogger (void)
     {
         if(timer_up == 0)
         {
-            timer_up = (int) TIEMPO_SALTO_ALTO + TARDA_SALTO;
+            timer_up = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
         }
         
         if(timer_up > TARDA_SALTO && rene.y >= RANA_ALTO/2 + rene.dy)
@@ -34,10 +84,10 @@ void frogger (void)
     {
         if(timer_down == 0)
         {
-            timer_down = (int) TIEMPO_SALTO_ALTO + TARDA_SALTO;
+            timer_down = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
         }
         
-        if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - RANA_ALTO/2)
+        if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - RANA_ALTO/2 -rene.dy)
         {
             rene.y += rene.dy;
         }
@@ -49,10 +99,10 @@ void frogger (void)
     {
         if(timer_right == 0)
         {
-            timer_right = (int) TIEMPO_SALTO_ANCHO + TARDA_SALTO;
+            timer_right = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
         }
         
-        if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - RANA_ANCHO/2)
+        if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - RANA_ANCHO/2 - rene.dx)
         {
             rene.x += rene.dx;
         }
@@ -64,7 +114,7 @@ void frogger (void)
     {
         if(timer_left == 0)
         {
-            timer_left = (int) TIEMPO_SALTO_ANCHO + TARDA_SALTO;
+            timer_left = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
         }
         
         if(timer_left > TARDA_SALTO && rene.x >= RANA_ANCHO/2 + rene.dx)
@@ -74,5 +124,4 @@ void frogger (void)
         
         timer_left--;
     }
-    
 }

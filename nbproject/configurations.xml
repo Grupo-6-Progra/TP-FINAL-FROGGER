@@ -4,7 +4,9 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <itemPath>allegro_funciones.h</itemPath>
       <itemPath>juego.h</itemPath>
+      <itemPath>mundo.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -13,6 +15,7 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <itemPath>allegro_funciones.c</itemPath>
       <itemPath>juego.c</itemPath>
       <itemPath>main.c</itemPath>
     </logicalFolder>
@@ -56,11 +59,17 @@
           </linkerLibItems>
         </linkerTool>
       </compileType>
+      <item path="allegro_funciones.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="allegro_funciones.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="juego.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="juego.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="mundo.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="Release" type="1">
@@ -83,11 +92,17 @@
           <developmentMode>5</developmentMode>
         </asmTool>
       </compileType>
+      <item path="allegro_funciones.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="allegro_funciones.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="juego.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="juego.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="mundo.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>

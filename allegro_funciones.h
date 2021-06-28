@@ -1,0 +1,41 @@
+#ifndef ALLEGRO_FUNCIONES_H
+#define ALLEGRO_FUNCIONES_H
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+#include <allegro5/allegro.h>
+#include <allegro5/allegro_font.h>
+#include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_audio.h>
+#include <allegro5/allegro_acodec.h>
+#include <allegro5/allegro_image.h>
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+/***********************************************************************
+ * 
+ * VARIABLES GLOBALES
+ * 
+ ***********************************************************************/
+
+extern ALLEGRO_DISPLAY * display;
+extern ALLEGRO_EVENT_QUEUE *event_queue;
+extern ALLEGRO_TIMER * timer;
+extern ALLEGRO_BITMAP * mundo_buffer;
+extern ALLEGRO_BITMAP * al_rene;
+
+
+/***************************************************
+ * DECLARACIÓN DE FUNCIONES GLOBALES
+***************************************************/
+
+bool allegro_startup (void);
+
+void allegro_destroy(void);
+
+/////////////////////////////////////////////////////////////////////////////////////////
+
+#endif /* ALLEGRO_FUNCIONES_H */
+

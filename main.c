@@ -5,7 +5,8 @@
 #include <stdbool.h>
 
 #include "juego.h"
-
+#include "allegro_funciones.h"
+#include "mundo.h"
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
@@ -15,93 +16,33 @@
 #include <allegro5/allegro_image.h>
 
 
-#define FPS    REFRESCO
+#define FPS             REFRESCO
 
-#define BUFFER_W MUNDO_ANCHO
-#define BUFFER_H MUNDO_ALTO
+#define BUFFER_W        MUNDO_ANCHO
+#define BUFFER_H        MUNDO_ALTO
 
-#define SCREEN_SCALE 1.5
-#define SCREEN_W (BUFFER_W * SCREEN_SCALE)
-#define SCREEN_H (BUFFER_H * SCREEN_SCALE)
+#define SCREEN_SCALE    1.5
+#define SCREEN_W        (BUFFER_W * SCREEN_SCALE)
+#define SCREEN_H        (BUFFER_H * SCREEN_SCALE)
 
 
 int main (void)
-{
-    ALLEGRO_DISPLAY *display = NULL;
-    ALLEGRO_EVENT_QUEUE *event_queue = NULL;
-    ALLEGRO_TIMER *timer = NULL;
-    ALLEGRO_BITMAP* buffer;
-    ALLEGRO_BITMAP* al_rene;
-    
+{    
     bool redraw = false;
     bool do_exit = false;
     
-    if (!al_init())
+    if(allegro_startup() == false)
     {
-        fprintf(stderr, "failed to initialize allegro!\n");
         return -1;
-    }
-    
-    if (!al_install_keyboard())
-    {
-        fprintf(stderr, "failed to initialize the keyboard!\n");
-        return -1;
-    }
-    
-    timer = al_create_timer(1.0 / FPS);
-    if (!timer)
-    {
-        fprintf(stderr, "failed to create timer!\n");
-        return -1;
-    }
-    
-    event_queue = al_create_event_queue();
-    if (!event_queue)
-    {
-        fprintf(stderr, "failed to create event_queue!\n");
-        al_destroy_timer(timer);
-        return -1;
-    }
-
-    buffer = al_create_bitmap(BUFFER_W, BUFFER_H);
-    if (!buffer) 
-    {
-        fprintf(stderr, "failed to create buffer!\n");
-        al_destroy_timer(timer);
-        al_destroy_event_queue(event_queue);
-        return -1;
-    }
-    
-    al_rene = al_create_bitmap(RANA_ANCHO, RANA_ALTO);
-    if (!al_rene) 
-    {
-        fprintf(stderr, "failed to create al_rene!\n");
-        al_destroy_timer(timer);
-        al_destroy_event_queue(event_queue);
-        al_destroy_bitmap(buffer);
-        return -1;
-    }
-    
-    display = al_create_display(SCREEN_W, SCREEN_H);
-    if (!display)
-    {
-        fprintf(stderr, "failed to create display!\n");
-        al_destroy_timer(timer);
-        al_destroy_event_queue(event_queue);
-        al_destroy_bitmap(buffer);
-        al_destroy_bitmap(al_rene);
-        return -1;
-    }
+    };
     
     
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
     
-    
-    
-    al_set_target_bitmap(buffer);
-    al_clear_to_color(al_map_rgb(255, 0, 255));
+    al_set_target_bitmap(mundo_buffer);
+    al_clear_to_color(al_map_rgb(0, 0, 0));
     
     al_set_target_bitmap(al_rene);
     al_clear_to_color(al_map_rgb(0,255,0));
@@ -121,7 +62,7 @@ int main (void)
             if (ev.type == ALLEGRO_EVENT_TIMER) {
                
                 ///////////////////////////////////////////
-                ///////// LÓGICA DEL JUEGO
+                /// LÓGICA DEL JUEGO
                 ////////////////////////////////////////////
 
                 frogger();
@@ -131,8 +72,8 @@ int main (void)
             
             
             ////////////////////////////////////////
-            ///////////// DETECCIÓN INPUTS
-           ///////////////////////////////////////
+            /// DETECCIÓN INPUTS
+            ///////////////////////////////////////
             
             else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)
                 do_exit = true;
@@ -187,24 +128,20 @@ int main (void)
         {
             redraw = false;
             
-            al_set_target_bitmap(buffer);
+            al_set_target_bitmap(mundo_buffer);
             al_clear_to_color(al_map_rgb(0,0,0));
             
             al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
             
             
             al_set_target_backbuffer(display);
-            al_draw_scaled_bitmap(buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);
+            al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);
 
             al_flip_display();
         }
     }
 
-    al_destroy_bitmap(al_rene);
-    al_destroy_bitmap(buffer);
-    al_destroy_timer(timer);
-    al_destroy_event_queue(event_queue);
-    al_destroy_display(display);
+    allegro_destroy();
     
     return 0;
 }
