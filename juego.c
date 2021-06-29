@@ -180,6 +180,18 @@ static void move_enemies(void)
     unsigned int i;
     for (i = 0; i < AUTOS_POR_FILA; i++)
     {
+        /* Analizo si los enemigos están dentro del mundo, sino, los teletransporto al lado contrario de donde desaparecieron*/
+        if(autos_fila1[i].x < -CASILLA_ANCHO || autos_fila1[i].x > MUNDO_ANCHO + CASILLA_ANCHO)
+        {
+            autos_fila1[i].x = MUNDO_ANCHO/2.0 - ( (autos_fila1[i].dx / fabs(autos_fila1[i].dx)) * (MUNDO_ANCHO + CASILLA_ANCHO)/2.0 );
+            
+            /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
+             *el primer paréntesis devuelve el signo y el segundo (Según sea el signo obtenido) suma o resta "medio mundo" desde el centro
+             * del mundo (significado del primer MUNDO_ANCHO/2.0)
+             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO+CASILLA_ANCHO)/2.0
+             * El significado de "+ CASILLA_ANCHO" es que no quiero que aparezcan dentro del mundo, sino que aparezcan gracias al movimiento
+             */
+        }
         autos_fila1[i].x += autos_fila1[i].dx;
     }
 }
