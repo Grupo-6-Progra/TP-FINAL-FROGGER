@@ -27,7 +27,7 @@
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 ALLEGRO_DISPLAY * display;
-ALLEGRO_EVENT_QUEUE *event_queue;
+ALLEGRO_EVENT_QUEUE * event_queue;
 ALLEGRO_TIMER * timer;
 ALLEGRO_BITMAP * mundo_buffer;
 ALLEGRO_BITMAP * al_rene;

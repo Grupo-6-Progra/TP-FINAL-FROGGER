@@ -3,7 +3,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-#include <stdbool.h>    
+#include <stdbool.h>  
+#include <math.h>
+#include <tgmath.h>
 
 
 
@@ -38,6 +40,18 @@ typedef struct
 }RANA;
 
 extern RANA rene;
+
+
+/***************************************************
+ * ENEMIGOS
+ **************************************************/
+#define CANT_ENEMIGOS 5 //Cantidad de filas que contienen enemigos "del mismo tipo" (autos o los que van sobre el agua)
+
+typedef struct //Defino una estructura nueva para los enemigos
+{
+    double x, dx, largo;      //Posición, velocidad y largo del enemigo
+    unsigned int fila;        //Fila en la que se moverá el enemigo
+}enemigo_t;
 
 
 /***************************************************

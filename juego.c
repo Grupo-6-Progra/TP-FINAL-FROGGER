@@ -27,14 +27,17 @@
 ***************************************************/
 static void move_frog (void);
 
-
+static void enemigos (unsigned int);
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
 bool key_pressed[TECLAS_MAX];
+
 RANA rene = {.x = 8 * CASILLA_ANCHO - RANA_ALTO/2, .y = MUNDO_ALTO - RANA_ALTO/2, .dx = VELOCIDAD_RANA_ANCHO, .dy = VELOCIDAD_RANA_ALTO};
 
+enemigo_t autos[5];
+enemigo_t acuaticos[5];
 
 
 /******************************************************************************************
@@ -124,4 +127,29 @@ static void move_frog (void)
         
         timer_left--;
     }
+}
+
+
+//LO PONGO ACA PERO HAY QUE SACARLO
+enum const_autos {AUTO1,AUTO2,AUTO3,AUTO4,AUTO5};
+enum const_acuaticos {TORTUGA1,TORTUGA2,TRONCO1,TRONCO2,TRONCO3};
+
+static void initialize_enemies (unsigned int nivel)
+/* Funcion que dependiendo del nivel que se esté jugando, inicializará a los enemigos con velocidades distintas
+ * Se encarga de inicializar todos los campos de todos los enemigos.
+ */
+{
+    int i;
+    for(i=0; i < CANT_ENEMIGOS; i++)  //inicialización de enemigos según nivel
+    {
+        autos[i].dx = (2 * nivel + i*0.5) * pow(-1, i); //cuenta arbitraria para aumentar la velocidad de los enemigos
+        autos[i].fila = i + 1;
+        autos[i].x = i * 100;
+        autos[i].largo = CASILLA_ANCHO;
+        
+        acuaticos[i].dx = (2 * nivel + i*0.5) * pow(-1, i);
+        acuaticos[i].fila = i + 7;
+        acuaticos[i].x = i * 100;
+        acuaticos[i].largo = 2 * CASILLA_ANCHO;   
+    }  
 }
