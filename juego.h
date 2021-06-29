@@ -69,6 +69,9 @@ extern RANA rene;
  **************************************************/
 #define CANT_ENEMIGOS 5 //Cantidad de filas que contienen enemigos "del mismo tipo" (autos o los que van sobre el agua)
 
+#define AUTOS_POR_FILA      5
+#define FILAS_DE_AUTOS      5
+
 typedef struct //Defino una estructura nueva para los enemigos
 {
     double x, y;
@@ -77,14 +80,8 @@ typedef struct //Defino una estructura nueva para los enemigos
     unsigned int fila;        //Fila en la que se moverá el enemigo
 }AUTOS;
 
-#define AUTOS_POR_FILA      5
 
-extern AUTOS autos_fila1[AUTOS_POR_FILA];
-extern AUTOS autos_fila2[AUTOS_POR_FILA];
-extern AUTOS autos_fila3[AUTOS_POR_FILA];
-extern AUTOS autos_fila4[AUTOS_POR_FILA];
-extern AUTOS autos_fila5[AUTOS_POR_FILA];
-
+extern AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA]; //Defino una sola matriz con todos los enemigos de un mismo tipo
 
 /***************************************************
  * DECLARACIÓN DE FUNCIONES GLOBALES

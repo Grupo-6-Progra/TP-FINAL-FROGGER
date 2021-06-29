@@ -190,11 +190,16 @@ void allegro_redraw(void)
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
 
     unsigned int i;
+    unsigned int j,k;
     
-    for (i = 0; i < AUTOS_POR_FILA; i++ )
+    for(j=0; j<FILAS_DE_AUTOS; j++)
     {
-        al_draw_bitmap(al_auto_fila1, autos_fila1[i].x - CASILLA_ANCHO/2, autos_fila1[i].y - CASILLA_ALTO/2, 0);
+        for(k=0; k<AUTOS_POR_FILA; k++)
+        {
+            al_draw_bitmap(al_auto_fila1, autos[j][k].x - CASILLA_ANCHO/2, autos[j][k].y - CASILLA_ALTO/2, 0);
+        }
     }
+    
 
     al_set_target_backbuffer(display);
     al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);

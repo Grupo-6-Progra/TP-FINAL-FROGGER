@@ -44,12 +44,7 @@ bool key_pressed[TECLAS_MAX];
 
 RANA rene = {.x = 8 * CASILLA_ANCHO - RANA_ALTO/2, .y = MUNDO_ALTO - RANA_ALTO/2, .dx = VELOCIDAD_RANA_ANCHO, .dy = VELOCIDAD_RANA_ALTO};
 
-AUTOS autos_fila1[AUTOS_POR_FILA];
-AUTOS autos_fila2[AUTOS_POR_FILA];
-AUTOS autos_fila3[AUTOS_POR_FILA];
-AUTOS autos_fila4[AUTOS_POR_FILA];
-AUTOS autos_fila5[AUTOS_POR_FILA];
-
+AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
 
 AUTOS acuaticos[5];
 
@@ -152,46 +147,50 @@ static void move_frog (void)
     }
 }
 
-
-//LO PONGO ACA PERO HAY QUE SACARLO
-enum const_autos {AUTO1,AUTO2,AUTO3,AUTO4,AUTO5};
-enum const_acuaticos {TORTUGA1,TORTUGA2,TRONCO1,TRONCO2,TRONCO3};
-
 static void initialize_enemies (unsigned int nivel)
 /* 
  * Funcion que dependiendo del nivel que se esté jugando, inicializará a los enemigos con velocidades distintas
  * Se encarga de inicializar todos los campos de todos los enemigos.
  */
 {
-    int i;
-    for(i=0; i < AUTOS_POR_FILA ; i++)  //inicialización de enemigos según nivel
+    int j;
+    int k;
+    for(j=0; j < FILAS_DE_AUTOS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
     {
-        autos_fila1[i].dx = (2 * nivel + i*0.5) * pow(-1, i); //cuenta arbitraria para aumentar la velocidad de los enemigos
-        autos_fila1[i].fila = i + 1;
-        autos_fila1[i].y = (CANT_CASILLAS_COLUMNA - autos_fila1[i].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-        autos_fila1[i].x = i * 100;
-        autos_fila1[i].largo = CASILLA_ANCHO;
-          
-    }  
+        for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+        {
+            autos[j][k].dx = (nivel + 0.5*j) * pow(-1,j);
+            autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
+            autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+            autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+            autos[j][k].largo = CASILLA_ANCHO;                          //Cada enemigo será tan ancho como una casilla
+        }
+    }
 }
 
 static void move_enemies(void)
 {
-    unsigned int i;
-    for (i = 0; i < AUTOS_POR_FILA; i++)
+    unsigned int j, k;
+    for(j=0; j < FILAS_DE_AUTOS; j++)
     {
-        /* Analizo si los enemigos están dentro del mundo, sino, los teletransporto al lado contrario de donde desaparecieron*/
-        if(autos_fila1[i].x < -CASILLA_ANCHO || autos_fila1[i].x > MUNDO_ANCHO + CASILLA_ANCHO)
+        
+        for(k=0; k < AUTOS_POR_FILA; k++)
         {
-            autos_fila1[i].x = MUNDO_ANCHO/2.0 - ( (autos_fila1[i].dx / fabs(autos_fila1[i].dx)) * (MUNDO_ANCHO + CASILLA_ANCHO)/2.0 );
+            /* Analizo si los enemigos están dentro del campo de movimiento
+             * , sino, los teletransporto al lado contrario de donde desaparecieron*/
+            
+            if(autos[j][k].x < -MUNDO_ANCHO/2 || autos[j][k].x > MUNDO_ANCHO*2)
+            {
+                autos[j][k].x = MUNDO_ANCHO/2.0 - ( (autos[j][k].dx / fabs(autos[j][k].dx)) * MUNDO_ANCHO);
             
             /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
-             *el primer paréntesis devuelve el signo y el segundo (Según sea el signo obtenido) suma o resta "medio mundo" desde el centro
+             *el primer paréntesis devuelve el signo y lo que sigue (Según sea el signo obtenido) suma o resta "un mundo" desde el centro
              * del mundo (significado del primer MUNDO_ANCHO/2.0)
-             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO+CASILLA_ANCHO)/2.0
-             * El significado de "+ CASILLA_ANCHO" es que no quiero que aparezcan dentro del mundo, sino que aparezcan gracias al movimiento
+             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
+             * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
              */
         }
-        autos_fila1[i].x += autos_fila1[i].dx;
+            autos[j][k].x += autos[j][k].dx;
+        }
     }
 }
