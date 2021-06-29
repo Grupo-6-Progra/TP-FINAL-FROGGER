@@ -1,5 +1,7 @@
 #include "juego.h"
-#include "mundo.h"
+
+#include <math.h>
+#include <tgmath.h>
 
 /***************************************************
  * VELOCIDADES Y TIEMPOS DE LA RANA
@@ -27,17 +29,29 @@
 ***************************************************/
 static void move_frog (void);
 
+static void initialize_enemies (unsigned int nivel);
+
 static void enemigos (unsigned int);
+
+static void move_enemies(void);
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
+
+int estado_juego = INICIO;
 
 bool key_pressed[TECLAS_MAX];
 
 RANA rene = {.x = 8 * CASILLA_ANCHO - RANA_ALTO/2, .y = MUNDO_ALTO - RANA_ALTO/2, .dx = VELOCIDAD_RANA_ANCHO, .dy = VELOCIDAD_RANA_ALTO};
 
-enemigo_t autos[5];
-enemigo_t acuaticos[5];
+AUTOS autos_fila1[AUTOS_POR_FILA];
+AUTOS autos_fila2[AUTOS_POR_FILA];
+AUTOS autos_fila3[AUTOS_POR_FILA];
+AUTOS autos_fila4[AUTOS_POR_FILA];
+AUTOS autos_fila5[AUTOS_POR_FILA];
+
+
+AUTOS acuaticos[5];
 
 
 /******************************************************************************************
@@ -50,6 +64,15 @@ enemigo_t acuaticos[5];
 
 void frogger (void)
 {
+    if(estado_juego == INICIO)
+    {
+        initialize_enemies (2);
+    }
+    
+    estado_juego = JUEGO;
+    
+    move_enemies();
+    
     move_frog();
     
 }
@@ -135,21 +158,28 @@ enum const_autos {AUTO1,AUTO2,AUTO3,AUTO4,AUTO5};
 enum const_acuaticos {TORTUGA1,TORTUGA2,TRONCO1,TRONCO2,TRONCO3};
 
 static void initialize_enemies (unsigned int nivel)
-/* Funcion que dependiendo del nivel que se esté jugando, inicializará a los enemigos con velocidades distintas
+/* 
+ * Funcion que dependiendo del nivel que se esté jugando, inicializará a los enemigos con velocidades distintas
  * Se encarga de inicializar todos los campos de todos los enemigos.
  */
 {
     int i;
-    for(i=0; i < CANT_ENEMIGOS; i++)  //inicialización de enemigos según nivel
+    for(i=0; i < AUTOS_POR_FILA ; i++)  //inicialización de enemigos según nivel
     {
-        autos[i].dx = (2 * nivel + i*0.5) * pow(-1, i); //cuenta arbitraria para aumentar la velocidad de los enemigos
-        autos[i].fila = i + 1;
-        autos[i].x = i * 100;
-        autos[i].largo = CASILLA_ANCHO;
-        
-        acuaticos[i].dx = (2 * nivel + i*0.5) * pow(-1, i);
-        acuaticos[i].fila = i + 7;
-        acuaticos[i].x = i * 100;
-        acuaticos[i].largo = 2 * CASILLA_ANCHO;   
+        autos_fila1[i].dx = (2 * nivel + i*0.5) * pow(-1, i); //cuenta arbitraria para aumentar la velocidad de los enemigos
+        autos_fila1[i].fila = i + 1;
+        autos_fila1[i].y = (CANT_CASILLAS_COLUMNA - autos_fila1[i].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+        autos_fila1[i].x = i * 100;
+        autos_fila1[i].largo = CASILLA_ANCHO;
+          
     }  
+}
+
+static void move_enemies(void)
+{
+    unsigned int i;
+    for (i = 0; i < AUTOS_POR_FILA; i++)
+    {
+        autos_fila1[i].x += autos_fila1[i].dx;
+    }
 }

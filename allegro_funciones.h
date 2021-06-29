@@ -25,6 +25,7 @@ extern ALLEGRO_EVENT_QUEUE *event_queue;
 extern ALLEGRO_TIMER * timer;
 extern ALLEGRO_BITMAP * mundo_buffer;
 extern ALLEGRO_BITMAP * al_rene;
+extern ALLEGRO_BITMAP * al_auto_fila1;
 
 
 /***************************************************
@@ -33,7 +34,13 @@ extern ALLEGRO_BITMAP * al_rene;
 
 bool allegro_startup (void);
 
+void allegro_event_register(void);
+
 void allegro_destroy(void);
+
+bool allegro_teclas (ALLEGRO_EVENT *);
+
+void allegro_redraw(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 

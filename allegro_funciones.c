@@ -1,6 +1,7 @@
 #include "allegro_funciones.h"
-#include "mundo.h"
 #include "juego.h"
+
+#include <stdbool.h>
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
@@ -18,7 +19,7 @@
 #define BUFFER_W        MUNDO_ANCHO
 #define BUFFER_H        MUNDO_ALTO
 
-#define SCREEN_SCALE    1.5
+#define SCREEN_SCALE    1
 #define SCREEN_W        (BUFFER_W * SCREEN_SCALE)
 #define SCREEN_H        (BUFFER_H * SCREEN_SCALE)
 
@@ -31,6 +32,7 @@ ALLEGRO_EVENT_QUEUE * event_queue;
 ALLEGRO_TIMER * timer;
 ALLEGRO_BITMAP * mundo_buffer;
 ALLEGRO_BITMAP * al_rene;
+ALLEGRO_BITMAP * al_auto_fila1;
 
 /**********************************************************************************
  * 
@@ -86,6 +88,18 @@ bool allegro_startup (void)
         return -1;
     }
     
+    al_auto_fila1 = al_create_bitmap(CASILLA_ANCHO, CASILLA_ALTO);
+    if(!al_auto_fila1)
+    {
+        fprintf(stderr, "failed to create al_auto_fila1!\n");
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(al_rene);
+        return false;
+        
+    }
+    
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display)
     {
@@ -94,15 +108,103 @@ bool allegro_startup (void)
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(al_rene);
+        al_destroy_bitmap(al_auto_fila1);
         return false;
     }
     
     return true;
 }
 
+void allegro_event_register(void)
+{
+    al_register_event_source(event_queue, al_get_display_event_source(display));
+    al_register_event_source(event_queue, al_get_timer_event_source(timer));
+    al_register_event_source(event_queue, al_get_keyboard_event_source());
+}
+
+
+bool allegro_teclas (ALLEGRO_EVENT * ev)
+{
+    bool do_exit = false;
+    
+    if (ev->type == ALLEGRO_EVENT_DISPLAY_CLOSE)
+    {
+        do_exit = true;
+    }
+
+    if (ev->type == ALLEGRO_EVENT_KEY_DOWN)
+    {
+        switch (ev->keyboard.keycode)
+        {
+            case ALLEGRO_KEY_UP:
+                key_pressed[KEY_UP] = true;
+                break;
+
+            case ALLEGRO_KEY_DOWN:
+                key_pressed[KEY_DOWN] = true;
+                break;
+
+            case ALLEGRO_KEY_LEFT:
+                key_pressed[KEY_LEFT] = true;
+                break;
+
+            case ALLEGRO_KEY_RIGHT:
+                key_pressed[KEY_RIGHT] = true;
+                break;
+        }
+    }
+    
+    else if (ev->type == ALLEGRO_EVENT_KEY_UP)
+    {
+        switch (ev->keyboard.keycode) {
+            case ALLEGRO_KEY_UP:
+                key_pressed[KEY_UP] = false;
+                break;
+
+            case ALLEGRO_KEY_DOWN:
+                key_pressed[KEY_DOWN] = false;
+                break;
+
+            case ALLEGRO_KEY_LEFT:
+                key_pressed[KEY_LEFT] = false;
+                break;
+
+            case ALLEGRO_KEY_RIGHT:
+                key_pressed[KEY_RIGHT] = false;
+                break;
+
+            case ALLEGRO_KEY_ESCAPE:
+                do_exit = true;
+                break;
+        }
+    }
+    
+    return do_exit;
+}
+
+void allegro_redraw(void)
+{
+    al_set_target_bitmap(mundo_buffer);
+    al_clear_to_color(al_map_rgb(0,0,0));
+
+    al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
+
+    unsigned int i;
+    
+    for (i = 0; i < AUTOS_POR_FILA; i++ )
+    {
+        al_draw_bitmap(al_auto_fila1, autos_fila1[i].x - CASILLA_ANCHO/2, autos_fila1[i].y - CASILLA_ALTO/2, 0);
+    }
+
+    al_set_target_backbuffer(display);
+    al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);
+
+    al_flip_display();
+}
 
 void allegro_destroy(void)
 {
+    al_destroy_bitmap(al_auto_fila1);
     al_destroy_bitmap(al_rene);
     al_destroy_bitmap(mundo_buffer);
     al_destroy_timer(timer);
