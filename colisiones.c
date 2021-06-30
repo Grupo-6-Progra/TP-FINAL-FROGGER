@@ -2,16 +2,11 @@
 #include <stdbool.h>
 #include "colisiones.h"
 
-/*
- 
- ME GUSTARÍA HACER MAS EFICIENTE ESTO
- 
- */
-
 bool colision (void)
 {
+    int aux = ((CANT_CASILLAS_COLUMNA - rene.y / CASILLA_ALTO == 0)?(CANT_CASILLAS_COLUMNA - rene.y / CASILLA_ALTO) : (CANT_CASILLAS_COLUMNA - rene.y / CASILLA_ALTO - 1));
     int j, k;
-    for(j=0; j < FILAS_DE_AUTOS; j++)
+    for(j= aux; j < FILAS_DE_AUTOS && j < aux + 2; j++)
     {
         for(k=0; k < AUTOS_POR_FILA; k++)
         {
@@ -27,6 +22,5 @@ bool colision (void)
             }
         }
     }//Si no se cumplió nunca dentro de ambos "for" (todos los autos), no choqué
-    return false;
-    
+    return false; 
 }

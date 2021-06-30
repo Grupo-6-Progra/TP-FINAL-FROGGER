@@ -33,6 +33,8 @@ ALLEGRO_TIMER * timer;
 ALLEGRO_BITMAP * mundo_buffer;
 ALLEGRO_BITMAP * al_rene;
 ALLEGRO_BITMAP * al_auto_fila1;
+ALLEGRO_BITMAP * fondo;
+
 
 /**********************************************************************************
  * 
@@ -45,6 +47,11 @@ bool allegro_startup (void)
     if (!al_init())
     {
         fprintf(stderr, "failed to initialize allegro!\n");
+        return false;
+    }
+    if(!al_init_image_addon())
+    {
+        fprintf(stderr, "failed to initialize allegro images!\n");
         return false;
     }
     
@@ -100,6 +107,18 @@ bool allegro_startup (void)
         
     }
     
+    fondo = al_load_bitmap("frogger.png");
+    if(!fondo)
+    {
+        fprintf(stderr, "failed to create fondo!\n");
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(al_rene);
+        al_destroy_bitmap(al_auto_fila1);
+        return false;
+    }
+    
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display)
     {
@@ -109,8 +128,11 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(al_rene);
         al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(fondo);
         return false;
     }
+    
+    
     
     return true;
 }
@@ -199,8 +221,10 @@ void allegro_initialize_bitmaps(void)
 void allegro_redraw(void)
 {
     al_set_target_bitmap(mundo_buffer);
-    al_clear_to_color(al_map_rgb(0,0,0));
-
+    //al_clear_to_color(al_map_rgb(0,0,0));
+    al_draw_scaled_bitmap(fondo,0,0,320,387, 0, 0, MUNDO_ANCHO, MUNDO_ALTO, 0);
+    //al_draw_scaled_bitmap(fondo,-10,0,0);
+    
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
 
     unsigned int i;
