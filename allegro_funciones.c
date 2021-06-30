@@ -122,7 +122,6 @@ void allegro_event_register(void)
     al_register_event_source(event_queue, al_get_keyboard_event_source());
 }
 
-
 bool allegro_teclas (ALLEGRO_EVENT * ev)
 {
     bool do_exit = false;
@@ -181,6 +180,21 @@ bool allegro_teclas (ALLEGRO_EVENT * ev)
     
     return do_exit;
 }
+
+
+void allegro_initialize_bitmaps(void)
+{
+    al_set_target_bitmap(al_rene);
+    al_clear_to_color(al_map_rgb(0,255,0));
+    
+    al_set_target_bitmap(al_auto_fila1);
+    al_clear_to_color(al_map_rgb(150,152,154));
+    
+    al_set_target_bitmap(al_get_backbuffer(display));
+    al_clear_to_color(al_map_rgb(0, 0, 0));
+    al_flip_display();
+}
+
 
 void allegro_redraw(void)
 {

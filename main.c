@@ -1,18 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 #include <stdbool.h>
 
 #include "juego.h"
 #include "allegro_funciones.h"
 
 #include <allegro5/allegro.h>
-#include <allegro5/allegro_font.h>
-#include <allegro5/allegro_primitives.h>
-#include <allegro5/allegro_audio.h>
-#include <allegro5/allegro_acodec.h>
-#include <allegro5/allegro_image.h>
+
 
 
 int main (void)
@@ -26,17 +21,8 @@ int main (void)
     };
     
     allegro_event_register();
-    
 
-    al_set_target_bitmap(al_rene);
-    al_clear_to_color(al_map_rgb(0,255,0));
-    
-    al_set_target_bitmap(al_auto_fila1);
-    al_clear_to_color(al_map_rgb(150,152,154));
-    
-    al_set_target_bitmap(al_get_backbuffer(display));
-    al_clear_to_color(al_map_rgb(0, 0, 0));
-    al_flip_display();
+    allegro_initialize_bitmaps();
     
     
     al_start_timer(timer);

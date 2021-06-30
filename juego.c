@@ -37,6 +37,7 @@ static void initialize_enemies (unsigned int nivel);
 static void enemigos (unsigned int);
 
 static void move_enemies(void);
+
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/

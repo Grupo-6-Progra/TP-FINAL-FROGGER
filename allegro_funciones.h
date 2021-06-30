@@ -36,6 +36,8 @@ bool allegro_startup (void);
 
 void allegro_event_register(void);
 
+void allegro_initialize_bitmaps(void);
+
 void allegro_destroy(void);
 
 bool allegro_teclas (ALLEGRO_EVENT *);
