@@ -1,4 +1,5 @@
 #include "juego.h"
+#include "colisiones.h"
 
 #include <math.h>
 #include <tgmath.h>
@@ -29,6 +30,8 @@
 ***************************************************/
 static void move_frog (void);
 
+static void initialize_frog(void);
+
 static void initialize_enemies (unsigned int nivel);
 
 static void enemigos (unsigned int);
@@ -42,7 +45,7 @@ int estado_juego = INICIO;
 
 bool key_pressed[TECLAS_MAX];
 
-RANA rene = {.x = 8 * CASILLA_ANCHO - RANA_ALTO/2, .y = MUNDO_ALTO - RANA_ALTO/2, .dx = VELOCIDAD_RANA_ANCHO, .dy = VELOCIDAD_RANA_ALTO};
+RANA rene; 
 
 AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
 
@@ -62,6 +65,7 @@ void frogger (void)
     if(estado_juego == INICIO)
     {
         initialize_enemies (2);
+        initialize_frog();
     }
     
     estado_juego = JUEGO;
@@ -69,6 +73,11 @@ void frogger (void)
     move_enemies();
     
     move_frog();
+    
+    if(colision())
+    {
+        estado_juego = INICIO;
+    }
     
 }
 
@@ -146,6 +155,15 @@ static void move_frog (void)
         timer_left--;
     }
 }
+
+static void initialize_frog(void)
+{
+    rene.x = 8 * CASILLA_ANCHO - RANA_ALTO/2.0;
+    rene.y = MUNDO_ALTO - RANA_ALTO/2.0;
+    rene.dy = VELOCIDAD_RANA_ALTO;
+    rene.dx = VELOCIDAD_RANA_ANCHO;
+}
+
 
 static void initialize_enemies (unsigned int nivel)
 /* 
