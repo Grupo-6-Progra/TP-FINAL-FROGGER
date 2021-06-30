@@ -6,7 +6,7 @@
 
 /* 
  * File:   teclado.h
- * Author: bruno MASTER CRACK GRANDE
+ * Author: bruno
  *
  * Created on 28 de junio de 2021, 18:40
  */
