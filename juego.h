@@ -76,8 +76,9 @@ typedef struct //Defino una estructura nueva para los enemigos
 {
     double x, y;
     double dx, dy;
-    double largo;      //Posición, velocidad y largo del enemigo
-    unsigned int fila;        //Fila en la que se moverá el enemigo
+    double largo;               //Posición, velocidad y largo del enemigo
+    double alto;
+    unsigned int fila;          //Fila en la que se moverá el enemigo
 }AUTOS;
 
 

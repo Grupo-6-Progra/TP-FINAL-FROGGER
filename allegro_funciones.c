@@ -49,6 +49,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to initialize allegro!\n");
         return false;
     }
+    
     if(!al_init_image_addon())
     {
         fprintf(stderr, "failed to initialize allegro images!\n");
@@ -107,7 +108,7 @@ bool allegro_startup (void)
         
     }
     
-    fondo = al_load_bitmap("frogger.png");
+    fondo = al_load_bitmap("frogger2.png");
     if(!fondo)
     {
         fprintf(stderr, "failed to create fondo!\n");
@@ -222,14 +223,16 @@ void allegro_redraw(void)
 {
     al_set_target_bitmap(mundo_buffer);
     //al_clear_to_color(al_map_rgb(0,0,0));
-    al_draw_scaled_bitmap(fondo,0,0,320,387, 0, 0, MUNDO_ANCHO, MUNDO_ALTO, 0);
-    //al_draw_scaled_bitmap(fondo,-10,0,0);
+    al_draw_scaled_bitmap(fondo,0,00,300,400, 0, 0, MUNDO_ANCHO, MUNDO_ALTO, 0);
+    
     
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
 
     unsigned int i;
     unsigned int j,k;
     
+    
+    //IMPRESION DE LOS AUTOS
     for(j=0; j<FILAS_DE_AUTOS; j++)
     {
         for(k=0; k<AUTOS_POR_FILA; k++)

@@ -19,6 +19,7 @@
 extern AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
 extern RANA rene;
 
+
 bool colision(void);
 
 

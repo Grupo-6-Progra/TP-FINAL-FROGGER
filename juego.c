@@ -178,11 +178,12 @@ static void initialize_enemies (unsigned int nivel)
     {
         for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
         {
-            autos[j][k].dx = (nivel + 0.5*j) * pow(-1,j);
+            autos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
             autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
             autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
             autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
             autos[j][k].largo = CASILLA_ANCHO;                          //Cada enemigo será tan ancho como una casilla
+            autos[j][k].alto = CASILLA_ALTO;
         }
     }
 }
