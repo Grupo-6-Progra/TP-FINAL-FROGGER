@@ -6,6 +6,7 @@
                    projectFiles="true">
       <itemPath>allegro_funciones.h</itemPath>
       <itemPath>colisiones.h</itemPath>
+      <itemPath>display.h</itemPath>
       <itemPath>juego.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
@@ -17,6 +18,7 @@
                    projectFiles="true">
       <itemPath>allegro_funciones.c</itemPath>
       <itemPath>colisiones.c</itemPath>
+      <itemPath>display.c</itemPath>
       <itemPath>juego.c</itemPath>
       <itemPath>main.c</itemPath>
     </logicalFolder>
@@ -68,6 +70,10 @@
       </item>
       <item path="colisiones.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="display.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="display.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="juego.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="juego.h" ex="false" tool="3" flavor2="0">
@@ -102,6 +108,10 @@
       <item path="colisiones.c" ex="false" tool="0" flavor2="0">
       </item>
       <item path="colisiones.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="display.c" ex="false" tool="0" flavor2="0">
+      </item>
+      <item path="display.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="juego.c" ex="false" tool="0" flavor2="0">
       </item>

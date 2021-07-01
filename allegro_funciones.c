@@ -223,7 +223,7 @@ void allegro_redraw(void)
 {
     al_set_target_bitmap(mundo_buffer);
     //al_clear_to_color(al_map_rgb(0,0,0));
-    al_draw_scaled_bitmap(fondo,0,00,300,400, 0, 0, MUNDO_ANCHO, MUNDO_ALTO, 0);
+    al_draw_scaled_bitmap(fondo,0,0,300,400, 0, 0, MUNDO_ANCHO, MUNDO_ALTO, 0);
     
     
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);

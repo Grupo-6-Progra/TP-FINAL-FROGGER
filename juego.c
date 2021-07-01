@@ -159,7 +159,7 @@ static void move_frog (void)
 
 static void initialize_frog(void)
 {
-    rene.x = 8 * CASILLA_ANCHO - RANA_ALTO/2.0;
+    rene.x = 8 * CASILLA_ANCHO - RANA_ANCHO/2.0;
     rene.y = MUNDO_ALTO - RANA_ALTO/2.0;
     rene.dy = VELOCIDAD_RANA_ALTO;
     rene.dx = VELOCIDAD_RANA_ANCHO;
@@ -199,7 +199,7 @@ static void move_enemies(void)
             /* Analizo si los enemigos están dentro del campo de movimiento
              * , sino, los teletransporto al lado contrario de donde desaparecieron*/
             
-            if(autos[j][k].x < -MUNDO_ANCHO/2 || autos[j][k].x > MUNDO_ANCHO*2)
+            if(autos[j][k].x < -MUNDO_ANCHO/2.0 || autos[j][k].x > MUNDO_ANCHO*2.0)
             {
                 autos[j][k].x = MUNDO_ANCHO/2.0 - ( (autos[j][k].dx / fabs(autos[j][k].dx)) * MUNDO_ANCHO);
             

@@ -37,6 +37,7 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 OBJECTFILES= \
 	${OBJECTDIR}/allegro_funciones.o \
 	${OBJECTDIR}/colisiones.o \
+	${OBJECTDIR}/display.o \
 	${OBJECTDIR}/juego.o \
 	${OBJECTDIR}/main.o
 
@@ -74,6 +75,11 @@ ${OBJECTDIR}/colisiones.o: colisiones.c
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/colisiones.o colisiones.c
+
+${OBJECTDIR}/display.o: display.c
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.c) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/display.o display.c
 
 ${OBJECTDIR}/juego.o: juego.c
 	${MKDIR} -p ${OBJECTDIR}

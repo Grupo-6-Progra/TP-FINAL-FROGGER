@@ -59,6 +59,8 @@ int main (void)
             redraw = false;
             
             allegro_redraw();
+            
+            //dibujar en display
         }
     }
 
