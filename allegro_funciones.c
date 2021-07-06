@@ -108,7 +108,7 @@ bool allegro_startup (void)
         
     }
     
-    fondo = al_load_bitmap("frogger2.png");
+    fondo = al_load_bitmap("fondo2.png");
     if(!fondo)
     {
         fprintf(stderr, "failed to create fondo!\n");
@@ -223,7 +223,7 @@ void allegro_redraw(void)
 {
     al_set_target_bitmap(mundo_buffer);
     //al_clear_to_color(al_map_rgb(0,0,0));
-    al_draw_scaled_bitmap(fondo,0,0,300,400, 0, 0, MUNDO_ANCHO, MUNDO_ALTO, 0);
+    al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
     
     
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
@@ -250,6 +250,7 @@ void allegro_redraw(void)
 
 void allegro_destroy(void)
 {
+    al_destroy_bitmap(fondo);
     al_destroy_bitmap(al_auto_fila1);
     al_destroy_bitmap(al_rene);
     al_destroy_bitmap(mundo_buffer);

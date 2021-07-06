@@ -1,4 +1,4 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
@@ -19,7 +19,7 @@ void init_display()
     disp_clear();
 }
 
-int main(int argc, char** argv) {
+int main2(int argc, char** argv) {
     
 {
 								//limpia todo el display
@@ -223,3 +223,5 @@ void timer(double h)
         //sacar esta función y hacer funcionar todo el tema de los fps
     }
 }
+ * 
+ */

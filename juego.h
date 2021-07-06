@@ -7,7 +7,7 @@
 
 /************************+
  * 
- */
+ ************************/
 
 enum ESTADO_JUEGO
 {
@@ -50,8 +50,8 @@ extern bool key_pressed[TECLAS_MAX];
  * RANA
 ***************************************************/
 
-#define RANA_ANCHO              CASILLA_ANCHO           
-#define RANA_ALTO               CASILLA_ALTO 
+#define RANA_ANCHO              (CASILLA_ANCHO - 10)         
+#define RANA_ALTO               (CASILLA_ALTO - 10)
                 
 typedef struct
 {

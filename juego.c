@@ -44,9 +44,9 @@ static void move_enemies(void);
 
 int estado_juego = INICIO;
 
-bool key_pressed[TECLAS_MAX];
+bool key_pressed[TECLAS_MAX] = {false,false,false,false,false};
 
-RANA rene; 
+RANA rene;
 
 AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
 
@@ -63,23 +63,31 @@ AUTOS acuaticos[5];
 
 void frogger (void)
 {
-    if(estado_juego == INICIO)
+    switch(estado_juego)
     {
-        initialize_enemies (2);
-        initialize_frog();
+        case INICIO:
+            initialize_enemies (2);
+            initialize_frog();
+            estado_juego = JUEGO;
+            
+            break;
+        
+        case JUEGO:
+            move_enemies();
+            move_frog();
+            
+            if(colision())
+            {
+                estado_juego = INICIO;
+            }
+            break;
+            
+        case PAUSA:
+            
+            break;
+            
+     
     }
-    
-    estado_juego = JUEGO;
-    
-    move_enemies();
-    
-    move_frog();
-    
-    if(colision())
-    {
-        estado_juego = INICIO;
-    }
-    
 }
 
 
@@ -159,8 +167,8 @@ static void move_frog (void)
 
 static void initialize_frog(void)
 {
-    rene.x = 8 * CASILLA_ANCHO - RANA_ANCHO/2.0;
-    rene.y = MUNDO_ALTO - RANA_ALTO/2.0;
+    rene.x = 8 * CASILLA_ANCHO - CASILLA_ANCHO/2.0;
+    rene.y = MUNDO_ALTO - CASILLA_ALTO/2.0;
     rene.dy = VELOCIDAD_RANA_ALTO;
     rene.dx = VELOCIDAD_RANA_ANCHO;
 }
@@ -209,7 +217,7 @@ static void move_enemies(void)
              * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
              * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
              */
-        }
+            }
             autos[j][k].x += autos[j][k].dx;
         }
     }
