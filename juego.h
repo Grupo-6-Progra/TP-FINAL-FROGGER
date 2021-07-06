@@ -81,8 +81,21 @@ typedef struct //Defino una estructura nueva para los enemigos
     unsigned int fila;          //Fila en la que se moverá el enemigo
 }AUTOS;
 
-
 extern AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA]; //Defino una sola matriz con todos los enemigos de un mismo tipo
+
+#define TRONCOS_POR_FILA      5
+#define FILAS_DE_TRONCOS     5
+
+typedef struct //Defino una estructura nueva para los enemigos
+{
+    double x, y;
+    double dx, dy;
+    double largo;               //Posición, velocidad y largo del enemigo
+    double alto;
+    unsigned int fila;          //Fila en la que se moverá el enemigo
+}TRONCO;
+
+extern TRONCO troncos[FILAS_DE_TRONCOS][TRONCOS_POR_FILA]; //Defino una sola matriz con todos los enemigos de un mismo tipo
 
 /***************************************************
  * DECLARACIÓN DE FUNCIONES GLOBALES

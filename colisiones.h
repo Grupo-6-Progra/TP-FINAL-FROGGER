@@ -21,7 +21,7 @@ extern RANA rene;
 
 
 bool colision(void);
-
+bool rana_sobre_tronco(void);
 
 #endif /* COLISIONES_H */
 

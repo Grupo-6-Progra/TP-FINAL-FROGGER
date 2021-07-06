@@ -33,10 +33,14 @@ static void move_frog (void);
 static void initialize_frog(void);
 
 static void initialize_enemies (unsigned int nivel);
+static void initialize_autos(unsigned int);
+static void initialize_troncos(unsigned int);
 
 static void enemigos (unsigned int);
 
 static void move_enemies(void);
+static void move_autos(void);
+static void move_troncos(void);
 
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
@@ -50,7 +54,7 @@ RANA rene;
 
 AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
 
-AUTOS acuaticos[5];
+TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA];
 
 
 /******************************************************************************************
@@ -80,6 +84,15 @@ void frogger (void)
             {
                 estado_juego = INICIO;
             }
+            
+            if(rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO)
+            {
+                if (rana_sobre_tronco() == false)
+                {
+                    estado_juego = INICIO;
+                }
+            }
+            
             break;
             
         case PAUSA:
@@ -174,11 +187,23 @@ static void initialize_frog(void)
 }
 
 
+/**************************************
+ * 
+ * INITIALIZE_ENEMIES:
+ *  
+ ***************************************/
+
 static void initialize_enemies (unsigned int nivel)
 /* 
  * Funcion que dependiendo del nivel que se esté jugando, inicializará a los enemigos con velocidades distintas
  * Se encarga de inicializar todos los campos de todos los enemigos.
  */
+{
+    initialize_autos(nivel);
+    initialize_troncos(nivel);
+}
+
+static void initialize_autos(unsigned int nivel)
 {
     int j;
     int k;
@@ -196,7 +221,37 @@ static void initialize_enemies (unsigned int nivel)
     }
 }
 
+static void initialize_troncos(unsigned int nivel)
+{
+    int j;
+    int k;
+    for(j=0; j < FILAS_DE_TRONCOS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
+    {
+        for(k=0; k < TRONCOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+        {
+            troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+            troncos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
+            troncos[j][k].y = (CANT_CASILLAS_COLUMNA - 6 - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+            troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+            troncos[j][k].largo = CASILLA_ANCHO * 2;                          //Cada enemigo será tan ancho como una casilla
+            troncos[j][k].alto = CASILLA_ALTO;
+        }
+    }
+}
+
+/**************************************
+ * 
+ * MOVE_ENEMIES:
+ *  
+ ***************************************/
+
 static void move_enemies(void)
+{
+    move_autos();
+    move_troncos();
+}
+
+static void move_autos(void)
 {
     unsigned int j, k;
     for(j=0; j < FILAS_DE_AUTOS; j++)
@@ -219,6 +274,33 @@ static void move_enemies(void)
              */
             }
             autos[j][k].x += autos[j][k].dx;
+        }
+    }
+}
+
+static void move_troncos(void)
+{
+    unsigned int j, k;
+    for(j=0; j < FILAS_DE_TRONCOS; j++)
+    {
+        
+        for(k=0; k < TRONCOS_POR_FILA; k++)
+        {
+            /* Analizo si los enemigos están dentro del campo de movimiento
+             * , sino, los teletransporto al lado contrario de donde desaparecieron*/
+            
+            if(troncos[j][k].x < -MUNDO_ANCHO/2.0 || troncos[j][k].x > MUNDO_ANCHO*2.0)
+            {
+                troncos[j][k].x = MUNDO_ANCHO/2.0 - ( (troncos[j][k].dx / fabs(troncos[j][k].dx)) * MUNDO_ANCHO);
+            
+            /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
+             *el primer paréntesis devuelve el signo y lo que sigue (Según sea el signo obtenido) suma o resta "un mundo" desde el centro
+             * del mundo (significado del primer MUNDO_ANCHO/2.0)
+             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
+             * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
+             */
+            }
+            troncos[j][k].x += troncos[j][k].dx;
         }
     }
 }
