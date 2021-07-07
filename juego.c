@@ -85,12 +85,9 @@ void frogger (void)
                 estado_juego = INICIO;
             }
             
-            if(rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO)
+            if((rana_sobre_tronco() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
             {
-                if (rana_sobre_tronco() == false)
-                {
-                    estado_juego = INICIO;
-                }
+                   estado_juego = INICIO;
             }
             
             break;
@@ -116,6 +113,8 @@ static void move_frog (void)
 {
     static unsigned int timer_up = 0, timer_down = 0, timer_right = 0, timer_left = 0;
     
+    rene.x += rene.dx_extra; //se mueve la rana la velocidad extra adquirida por un tronco o tortuga
+    
     if ((key_pressed[KEY_UP] == true || timer_up != 0 ) && timer_down == 0 && timer_right == 0 && timer_left == 0)
     {
         if(timer_up == 0)
@@ -123,7 +122,7 @@ static void move_frog (void)
             timer_up = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
         }
         
-        if(timer_up > TARDA_SALTO && rene.y >= RANA_ALTO/2 + rene.dy)
+        if(timer_up > TARDA_SALTO && rene.y >= CASILLA_ALTO/2 + rene.dy)
         {
              rene.y -= rene.dy;
         }
@@ -139,7 +138,7 @@ static void move_frog (void)
             timer_down = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
         }
         
-        if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - RANA_ALTO/2 -rene.dy)
+        if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - CASILLA_ALTO/2 -rene.dy)
         {
             rene.y += rene.dy;
         }
@@ -154,7 +153,7 @@ static void move_frog (void)
             timer_right = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
         }
         
-        if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - RANA_ANCHO/2 - rene.dx)
+        if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - CASILLA_ANCHO/2 - rene.dx)
         {
             rene.x += rene.dx;
         }
@@ -169,7 +168,7 @@ static void move_frog (void)
             timer_left = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
         }
         
-        if(timer_left > TARDA_SALTO && rene.x >= RANA_ANCHO/2 + rene.dx)
+        if(timer_left > TARDA_SALTO && rene.x >= CASILLA_ANCHO/2 + rene.dx)
         {
             rene.x -= rene.dx;
         }
@@ -184,6 +183,7 @@ static void initialize_frog(void)
     rene.y = MUNDO_ALTO - CASILLA_ALTO/2.0;
     rene.dy = VELOCIDAD_RANA_ALTO;
     rene.dx = VELOCIDAD_RANA_ANCHO;
+    rene.dx_extra = 0;
 }
 
 

@@ -58,6 +58,7 @@ typedef struct
     
     double x, y;
     double dx, dy;
+    double dx_extra;
     
 }RANA;
 
