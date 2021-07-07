@@ -82,12 +82,12 @@ void frogger (void)
             
             if(colision())
             {
-                estado_juego = INICIO;
+               //estado_juego = INICIO;
             }
             
             if((rana_sobre_tronco() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
             {
-                   estado_juego = INICIO;
+                  //estado_juego = INICIO;
             }
             
             break;

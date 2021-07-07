@@ -1,16 +1,17 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 
 #include "juego.h"
 #include "colisiones.h"
+#include "display.h"
 
-#include "/home/ivan/Repositorios/TP-FINAL-FROGGER/librerias/libs/joydisp/disdrv.h"
-#include "/home/ivan/Repositorios/TP-FINAL-FROGGER/librerias/libs/joydisp/joydrv.h"
-#include "/home/ivan/Repositorios/TP-FINAL-FROGGER/librerias/libs/joydisp/termlib.h"
+#include "/home/pi/libs/joydisp/disdrv.h"
+#include "/home/pi/libs/joydisp/joydrv.h"
+#include "/home/pi/libs/joydisp/termlib.h"
 
 #define THRESHOLD 40	//Límite a partir del cual se mueve el LED encendido
-void vidas(int n);
+
 
 void init_display()
 {
@@ -19,82 +20,53 @@ void init_display()
     disp_clear();
 }
 
-int main2(int argc, char** argv) {
-    
+void redraw_disp (void) 
 {
-								//limpia todo el display
-	dcoord_t pos = {DISP_MAX_X>>1 , DISP_MAX_Y-2};	//pos es la posición actual, empieza en el centro y abajo de todo(14x13)
-	dcoord_t npos = pos;							//npos es la próxima posición
-	
-	jcoord_t coord = {0,0};	
-        time_t timer;
-        time(&timer);
-        
-        while(difftime(time(NULL),timer) < 2)
+    int i;
+    int j;
+    int k;
+    int l;
+    dcoord_t coord;
+    for (i=0 ; i<DISP_CANT_X_DOTS ; i++)
+    {
+        for (j=0 ; j<DISP_CANT_Y_DOTS ; j++)
         {
-            printf("%f", difftime(time(NULL),timer));
+            coord.x = i;
+            coord.y = j;
+            disp_write(coord, D_OFF);
         }
-        //coordenadas medidas del joystick
-	
+    }
+  
+    print_object_display(rene.x, rene.y, D_ON);
+    for (k=0 ; k<FILAS_DE_AUTOS ; k++)
+    {
+        for (l=0 ; l<AUTOS_POR_FILA ; l++)
+        {
+            if ((autos[k][l].x/CASILLA_ANCHO < DISP_CANT_X_DOTS)&&(autos[k][l].x/CASILLA_ANCHO > 0))
+            {
+                print_object_display(autos[k][l].x, autos[k][l].y,D_ON);               
+            }
+
+        }
+    }
+       
     vidas(3);
-	do
-	{
-		printf(CYAN_TEXT "Joystick: (%4d,%4d)" , coord.x, coord.y);	//Imprime las coordenadas del joystick
-		printf(WHITE_TEXT " | ");
-		printf(RED_TEXT "Display: (%2d,%2d)\n" , npos.x, npos.y);	//Imprime la posición del LED encendio
+	
+	
 		
-		disp_update();	//Actualiza el display con el contenido del buffer
+/*		disp_update();	//Actualiza el display con el contenido del buffer
 		joy_update();	//Mide las coordenadas del joystick
 		coord = joy_get_coord();	//Guarda las coordenadas medidas
 		
-		//Establece la próxima posición según las coordenadas medidas
-		if(coord.x > THRESHOLD && npos.x < DISP_MAX_X-1)//si movi el joystick lo suficiente para la derecha y no esta en el borde der
-		{
-			npos.x++;//derecha
-		}
-		if(coord.x < -THRESHOLD && npos.x > DISP_MIN) //si movi el joystick lo suficiente para la izq y no esta en el borde izq
-		{
-			npos.x--;//izquierda
-		}
-		if(coord.y > THRESHOLD && npos.y > DISP_MIN)//si movi el joystick lo suficiente para abajo y no esta abajo de todo
-		{
-			npos.y--;//baja
-		}
-		if(coord.y < -THRESHOLD && npos.y < DISP_MAX_Y-2)//si movi el joystick lo suficiente para arriba y no esta arriba de todo
-		{
-			npos.y++;//sube
-		}
+		
 		
 		disp_write(pos,D_OFF);	//apaga la posición vieja en el buffer
 		disp_write(npos,D_ON);	//enciende la posición nueva en el buffer
 		pos = npos;				//actualiza la posición actual
 		
-		int i;
-		int j;
-		
-		for (i=0 ; i<FILAS_DE_AUTOS ; i++)
-		{
-			for (j=0 ; j<AUTOS_POR_FILA ; j++)
-			{
-				dcoord_t posE = {DISP_MIN+ i, (DISP_MIN+2)*j};
-				disp_write(posE,D_ON);
-						dcoord_t nposE = posE;
-		while (nposE.x>DISP_MIN && posE.x > DISP_MIN)
-		{
-		posE.x++;
-		disp_write(posE, D_ON);
-		nposE.x--;
-		disp_write(nposE, D_OFF);
-		}	
-			}
-
-		}
-
-		
-		
-	} while( joy_get_switch() == J_NOPRESS );	//termina si se presiona el switch
-}
-
+        }
+*/
+    disp_update();
 }
 
 
@@ -180,6 +152,7 @@ void display_teclas (void)
     if(coord.y > THRESHOLD)
     {
         key_pressed[KEY_UP] = true;
+        printf("subo");
     }
     else
     {
@@ -189,6 +162,7 @@ void display_teclas (void)
     if(coord.y < -THRESHOLD)
     {
         key_pressed[KEY_DOWN] = true;
+        printf("bajo");
     }
     else
     {
@@ -214,14 +188,26 @@ void print_object_display (double x, double y, int estado)
     disp_write(coordenadas,estado);	//enciende o apaga una posición en el buffer
 }
 
-void timer(double h)
+bool timer(void)
 {
-    clock_t t;
-    t = clock();
-    while (clock() - t < CLOCKS_PER_SEC * h)
+    static bool flag = true;
+    static clock_t t;       
+    if (flag == true)
     {
-        //sacar esta función y hacer funcionar todo el tema de los fps
+        t = clock();
+    }
+
+    if (clock() -t < CLOCKS_PER_SEC/20/REFRESCO)
+    {
+        flag = false;
+        return false;
+    }
+    else
+    {
+        flag = true;
+        return true; 
+        
     }
 }
- * 
- */
+ 
+ 

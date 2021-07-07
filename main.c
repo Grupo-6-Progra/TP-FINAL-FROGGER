@@ -4,6 +4,11 @@
 #include <stdbool.h>
 
 #include "juego.h"
+
+#define RASPI
+#ifndef RASPI
+
+
 #include "allegro_funciones.h"
 
 #include <allegro5/allegro.h>
@@ -14,7 +19,7 @@ int main (void)
 {    
     bool redraw = false;
     bool do_exit = false;
-    
+
     if(allegro_startup() == false)
     {
         return -1;
@@ -27,6 +32,8 @@ int main (void)
     
     al_start_timer(timer);
     ALLEGRO_EVENT ev;
+    
+
     
     while (!do_exit)
     {
@@ -65,6 +72,43 @@ int main (void)
     }
 
     allegro_destroy();
-    
-    return 0;
+        return 0;
 }
+    
+#else
+   #include "display.h"
+  int main (void)
+  {
+      bool redraw = false;
+      bool do_exit = false;
+      init_display();
+      while (!do_exit)
+      {
+        if (timer())
+        {   printf ("hola");
+            redraw = true;  //paso un frame  
+            frogger();
+        }
+        else 
+        {
+            display_teclas();
+        }
+        
+        if (redraw == true)
+        {
+            redraw_disp();
+            redraw = false;
+        }
+      }
+      
+      return 0;
+      
+  }
+    
+    
+    
+#endif
+    
+    
+
+

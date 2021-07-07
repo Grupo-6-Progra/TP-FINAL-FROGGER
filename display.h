@@ -18,7 +18,12 @@
 extern "C" {
 #endif
 
-
+    void redraw_disp(void);
+    bool timer (void);
+    void print_object_display (double , double, int);
+    void display_teclas(void);
+    void vidas(int);
+    void init_display(void);
 
 
 #ifdef __cplusplus
