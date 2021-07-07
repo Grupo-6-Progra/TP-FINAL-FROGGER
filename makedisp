@@ -1,9 +1,0 @@
-prueba: prueba.o 
-	gcc prueba.o -o prueba /home/ivan/Repositorios/TP-FINAL-FROGGER/librerias/libs/joydisp/disdrv.o /home/ivan/Repositorios/TP-FINAL-FROGGER/librerias/libs/joydisp/joydrv.o /home/ivan/Repositorios/TP-FINAL-FROGGER/librerias/libs/joydisp/termlib.o -Wall
-	
-prueba.o: pruebadisp.c juego.h colisiones.h
-	gcc pruebadisp.c -c -o prueba.o  -Wall
-
-
-
-

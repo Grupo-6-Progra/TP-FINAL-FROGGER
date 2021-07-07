@@ -7,10 +7,12 @@
 
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
+#include <allegro5/allegro_ttf.h> 
 #include <allegro5/allegro_primitives.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_image.h>
+
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -26,6 +28,9 @@ extern ALLEGRO_TIMER * timer;
 extern ALLEGRO_BITMAP * mundo_buffer;
 extern ALLEGRO_BITMAP * al_rene;
 extern ALLEGRO_BITMAP * al_auto_fila1;
+extern ALLEGRO_FONT * font;
+
+extern char vidas_restantes;
 
 
 /***************************************************
@@ -41,6 +46,8 @@ void allegro_initialize_bitmaps(void);
 void allegro_destroy(void);
 
 bool allegro_teclas (ALLEGRO_EVENT *);
+
+void allegro_fuentes (void);
 
 void allegro_redraw(void);
 

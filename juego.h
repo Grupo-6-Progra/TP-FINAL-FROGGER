@@ -11,7 +11,7 @@
 
 enum ESTADO_JUEGO
 {
-    INICIO, PAUSA, JUEGO, MENU
+    INICIO, REINICIO, PAUSA, JUEGO, PERDER, MENU
 };
 
 extern int estado_juego;

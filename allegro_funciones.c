@@ -9,6 +9,7 @@
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_image.h>
+#include <allegro5/allegro_ttf.h>
 
 /*****************************************************
  * CONSTANTES PARA ALLEGRO
@@ -27,14 +28,15 @@
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
-ALLEGRO_DISPLAY * display;
+ALLEGRO_DISPLAY     * display;
 ALLEGRO_EVENT_QUEUE * event_queue;
-ALLEGRO_TIMER * timer;
-ALLEGRO_BITMAP * mundo_buffer;
-ALLEGRO_BITMAP * al_rene;
-ALLEGRO_BITMAP * al_auto_fila1;
-ALLEGRO_BITMAP * al_tronco1;
-ALLEGRO_BITMAP * fondo;
+ALLEGRO_TIMER       * timer;
+ALLEGRO_BITMAP      * mundo_buffer;
+ALLEGRO_BITMAP      * al_rene;
+ALLEGRO_BITMAP      * al_auto_fila1;
+ALLEGRO_BITMAP      * al_tronco1;
+ALLEGRO_BITMAP      * fondo;
+ALLEGRO_FONT        * font;
 
 
 /**********************************************************************************
@@ -49,6 +51,19 @@ bool allegro_startup (void)
     {
         fprintf(stderr, "failed to initialize allegro!\n");
         return false;
+    }
+    
+    if (!al_init_font_addon()) // Inicializa el complemento de fuentes
+    {
+        fprintf(stderr, "failed to initialize the fonts!\n");
+        return false;
+    }
+    
+    if (!al_init_ttf_addon()) // Inicializa el complemento que permite reconocer fuentes ttf
+    {
+        fprintf(stderr, "failed to initialize the ttf addon!\n");
+        return false;
+        
     }
     
     if(!al_init_image_addon())
@@ -147,8 +162,6 @@ bool allegro_startup (void)
         return false;
     }
     
-    
-    
     return true;
 }
 
@@ -157,6 +170,16 @@ void allegro_event_register(void)
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
+}
+
+void allegro_fuentes(void)
+{
+    font = al_load_ttf_font("Karumbi-Regular.ttf", 40, 0); //asigno la fuente que voy a usar
+
+    if (!font) {
+        fprintf(stderr, "Could not load 'disney.ttf'.\n");
+        return;
+    }
 }
 
 bool allegro_teclas (ALLEGRO_EVENT * ev)
@@ -242,6 +265,33 @@ void allegro_redraw(void)
     //al_clear_to_color(al_map_rgb(0,0,0));
     al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
     
+    switch(vidas_restantes)
+    {
+        case 1:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "1");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+        case 2:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "2");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+        case 3:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "3");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+        default:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "Error, algo salió mal");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+    }
 
     unsigned int i;
     unsigned int j,k;
@@ -265,6 +315,8 @@ void allegro_redraw(void)
     }
 
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
+    
+    
     
     al_set_target_backbuffer(display);
     al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);

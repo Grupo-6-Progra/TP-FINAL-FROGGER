@@ -28,7 +28,7 @@
 /***************************************************
  *  DECLARACIÓN DE FUNCIONES LOCALES
 ***************************************************/
-static void move_frog (void);
+static void move_frog (bool);
 
 static void initialize_frog(void);
 
@@ -41,12 +41,14 @@ static void enemigos (unsigned int);
 static void move_enemies(void);
 static void move_autos(void);
 static void move_troncos(void);
-
+static int game_over(void);
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
 int estado_juego = INICIO;
+
+char vidas_restantes = 3;
 
 bool key_pressed[TECLAS_MAX] = {false,false,false,false,false};
 
@@ -67,38 +69,81 @@ TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA];
 
 void frogger (void)
 {
+    static int choque_en_proceso = 0;
+    static int nivel = 4;
+    bool choque = false;
     switch(estado_juego)
     {
+        
         case INICIO:
-            initialize_enemies (2);
+        {
+            vidas_restantes = 3;
+            initialize_enemies (1);
             initialize_frog();
             estado_juego = JUEGO;
-            
             break;
-        
-        case JUEGO:
-            move_enemies();
-            move_frog();
-            
-            if(colision())
+        }
+        case REINICIO: //caso al que se entra cuando se pierde una vida
+        {
+            if(vidas_restantes == 0)
             {
-                estado_juego = INICIO;
+                estado_juego = PERDER;
+            }
+            else
+            {
+                initialize_enemies (nivel);
+                initialize_frog();
+                estado_juego = JUEGO;
             }
             
-            if(rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO)
+            break;
+        }
+        
+        case JUEGO:
+        {
+            if (choque_en_proceso > 0)
             {
-                if (rana_sobre_tronco() == false)
+                choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
+            }
+            else
+            {
+                move_enemies();
+
+                choque = colision();
+
+                move_frog(choque);
+
+                if(choque == true)
                 {
-                    estado_juego = INICIO;
+                    vidas_restantes--;
+                    choque_en_proceso = 15; //la idea de hacer esto es que cuando muera espere un ratito, despues hacemos otra cosa
+                    estado_juego = REINICIO;
+                }
+
+                if(rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO)
+                {
+                    if (rana_sobre_tronco() == false)
+                    {
+                        vidas_restantes--;
+                        estado_juego = REINICIO;
+                    }
                 }
             }
             
             break;
-            
+        }
         case PAUSA:
-            
+        {
             break;
-            
+        }   
+        case PERDER:
+        {
+            if(!game_over())
+            {
+                estado_juego = INICIO;
+            }
+            break;
+        }
      
     }
 }
@@ -112,69 +157,81 @@ void frogger (void)
  ******************************************************************************************
 *******************************************************************************************/
 
-static void move_frog (void)
+static void move_frog (bool choque)
 {
     static unsigned int timer_up = 0, timer_down = 0, timer_right = 0, timer_left = 0;
     
-    if ((key_pressed[KEY_UP] == true || timer_up != 0 ) && timer_down == 0 && timer_right == 0 && timer_left == 0)
+    if (choque == true)
     {
-        if(timer_up == 0)
-        {
-            timer_up = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
-        }
-        
-        if(timer_up > TARDA_SALTO && rene.y >= RANA_ALTO/2 + rene.dy)
-        {
-             rene.y -= rene.dy;
-        }
-        
-        timer_up--;
-        
+        timer_up = 0;
+        timer_down = 0;
+        timer_left = 0;
+        timer_right = 0;
     }
     
-    if ( (key_pressed[KEY_DOWN] == true || timer_down != 0 ) && timer_up == 0 && timer_right == 0 && timer_left == 0)
+    else
     {
-        if(timer_down == 0)
+
+        if ((key_pressed[KEY_UP] == true || timer_up != 0 ) && timer_down == 0 && timer_right == 0 && timer_left == 0)
         {
-            timer_down = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
+            if(timer_up == 0)
+            {
+                timer_up = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
+            }
+
+            if(timer_up > TARDA_SALTO && rene.y >= RANA_ALTO/2 + rene.dy)
+            {
+                 rene.y -= rene.dy;
+            }
+
+            timer_up--;
+
         }
-        
-        if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - RANA_ALTO/2 -rene.dy)
+
+        if ( (key_pressed[KEY_DOWN] == true || timer_down != 0 ) && timer_up == 0 && timer_right == 0 && timer_left == 0)
         {
-            rene.y += rene.dy;
+            if(timer_down == 0)
+            {
+                timer_down = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
+            }
+
+            if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - RANA_ALTO/2 -rene.dy)
+            {
+                rene.y += rene.dy;
+            }
+
+            timer_down--;
         }
-        
-        timer_down--;
-    }
-    
-    if ((key_pressed[KEY_RIGHT] == true || timer_right != 0 ) && timer_down == 0 && timer_up== 0 && timer_left == 0)
-    {
-        if(timer_right == 0)
+
+        if ((key_pressed[KEY_RIGHT] == true || timer_right != 0 ) && timer_down == 0 && timer_up== 0 && timer_left == 0)
         {
-            timer_right = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
+            if(timer_right == 0)
+            {
+                timer_right = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
+            }
+
+            if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - RANA_ANCHO/2 - rene.dx)
+            {
+                rene.x += rene.dx;
+            }
+
+            timer_right--;
         }
-        
-        if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - RANA_ANCHO/2 - rene.dx)
+
+        if ((key_pressed[KEY_LEFT] == true || timer_left != 0 ) && timer_down == 0 && timer_right == 0 && timer_up == 0)
         {
-            rene.x += rene.dx;
+            if(timer_left == 0)
+            {
+                timer_left = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
+            }
+
+            if(timer_left > TARDA_SALTO && rene.x >= RANA_ANCHO/2 + rene.dx)
+            {
+                rene.x -= rene.dx;
+            }
+
+            timer_left--;
         }
-        
-        timer_right--;
-    }
-    
-    if ((key_pressed[KEY_LEFT] == true || timer_left != 0 ) && timer_down == 0 && timer_right == 0 && timer_up == 0)
-    {
-        if(timer_left == 0)
-        {
-            timer_left = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
-        }
-        
-        if(timer_left > TARDA_SALTO && rene.x >= RANA_ANCHO/2 + rene.dx)
-        {
-            rene.x -= rene.dx;
-        }
-        
-        timer_left--;
     }
 }
 
@@ -303,4 +360,26 @@ static void move_troncos(void)
             troncos[j][k].x += troncos[j][k].dx;
         }
     }
+}
+
+static int game_over (void)
+{
+    static int contador_de_frames = 0;
+    if (contador_de_frames == 0)
+    {
+        contador_de_frames = CANT_CASILLAS_FILA * CANT_CASILLAS_COLUMNA;
+        rene.x = CASILLA_ANCHO / 2.0;
+        rene.y = CASILLA_ALTO / 2.0;
+    }
+    contador_de_frames--;
+    if(rene.x <= MUNDO_ANCHO - RANA_ANCHO / 2.0)
+    {
+        rene.x += rene.dx * TARDA_SALTO;
+    }
+    else
+    {
+        rene.x = CASILLA_ANCHO / 2.0;
+        rene.y = CASILLA_ALTO * (CANT_CASILLAS_FILA * CANT_CASILLAS_COLUMNA - contador_de_frames) + CASILLA_ALTO/2.0;
+    }
+    return contador_de_frames;
 }
