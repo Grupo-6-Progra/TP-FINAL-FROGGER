@@ -120,13 +120,10 @@ void frogger (void)
                     estado_juego = REINICIO;
                 }
 
-                if(rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO)
+                if((rana_sobre_tronco() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
                 {
-                    if (rana_sobre_tronco() == false)
-                    {
                         vidas_restantes--;
                         estado_juego = REINICIO;
-                    }
                 }
             }
             
@@ -160,6 +157,8 @@ void frogger (void)
 static void move_frog (bool choque)
 {
     static unsigned int timer_up = 0, timer_down = 0, timer_right = 0, timer_left = 0;
+    
+    rene.x += rene.dx_extra; //se mueve la rana la velocidad extra adquirida por un tronco o tortuga
     
     if (choque == true)
     {
