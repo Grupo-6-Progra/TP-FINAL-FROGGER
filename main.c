@@ -15,6 +15,7 @@ int main (void)
     bool redraw = false;
     bool do_exit = false;
     
+    
     if(allegro_startup() == false)
     {
         return -1;
@@ -24,6 +25,7 @@ int main (void)
 
     allegro_initialize_bitmaps();
     
+    allegro_fuentes();
     
     al_start_timer(timer);
     ALLEGRO_EVENT ev;

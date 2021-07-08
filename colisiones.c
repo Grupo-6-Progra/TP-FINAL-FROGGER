@@ -1,4 +1,3 @@
-
 #include <stdbool.h>
 #include "colisiones.h"
 /**********************************************************/
@@ -33,11 +32,11 @@ bool rana_sobre_tronco(void)
             if (choque (troncos[j][k].x, troncos[j][k].y, troncos[j][k].largo, troncos[j][k].alto, rene.x, rene.y, RANA_ANCHO, RANA_ALTO) == true)
             {
                 rene.dx_extra = troncos[j][k].dx;
+                
                 return true;
             }
         }
     } // si choca un tronco, adquiere su velocidad
-    
     rene.dx_extra = 0;
     return false;
 }
