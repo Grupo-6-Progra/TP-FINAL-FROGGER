@@ -35,8 +35,20 @@ ALLEGRO_BITMAP      * mundo_buffer;
 ALLEGRO_BITMAP      * al_rene;
 ALLEGRO_BITMAP      * al_auto_fila1;
 ALLEGRO_BITMAP      * al_tronco1;
+ALLEGRO_BITMAP      * al_tronco2;
+ALLEGRO_BITMAP      * al_tronco3;
+ALLEGRO_BITMAP      * al_tortuga1;
+ALLEGRO_BITMAP      * al_tortuga2;
 ALLEGRO_BITMAP      * fondo;
 ALLEGRO_FONT        * font;
+
+/***************************************************
+ *  DECLARACIÓN DE FUNCIONES LOCALES
+***************************************************/
+static void redraw_autos(void);
+static void redraw_troncos(void);
+static void redraw_tortugas(void);
+
 
 
 /**********************************************************************************
@@ -123,7 +135,7 @@ bool allegro_startup (void)
         return false;
     }
     
-    al_tronco1 = al_create_bitmap(CASILLA_ANCHO*2, CASILLA_ALTO);
+    al_tronco1 = al_create_bitmap(CASILLA_ANCHO*3, CASILLA_ALTO);
     if(!al_tronco1)
     {
         fprintf(stderr, "failed to create al_tronco1!\n");
@@ -132,6 +144,64 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(al_rene);
         al_destroy_bitmap(al_auto_fila1);
+        return false;
+    }
+    
+    al_tronco2 = al_create_bitmap(CASILLA_ANCHO*5, CASILLA_ALTO);
+    if(!al_tronco2)
+    {
+        fprintf(stderr, "failed to create al_tronco2!\n");
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(al_rene);
+        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(al_tronco1);
+        return false;
+    }
+    
+    al_tronco3 = al_create_bitmap(CASILLA_ANCHO*4, CASILLA_ALTO);
+    if(!al_tronco3)
+    {
+        fprintf(stderr, "failed to create al_tronco3!\n");
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(al_rene);
+        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(al_tronco1);
+        al_destroy_bitmap(al_tronco2);
+        return false;
+    }
+    
+    al_tortuga1 = al_create_bitmap(CASILLA_ANCHO*3, CASILLA_ALTO);
+    if(!al_tortuga1)
+    {
+        fprintf(stderr, "failed to create al_tronco3!\n");
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(al_rene);
+        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(al_tronco1);
+        al_destroy_bitmap(al_tronco2);
+        al_destroy_bitmap(al_tronco3);
+        return false;
+    }
+    
+    al_tortuga2 = al_create_bitmap(CASILLA_ANCHO*2, CASILLA_ALTO);
+    if(!al_tortuga2)
+    {
+        fprintf(stderr, "failed to create al_tronco3!\n");
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(al_rene);
+        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(al_tronco1);
+        al_destroy_bitmap(al_tronco2);
+        al_destroy_bitmap(al_tronco3);
+        al_destroy_bitmap(al_tortuga1);
         return false;
     }
     
@@ -145,6 +215,10 @@ bool allegro_startup (void)
         al_destroy_bitmap(al_rene);
         al_destroy_bitmap(al_auto_fila1);
         al_destroy_bitmap(al_tronco1);
+        al_destroy_bitmap(al_tronco2);
+        al_destroy_bitmap(al_tronco3);
+        al_destroy_bitmap(al_tortuga1);
+        al_destroy_bitmap(al_tortuga2);
         return false;
     }
     
@@ -158,6 +232,10 @@ bool allegro_startup (void)
         al_destroy_bitmap(al_rene);
         al_destroy_bitmap(al_auto_fila1);
         al_destroy_bitmap(al_tronco1);
+        al_destroy_bitmap(al_tronco2);
+        al_destroy_bitmap(al_tronco3);
+        al_destroy_bitmap(al_tortuga1);
+        al_destroy_bitmap(al_tortuga2);
         al_destroy_bitmap(fondo);
         return false;
     }
@@ -250,13 +328,35 @@ void allegro_initialize_bitmaps(void)
     al_set_target_bitmap(al_auto_fila1);
     al_clear_to_color(al_map_rgb(150,152,154));
     
+    
+    
     al_set_target_bitmap(al_tronco1);
     al_clear_to_color(al_map_rgb(80,40,0));
+    
+    al_set_target_bitmap(al_tronco2);
+    al_clear_to_color(al_map_rgb(80,40,0));
+    
+    al_set_target_bitmap(al_tronco3);
+    al_clear_to_color(al_map_rgb(80,40,0));
+    
+    
+    al_set_target_bitmap(al_tortuga1);
+    al_clear_to_color(al_map_rgb(255,0,0));
+    
+    al_set_target_bitmap(al_tortuga2);
+    al_clear_to_color(al_map_rgb(255,0,0));
+    
     
     al_set_target_bitmap(al_get_backbuffer(display));
     al_clear_to_color(al_map_rgb(0, 0, 0));
     al_flip_display();
 }
+
+/*************************************************************************
+ * 
+ * REDRAW
+ * 
+ ***************************************************************************/
 
 
 void allegro_redraw(void)
@@ -293,27 +393,18 @@ void allegro_redraw(void)
         }
     }
 
-    unsigned int i;
-    unsigned int j,k;
-    
     
     //IMPRESION DE LOS AUTOS
-    for(j=0; j < FILAS_DE_AUTOS; j++)
-    {
-        for(k=0; k<AUTOS_POR_FILA; k++)
-        {
-            al_draw_bitmap(al_auto_fila1, autos[j][k].x - autos[j][k].largo/2, autos[j][k].y - autos[j][k].alto/2, 0);
-        }
-    }
+    redraw_autos();
     
-    for(j=0; j < FILAS_DE_TRONCOS; j++)
-    {
-        for(k=0; k < TRONCOS_POR_FILA; k++)
-        {
-            al_draw_bitmap(al_tronco1, troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, 0);
-        }
-    }
-
+    
+    //impresión de troncos
+    redraw_troncos();
+    
+    //IMPRESIÓN DE TORTUGAS
+    redraw_tortugas();
+    
+    //IMPRESIÓN DE LA RANA
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
     
     
@@ -324,14 +415,83 @@ void allegro_redraw(void)
     al_flip_display();
 }
 
+static void redraw_autos(void)
+{
+    unsigned int j,k;
+    
+    //IMPRESION DE LOS AUTOS
+    for(j=0; j < FILAS_DE_AUTOS; j++)
+    {
+        for(k=0; k<AUTOS_POR_FILA; k++)
+        {
+            al_draw_bitmap(al_auto_fila1, autos[j][k].x - autos[j][k].largo/2, autos[j][k].y - autos[j][k].alto/2, 0);
+        }
+    }
+}
+
+static void redraw_troncos(void)
+{
+    unsigned int j,k;
+    //impresión de troncos
+    for(j=0; j < FILAS_DE_TRONCOS; j++)
+    {
+        for(k=0; k < TRONCOS_POR_FILA; k++)
+        {
+            if(j == 0)
+            {
+                al_draw_bitmap(al_tronco1, troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, 0);
+            }
+            if(j == 1)
+            {
+                al_draw_bitmap(al_tronco2, troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, 0);
+            }
+            if(j == 2)
+            {
+                al_draw_bitmap(al_tronco3, troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, 0);
+            }
+        }
+    }
+}
+
+static void redraw_tortugas(void)
+{
+    unsigned int j,k;
+    //impresión de troncos
+    for(j=0; j < FILAS_DE_TORTUGAS; j++)
+    {
+        for(k=0; k < TORTUGAS_POR_FILA; k++)
+        {
+            if(tortugas[j][k].hundirse == false)
+            {
+                if(j == 0)
+                {
+                    al_draw_bitmap(al_tortuga1, tortugas[j][k].x - tortugas[j][k].largo/2, tortugas[j][k].y - tortugas[j][k].alto/2, 0);
+                }
+                
+                if(j == 1)
+                {
+                    al_draw_bitmap(al_tortuga2, tortugas[j][k].x - tortugas[j][k].largo/2, tortugas[j][k].y - tortugas[j][k].alto/2, 0);
+                }
+            }
+        }
+    }
+    
+}
+
+
 void allegro_destroy(void)
 {
-    al_destroy_bitmap(fondo);
-    al_destroy_bitmap(al_tronco1);
-    al_destroy_bitmap(al_auto_fila1);
-    al_destroy_bitmap(al_rene);
-    al_destroy_bitmap(mundo_buffer);
+
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
+    al_destroy_bitmap(mundo_buffer);
+    al_destroy_bitmap(al_rene);
+    al_destroy_bitmap(al_auto_fila1);
+    al_destroy_bitmap(al_tronco1);
+    al_destroy_bitmap(al_tronco2);
+    al_destroy_bitmap(al_tronco3);
+    al_destroy_bitmap(al_tortuga1);
+    al_destroy_bitmap(al_tortuga2);
+    al_destroy_bitmap(fondo);
     al_destroy_display(display);
 }

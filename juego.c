@@ -3,6 +3,8 @@
 
 #include <math.h>
 #include <tgmath.h>
+#include <stdbool.h>
+#include <stdio.h>
 
 /***************************************************
  * VELOCIDADES Y TIEMPOS DE LA RANA
@@ -35,12 +37,14 @@ static void initialize_frog(void);
 static void initialize_enemies (unsigned int nivel);
 static void initialize_autos(unsigned int);
 static void initialize_troncos(unsigned int);
+static void initialize_tortugas(unsigned int nivel);
 
-static void enemigos (unsigned int);
 
 static void move_enemies(void);
 static void move_autos(void);
 static void move_troncos(void);
+static void move_tortugas(void);
+
 static int game_over(void);
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
@@ -57,6 +61,8 @@ RANA rene;
 AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
 
 TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA];
+
+TORTUGAS tortugas[FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA];
 
 
 /******************************************************************************************
@@ -120,7 +126,7 @@ void frogger (void)
                     estado_juego = REINICIO;
                 }
 
-                if((rana_sobre_tronco() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
+                if((rana_sobre_tronco() == false) && (rana_sobre_tortuga() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
                 {
                         vidas_restantes--;
                         estado_juego = REINICIO;
@@ -158,7 +164,10 @@ static void move_frog (bool choque)
 {
     static unsigned int timer_up = 0, timer_down = 0, timer_right = 0, timer_left = 0;
     
-    rene.x += rene.dx_extra; //se mueve la rana la velocidad extra adquirida por un tronco o tortuga
+    if((rene.x <= MUNDO_ANCHO - RANA_ANCHO/2 - rene.dx_extra) && (rene.x >= RANA_ANCHO/2 + rene.dx_extra))
+    {
+        rene.x += rene.dx_extra; //se mueve la rana la velocidad extra adquirida por un tronco o tortuga
+    }
     
     if (choque == true)
     {
@@ -178,7 +187,7 @@ static void move_frog (bool choque)
                 timer_up = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
             }
 
-            if(timer_up > TARDA_SALTO && rene.y >= RANA_ALTO/2 + rene.dy)
+            if(timer_up > TARDA_SALTO && rene.y >=  CASILLA_ALTO/2 + rene.dy)
             {
                  rene.y -= rene.dy;
             }
@@ -194,7 +203,7 @@ static void move_frog (bool choque)
                 timer_down = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
             }
 
-            if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - RANA_ALTO/2 -rene.dy)
+            if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - CASILLA_ALTO/2 -rene.dy)
             {
                 rene.y += rene.dy;
             }
@@ -209,7 +218,7 @@ static void move_frog (bool choque)
                 timer_right = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
             }
 
-            if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - RANA_ANCHO/2 - rene.dx)
+            if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - CASILLA_ANCHO/2 - rene.dx)
             {
                 rene.x += rene.dx;
             }
@@ -224,7 +233,7 @@ static void move_frog (bool choque)
                 timer_left = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
             }
 
-            if(timer_left > TARDA_SALTO && rene.x >= RANA_ANCHO/2 + rene.dx)
+            if(timer_left > TARDA_SALTO && rene.x >= CASILLA_ANCHO/2 + rene.dx)
             {
                 rene.x -= rene.dx;
             }
@@ -257,6 +266,7 @@ static void initialize_enemies (unsigned int nivel)
 {
     initialize_autos(nivel);
     initialize_troncos(nivel);
+    initialize_tortugas(nivel);
 }
 
 static void initialize_autos(unsigned int nivel)
@@ -283,15 +293,81 @@ static void initialize_troncos(unsigned int nivel)
     int k;
     for(j=0; j < FILAS_DE_TRONCOS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
     {
-        for(k=0; k < TRONCOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
-        {
-            troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
-            troncos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
-            troncos[j][k].y = (CANT_CASILLAS_COLUMNA - 6 - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-            troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
-            troncos[j][k].largo = CASILLA_ANCHO * 2;                          //Cada enemigo será tan ancho como una casilla
-            troncos[j][k].alto = CASILLA_ALTO;
+        if(j == 0)
+        {       
+            for(k = 0; k < TRONCOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+            {
+                troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                troncos[j][k].fila = 8;                                                                                 //necesito que los autos empiecen en la fila 1
+                troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                troncos[j][k].largo = CASILLA_ANCHO * 3;                          //Cada enemigo será tan ancho como una casilla
+                troncos[j][k].alto = CASILLA_ALTO;
+            }
         }
+        
+        if(j == 1)
+        {
+            for(k = 0; k < TRONCOS_POR_FILA; k++) 
+            {
+                troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                troncos[j][k].fila = 9;                                                                                      //necesito que los autos empiecen en la fila 1
+                troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                troncos[j][k].largo = CASILLA_ANCHO * 5;                          //Cada enemigo será tan ancho como una casilla
+                troncos[j][k].alto = CASILLA_ALTO;
+            }
+        }
+        
+        if(j == 2)
+        {
+            for(k = 0; k < TRONCOS_POR_FILA; k++) 
+            {
+                troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                troncos[j][k].fila = 11;                                                                                      //necesito que los autos empiecen en la fila 1
+                troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                troncos[j][k].largo = CASILLA_ANCHO * 4;                          //Cada enemigo será tan ancho como una casilla
+                troncos[j][k].alto = CASILLA_ALTO;
+            }
+        }
+        
+    }
+}
+
+static void initialize_tortugas(unsigned int nivel)
+{
+    int j;
+    int k;
+    for(j=0; j < FILAS_DE_TORTUGAS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
+    {
+        if(j == 0)
+        {       
+            for(k = 0; k < TORTUGAS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+            {
+                tortugas[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                tortugas[j][k].fila = 7;                                                                                 //necesito que los autos empiecen en la fila 1
+                tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].largo = CASILLA_ANCHO * 3;                          //Cada enemigo será tan ancho como una casilla
+                tortugas[j][k].alto = CASILLA_ALTO;
+                tortugas[j][k].hundirse = false;
+            }
+        }
+        
+        if(j == 1)
+        {
+            for(k = 0; k < TORTUGAS_POR_FILA; k++) 
+            {
+                tortugas[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                tortugas[j][k].fila = 10;                                                                                 //necesito que los autos empiecen en la fila 1
+                tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].largo = CASILLA_ANCHO * 2;                          //Cada enemigo será tan ancho como una casilla
+                tortugas[j][k].alto = CASILLA_ALTO;
+                tortugas[j][k].hundirse = false;
+            }
+        }        
     }
 }
 
@@ -305,6 +381,7 @@ static void move_enemies(void)
 {
     move_autos();
     move_troncos();
+    move_tortugas();
 }
 
 static void move_autos(void)
@@ -360,6 +437,61 @@ static void move_troncos(void)
         }
     }
 }
+
+static void move_tortugas(void)
+{
+    unsigned int j, k;
+    static unsigned int timer_hundirse = FRAMES_HASTA_HUNDIRSE;
+    
+    for(j=0; j < FILAS_DE_TORTUGAS; j++)
+    {
+        
+        for(k=0; k < TORTUGAS_POR_FILA; k++)
+        {
+            /* Analizo si los enemigos están dentro del campo de movimiento
+             * , sino, los teletransporto al lado contrario de donde desaparecieron*/
+            
+            if(tortugas[j][k].x < -MUNDO_ANCHO/2.0 || tortugas[j][k].x > MUNDO_ANCHO*2.0)
+            {
+                tortugas[j][k].x = MUNDO_ANCHO/2.0 - ( (tortugas[j][k].dx / fabs(tortugas[j][k].dx)) * MUNDO_ANCHO);
+            
+            /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
+             *el primer paréntesis devuelve el signo y lo que sigue (Según sea el signo obtenido) suma o resta "un mundo" desde el centro
+             * del mundo (significado del primer MUNDO_ANCHO/2.0)
+             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
+             * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
+             */
+            }
+            tortugas[j][k].x += tortugas[j][k].dx;
+        }
+    }
+    
+    if (timer_hundirse == 0)
+    {
+        int i;
+        for (i=0; i<2; i++)
+        {
+            if (tortugas[i][0].hundirse == false)
+            {
+                tortugas[i][0].hundirse = true;
+            }
+            else
+            {
+                tortugas[i][0].hundirse = false;
+            }
+        }
+        
+        timer_hundirse = FRAMES_HASTA_HUNDIRSE;
+    }
+    
+    timer_hundirse--;
+}
+
+/**************************************
+ * 
+ * GAMER_OVER():
+ *  
+ ***************************************/
 
 static int game_over (void)
 {

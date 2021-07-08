@@ -84,19 +84,46 @@ typedef struct //Defino una estructura nueva para los enemigos
 
 extern AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA]; //Defino una sola matriz con todos los enemigos de un mismo tipo
 
-#define TRONCOS_POR_FILA      5
-#define FILAS_DE_TRONCOS     5
+/***************************************************
+ * TRONCOS
+ **************************************************/
 
-typedef struct //Defino una estructura nueva para los enemigos
+#define TRONCOS_POR_FILA        5
+#define FILAS_DE_TRONCOS        3
+
+typedef struct //Defino una estructura nueva para los troncos
 {
     double x, y;
     double dx, dy;
-    double largo;               //Posición, velocidad y largo del enemigo
+    double largo;               //Posición, velocidad y largo del TRONCO
     double alto;
-    unsigned int fila;          //Fila en la que se moverá el enemigo
+    unsigned int fila;          //Fila en la que se moverá el TRONCO
 }TRONCO;
 
 extern TRONCO troncos[FILAS_DE_TRONCOS][TRONCOS_POR_FILA]; //Defino una sola matriz con todos los enemigos de un mismo tipo
+
+/***************************************************
+ * TORTUGAS
+ **************************************************/
+
+#define TORTUGAS_POR_FILA       5
+#define FILAS_DE_TORTUGAS       2
+
+#define TIEMPO_HASTA_HUNDIRSE   2
+#define FRAMES_HASTA_HUNDIRSE   ((int)(REFRESCO * TIEMPO_HASTA_HUNDIRSE))
+
+typedef struct //Defino una estructura nueva para las tortugas
+{
+    double x, y;
+    double dx, dy;
+    double largo;               //Posición, velocidad y largo de LAS TORUGAS
+    double alto;
+    unsigned int fila;          //Fila en la que se moverá LAS TORTUGAS
+    bool hundirse;
+    
+}TORTUGAS;
+
+extern TORTUGAS tortugas[FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA]; //Defino una sola matriz con todas las tortugas
 
 /***************************************************
  * DECLARACIÓN DE FUNCIONES GLOBALES
