@@ -20,7 +20,7 @@
 #define BUFFER_W        MUNDO_ANCHO
 #define BUFFER_H        MUNDO_ALTO
 
-#define SCREEN_SCALE    1
+#define SCREEN_SCALE    1.5
 #define SCREEN_W        (BUFFER_W * SCREEN_SCALE)
 #define SCREEN_H        (BUFFER_H * SCREEN_SCALE)
 
@@ -365,17 +365,31 @@ void allegro_redraw(void)
     //al_clear_to_color(al_map_rgb(0,0,0));
     al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
     
-    switch(vidas_restantes)
+    
+    //IMPRESION DE LOS AUTOS
+    redraw_autos();
+    
+    
+    //impresión de troncos
+    redraw_troncos();
+    
+    //IMPRESIÓN DE TORTUGAS
+    redraw_tortugas();
+    
+    //IMPRESIÓN DE LA RANA
+    al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
+    
+    switch(tortugas[1][0].hundirse)
     {
-        case 1:
+        case true:
         {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "1");
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "true");
             //           fuente         color               ancho          alto    flag            texto
             break;
         }
-        case 2:
+        case false:
         {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "2");
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "false");
             //           fuente         color               ancho          alto    flag            texto
             break;
         }
@@ -392,22 +406,6 @@ void allegro_redraw(void)
             break;
         }
     }
-
-    
-    //IMPRESION DE LOS AUTOS
-    redraw_autos();
-    
-    
-    //impresión de troncos
-    redraw_troncos();
-    
-    //IMPRESIÓN DE TORTUGAS
-    redraw_tortugas();
-    
-    //IMPRESIÓN DE LA RANA
-    al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
-    
-    
     
     al_set_target_backbuffer(display);
     al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);
@@ -475,7 +473,6 @@ static void redraw_tortugas(void)
             }
         }
     }
-    
 }
 
 

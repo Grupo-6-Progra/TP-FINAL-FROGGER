@@ -63,6 +63,25 @@ bool rana_sobre_tortuga(void)
     return false;
 }
 
+bool rana_llego (void)
+{
+    int i;
+    
+    for (i = 0; i < CANT_CASILLAS_LLEGADA; i++)
+    {   
+        if (llegadas[i].ocupado == false)
+        {
+            if (choque (llegadas[i].x, llegadas[i].y, llegadas[i].ancho, llegadas[i].alto, rene.x, rene.y, 1, 1) == true)
+            {
+                llegadas[i].ocupado = true;
+
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 static bool choque (double x1, double y1, double ancho1, double alto1, double x2, double y2, double ancho2, double alto2)
 {
     if ((x1 + ancho1/2.0) < (x2 - ancho2/2.0))

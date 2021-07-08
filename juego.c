@@ -38,7 +38,7 @@ static void initialize_enemies (unsigned int nivel);
 static void initialize_autos(unsigned int);
 static void initialize_troncos(unsigned int);
 static void initialize_tortugas(unsigned int nivel);
-
+static void initialize_llegada(void);
 
 static void move_enemies(void);
 static void move_autos(void);
@@ -64,6 +64,8 @@ TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA];
 
 TORTUGAS tortugas[FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA];
 
+LLEGADA llegadas[CANT_CASILLAS_LLEGADA];
+
 
 /******************************************************************************************
  ******************************************************************************************
@@ -86,6 +88,7 @@ void frogger (void)
             vidas_restantes = 3;
             initialize_enemies (1);
             initialize_frog();
+            initialize_llegada();
             estado_juego = JUEGO;
             break;
         }
@@ -97,7 +100,7 @@ void frogger (void)
             }
             else
             {
-                initialize_enemies (nivel);
+                initialize_enemies (2);
                 initialize_frog();
                 estado_juego = JUEGO;
             }
@@ -111,6 +114,7 @@ void frogger (void)
             {
                 choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
             }
+            
             else
             {
                 move_enemies();
@@ -130,6 +134,20 @@ void frogger (void)
                 {
                         vidas_restantes--;
                         estado_juego = REINICIO;
+                }
+                
+                if((rene.y <= CASILLA_ALTO))
+                {
+                    if(rana_llego() == true)
+                    {
+                        initialize_frog();
+                    }
+                    
+                    else
+                    {
+                        vidas_restantes--;
+                        estado_juego = REINICIO;
+                    }
                 }
             }
             
@@ -251,6 +269,26 @@ static void initialize_frog(void)
     rene.dx = VELOCIDAD_RANA_ANCHO;
 }
 
+/**************************************
+ * 
+ * INITIALIZE_LLEGADA:
+ *  
+ ***************************************/
+
+static void initialize_llegada(void)
+{
+    int i;
+    
+    for(i = 0; i < CANT_CASILLAS_LLEGADA; i++)
+    {
+        llegadas[i].x = 0.5*CASILLA_ANCHO + i * (1.2+1.75) * CASILLA_ANCHO + 1.2*CASILLA_ANCHO/2.0;
+        llegadas[i].y = CASILLA_ALTO / 2.0;
+        llegadas[i].alto = CASILLA_ALTO;
+        llegadas[i].ancho = 1.2 * CASILLA_ANCHO;
+        llegadas[i].ocupado = false;
+    }
+    
+}
 
 /**************************************
  * 
@@ -259,11 +297,11 @@ static void initialize_frog(void)
  ***************************************/
 
 static void initialize_enemies (unsigned int nivel)
-/* 
+{
+    /* 
  * Funcion que dependiendo del nivel que se esté jugando, inicializará a los enemigos con velocidades distintas
  * Se encarga de inicializar todos los campos de todos los enemigos.
  */
-{
     initialize_autos(nivel);
     initialize_troncos(nivel);
     initialize_tortugas(nivel);
@@ -395,17 +433,18 @@ static void move_autos(void)
             /* Analizo si los enemigos están dentro del campo de movimiento
              * , sino, los teletransporto al lado contrario de donde desaparecieron*/
             
-            if(autos[j][k].x < -MUNDO_ANCHO/2.0 || autos[j][k].x > MUNDO_ANCHO*2.0)
+            if(autos[j][k].x < -MUNDO_ANCHO || autos[j][k].x > MUNDO_ANCHO*2.0)
             {
-                autos[j][k].x = MUNDO_ANCHO/2.0 - ( (autos[j][k].dx / fabs(autos[j][k].dx)) * MUNDO_ANCHO);
-            
-            /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
-             *el primer paréntesis devuelve el signo y lo que sigue (Según sea el signo obtenido) suma o resta "un mundo" desde el centro
-             * del mundo (significado del primer MUNDO_ANCHO/2.0)
-             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
-             * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
-             */
+                if(autos[j][k].x < -MUNDO_ANCHO)
+                {
+                    autos[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO;
+                }
+                else
+                {
+                    autos[j][k].x = -MUNDO_ANCHO;
+                }
             }
+            
             autos[j][k].x += autos[j][k].dx;
         }
     }
@@ -422,9 +461,17 @@ static void move_troncos(void)
             /* Analizo si los enemigos están dentro del campo de movimiento
              * , sino, los teletransporto al lado contrario de donde desaparecieron*/
             
-            if(troncos[j][k].x < -MUNDO_ANCHO/2.0 || troncos[j][k].x > MUNDO_ANCHO*2.0)
+            if(troncos[j][k].x < -MUNDO_ANCHO || troncos[j][k].x > MUNDO_ANCHO*2.0)
             {
-                troncos[j][k].x = MUNDO_ANCHO/2.0 - ( (troncos[j][k].dx / fabs(troncos[j][k].dx)) * MUNDO_ANCHO);
+                if(troncos[j][k].x < -MUNDO_ANCHO)
+                {
+                    troncos[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO;
+                }
+                else
+                {
+                    troncos[j][k].x = -MUNDO_ANCHO;
+                }
+            }
             
             /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
              *el primer paréntesis devuelve el signo y lo que sigue (Según sea el signo obtenido) suma o resta "un mundo" desde el centro
@@ -432,7 +479,7 @@ static void move_troncos(void)
              * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
              * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
              */
-            }
+            
             troncos[j][k].x += troncos[j][k].dx;
         }
     }
@@ -451,16 +498,16 @@ static void move_tortugas(void)
             /* Analizo si los enemigos están dentro del campo de movimiento
              * , sino, los teletransporto al lado contrario de donde desaparecieron*/
             
-            if(tortugas[j][k].x < -MUNDO_ANCHO/2.0 || tortugas[j][k].x > MUNDO_ANCHO*2.0)
+            if(tortugas[j][k].x < -MUNDO_ANCHO || tortugas[j][k].x > MUNDO_ANCHO*2.0)
             {
-                tortugas[j][k].x = MUNDO_ANCHO/2.0 - ( (tortugas[j][k].dx / fabs(tortugas[j][k].dx)) * MUNDO_ANCHO);
-            
-            /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
-             *el primer paréntesis devuelve el signo y lo que sigue (Según sea el signo obtenido) suma o resta "un mundo" desde el centro
-             * del mundo (significado del primer MUNDO_ANCHO/2.0)
-             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
-             * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
-             */
+                if(tortugas[j][k].x < -MUNDO_ANCHO)
+                {
+                    tortugas[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO;
+                }
+                else
+                {
+                    tortugas[j][k].x = -MUNDO_ANCHO;
+                }
             }
             tortugas[j][k].x += tortugas[j][k].dx;
         }
@@ -480,6 +527,7 @@ static void move_tortugas(void)
                 tortugas[i][0].hundirse = false;
             }
         }
+        
         
         timer_hundirse = FRAMES_HASTA_HUNDIRSE;
     }
