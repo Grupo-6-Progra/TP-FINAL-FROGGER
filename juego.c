@@ -13,7 +13,7 @@
 #define SALTO_RANA_ANCHO        CASILLA_ANCHO
 #define SALTO_RANA_ALTO         CASILLA_ALTO 
 
-#define APROX(x)                ( (x > 0) ? ( (int)((x)+0.5) ) : ((int)((x)-0.5)) )
+#define APROX(x)                ((x>0) ? (int)((x)+0.5) : ((int)((x)-0.5)))
 
 #define TIEMPO_SALTO_ANCHO      (1.0/12) // tiempo que tarda en saltar a lo ancho
 #define FRAMES_POR_SALTO_ANCHO  (APROX(TIEMPO_SALTO_ANCHO * REFRESCO))
@@ -35,26 +35,22 @@ static void move_frog (bool);
 static void initialize_frog(void);
 
 static void initialize_enemies (unsigned int nivel);
-
 static void initialize_autos(unsigned int);
 static void initialize_troncos(unsigned int);
 static void initialize_tortugas(unsigned int nivel);
 static void initialize_llegada(void);
 
-
 static void move_enemies(void);
-
 static void move_autos(void);
 static void move_troncos(void);
 static void move_tortugas(void);
 
 static int game_over(void);
-
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
-int estado_juego = INICIO;
+int estado_juego = MENU;
 
 double tiempo_restante;
 

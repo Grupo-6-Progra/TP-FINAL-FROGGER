@@ -6,7 +6,7 @@
 #include <stdbool.h>  
 
 /************************+
- * ESTADOS DEL JUEGO
+ * 
  ************************/
 
 enum ESTADO_JUEGO

@@ -1,5 +1,5 @@
-//#define RASPI
-#ifndef RASPI
+//#define RASPI_ALLEGRO
+#ifndef RASPI_ALLEGRO
 #include "allegro_funciones.h"
 #include "juego.h"
 

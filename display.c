@@ -1,5 +1,6 @@
-//#define RASPI3
-#ifdef RASPI3
+
+//#define RASPI_DISPLAY
+#ifdef RASPI_DISPLAY 
 
 #include <stdio.h>
 #include <stdlib.h>
