@@ -5,7 +5,7 @@
 
 #include "juego.h"
 
-#define RASPI
+//#define RASPI
 #ifndef RASPI
 
 

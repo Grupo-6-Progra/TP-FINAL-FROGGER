@@ -1,5 +1,5 @@
 #define RASPI2
-#ifndef RASPI2
+#ifndef RASPI
 
 //#ifndef ALLEGRO_FUNCIONES_H
 //#define ALLEGRO_FUNCIONES_H

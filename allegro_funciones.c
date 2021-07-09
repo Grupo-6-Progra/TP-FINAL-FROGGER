@@ -1,4 +1,4 @@
-#define RASPI
+//#define RASPI
 #ifndef RASPI
 #include "allegro_funciones.h"
 #include "juego.h"

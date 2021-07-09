@@ -1,3 +1,6 @@
+//#define RASPI3
+#ifdef RASPI3
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -262,3 +265,5 @@ void print_auto1(double x, double y)
     APROX(x);
     APROX(y);
 }
+
+#endif
