@@ -3,50 +3,85 @@
 #include<conio.h>
 #define FLECHAD 1
 #define FLECHAA 2
+#define ASCII 48
 char arr[]={"PLQ"};     //inicializo un arreglo de strings para los estados
-char *p=arr;            //se posiciona un puntero para ver los estados y así decidir a dónde va
+char *p=arr;            //se posiciona un puntero para ver los estados y asï¿½ decidir a dï¿½nde va
+char c=0;			//la variable a usar como si fuera el stick
+char t=0;
 void MenuLevels(void);
 void Level (void);
 void Menu_start (void);
-void Play();
+void Play(void);
+void Quit(void);
 
-void Level (void)
+int main (void)
 {
-	MenuLevels();
+Menu_start();			//funciÃ³n de menu de inicio
+	return 0;
 }
+
 
 void Menu_start(void)
 {     	 
- 		int c=0;			//la variable a usar como si fuera el stick
-
-        while(*p=='P')
+        while(*p=='P')					//la condicion es que el puntero apunte al estado correspondiente
 		
 		{
-        	
-		printf ("PLAY\n");		//acá iria una funcion que enciende  los leds de la palabra PLAY
-		c=(getchar()-'0');		//simulo provisoriamente que ingreso algo , que puede ser mover la flecha hacia abajo o al costado
-		if (c==FLECHAD) 
-		{
-		p++;  //cambia de estado
-		Level();  
-		}
-		if (c==FLECHAA) 
-		{
-		Play(); //llama la función que inicia el juego? Entraría al juego directamente
+			printf ("Entramos en el modo PLAY\n");		//aca iria una funcion que enciende  los leds de la palabra PLAY
+			c=((getch())-'0');				//input
+			if (c==FLECHAD) 
+			{
+				p++;  //cambia de estado
+				Level(); //llamo a la selecciï¿½n de los niveles 
+			}
+			if (c==FLECHAA) 
+			{
+				Play(); //llama la funciï¿½n que inicia el juego? Entrarï¿½a al juego directamente
 		
-		}        
+			}
+		        
         }
 			//salio del estado de PLAY
 }
 
+void Level (void)
+{
+	printf("Entramos en el modo LEVELS\n");
+	c=((getch())-ASCII);				//input 2
+	switch(c) {							//analiza lo que ingreso con el stick
+	case FLECHAD: {	p++;				//cambia al estado de Quit en el arreglo
+					Quit();				//si fue hacia la derecha entonces va al modo QUIT
+	}
+	break;				
+	case FLECHAA: MenuLevels();			//si fue hacia abajo entrÃ³ en el modo de selecciÃ³n de niveles
+	break;
+	default: Level();					//si toca cualquier otra cosa vuelve al estado Level manteniendose allÃ­
+}
+}
+
 void MenuLevels(void)
 {
-	printf("Armar el menú de niveles");	//Necesitaría saber si va existir el menú de niveles
+	printf("Seleccione su nivel\n");	//Necesitarï¿½a saber si va existir el menï¿½ de niveles
+	scanf("%c",&t);
 }
 
 void Play (void)
 
 {
-	printf ("Va al juego");			//creo que no sería una función.
+	printf ("Va al juego\n");			//creo que no serï¿½a una funciï¿½n.
+	p++;
 }
+void Quit(void)
 
+{
+	printf("Entramos en el modo QUIT\n");		//mensaje avisando que va a terminar el juego (imrpimiendo QUIT)
+	c=((getch())-ASCII);						//se queda a la espera de un valor
+	if (c==FLECHAD) 							//ve si ese valor es el stick a la derecha
+			{
+				p=arr;						//si lo es, vuelve a posicionar el puntero a estado inicial para que vuelva al estado PLAY 
+			}
+			if (c==FLECHAA) 
+			{
+				Play(); //modifica la variable  del juego,alternando su valor y lo termina
+			}
+	
+}
