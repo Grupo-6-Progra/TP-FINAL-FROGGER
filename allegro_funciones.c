@@ -6,6 +6,7 @@
 #include <allegro5/allegro.h>
 #include <allegro5/allegro_font.h>
 #include <allegro5/allegro_primitives.h>
+#include <allegro5/allegro_color.h>
 #include <allegro5/allegro_audio.h>
 #include <allegro5/allegro_acodec.h>
 #include <allegro5/allegro_image.h>
@@ -35,6 +36,7 @@ ALLEGRO_BITMAP      * mundo_buffer;
 ALLEGRO_BITMAP      * al_rene;
 ALLEGRO_BITMAP      * al_auto_fila1;
 ALLEGRO_BITMAP      * al_tronco1;
+
 ALLEGRO_BITMAP      * al_tronco2;
 ALLEGRO_BITMAP      * al_tronco3;
 ALLEGRO_BITMAP      * al_tortuga1;
@@ -48,6 +50,7 @@ ALLEGRO_FONT        * font;
 static void redraw_autos(void);
 static void redraw_troncos(void);
 static void redraw_tortugas(void);
+static void redraw_tiempo(void);
 
 
 
@@ -74,6 +77,16 @@ bool allegro_startup (void)
     if (!al_init_ttf_addon()) // Inicializa el complemento que permite reconocer fuentes ttf
     {
         fprintf(stderr, "failed to initialize the ttf addon!\n");
+        al_shutdown_font_addon();
+        return false;
+        
+    }
+    
+    if (!al_init_primitives_addon()) // Inicializa el complemento que permite reconocer fuentes ttf
+    {
+        fprintf(stderr, "failed to initialize the primitives addon!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
         return false;
         
     }
@@ -81,12 +94,19 @@ bool allegro_startup (void)
     if(!al_init_image_addon())
     {
         fprintf(stderr, "failed to initialize allegro images!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
         return false;
     }
     
     if (!al_install_keyboard())
     {
         fprintf(stderr, "failed to initialize the keyboard!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
         return false;
     }
     
@@ -94,6 +114,11 @@ bool allegro_startup (void)
     if (!timer)
     {
         fprintf(stderr, "failed to create timer!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         return false;
     }
     
@@ -101,6 +126,11 @@ bool allegro_startup (void)
     if (!event_queue)
     {
         fprintf(stderr, "failed to create event_queue!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         return false;
     }
@@ -109,6 +139,11 @@ bool allegro_startup (void)
     if (!mundo_buffer) 
     {
         fprintf(stderr, "failed to create buffer!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         return false;
@@ -118,6 +153,11 @@ bool allegro_startup (void)
     if (!al_rene) 
     {
         fprintf(stderr, "failed to create al_rene!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -128,6 +168,11 @@ bool allegro_startup (void)
     if(!al_auto_fila1)
     {
         fprintf(stderr, "failed to create al_auto_fila1!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -139,6 +184,11 @@ bool allegro_startup (void)
     if(!al_tronco1)
     {
         fprintf(stderr, "failed to create al_tronco1!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -151,6 +201,11 @@ bool allegro_startup (void)
     if(!al_tronco2)
     {
         fprintf(stderr, "failed to create al_tronco2!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -164,6 +219,11 @@ bool allegro_startup (void)
     if(!al_tronco3)
     {
         fprintf(stderr, "failed to create al_tronco3!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -178,6 +238,11 @@ bool allegro_startup (void)
     if(!al_tortuga1)
     {
         fprintf(stderr, "failed to create al_tronco3!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -193,6 +258,11 @@ bool allegro_startup (void)
     if(!al_tortuga2)
     {
         fprintf(stderr, "failed to create al_tronco3!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -209,6 +279,11 @@ bool allegro_startup (void)
     if(!fondo)
     {
         fprintf(stderr, "failed to create fondo!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -226,6 +301,11 @@ bool allegro_startup (void)
     if (!display)
     {
         fprintf(stderr, "failed to create display!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
@@ -255,7 +335,9 @@ void allegro_fuentes(void)
     font = al_load_ttf_font("Karumbi-Regular.ttf", 40, 0); //asigno la fuente que voy a usar
 
     if (!font) {
+
         fprintf(stderr, "Could not load 'Karumbi-Regular.ttf'.\n");
+
         return;
     }
 }
@@ -364,11 +446,43 @@ void allegro_redraw(void)
     al_set_target_bitmap(mundo_buffer);
     //al_clear_to_color(al_map_rgb(0,0,0));
     al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
+
+    unsigned int i;
+    unsigned int j,k;
     
+    switch(vidas_restantes)
+    {
+        case 1:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "1");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+        case 2:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "2");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+        case 3:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "3");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+        default:
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "Error, algo salió mal");
+            //           fuente         color               ancho          alto    flag            texto
+            break;
+        }
+    }
+
+    //IMPRESION DEL TIEMPO RESTANTE
+    redraw_tiempo();
     
     //IMPRESION DE LOS AUTOS
     redraw_autos();
-    
     
     //impresión de troncos
     redraw_troncos();
@@ -379,33 +493,7 @@ void allegro_redraw(void)
     //IMPRESIÓN DE LA RANA
     al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
     
-    switch(tortugas[1][0].hundirse)
-    {
-        case true:
-        {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "true");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
-        }
-        case false:
-        {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "false");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
-        }
-        case 3:
-        {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "3");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
-        }
-        default:
-        {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 15, ALLEGRO_ALIGN_RIGHT, "Error, algo salió mal");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
-        }
-    }
+    
     
     al_set_target_backbuffer(display);
     al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);
@@ -475,6 +563,18 @@ static void redraw_tortugas(void)
     }
 }
 
+static void redraw_tiempo(void)
+{
+    static double xf;
+    xf = (MUNDO_ANCHO - 100) * ((TIEMPO_TOTAL - tiempo_restante)/TIEMPO_TOTAL); //le resto 100 para poder escribir la palabra "time" a la derecha
+    al_draw_line(MUNDO_ANCHO - 100, MUNDO_ALTO, xf, MUNDO_ALTO, al_color_name("darkgreen"), 20);
+    //           x0            y0         xf        yf               color          thickness
+    al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 30, MUNDO_ALTO - 40, ALLEGRO_ALIGN_RIGHT, "Time");
+    //           fuente         color               ancho          alto    flag            texto
+}
+
+
+
 
 void allegro_destroy(void)
 {
@@ -492,3 +592,4 @@ void allegro_destroy(void)
     al_destroy_bitmap(fondo);
     al_destroy_display(display);
 }
+

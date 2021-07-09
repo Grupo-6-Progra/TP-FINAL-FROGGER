@@ -52,6 +52,8 @@ static int game_over(void);
 
 int estado_juego = INICIO;
 
+double tiempo_restante;
+
 char vidas_restantes = 3;
 
 bool key_pressed[TECLAS_MAX] = {false,false,false,false,false};
@@ -90,65 +92,115 @@ void frogger (void)
             initialize_frog();
             initialize_llegada();
             estado_juego = JUEGO;
+            tiempo_restante = TIEMPO_TOTAL; //Inicializo el tiempo restante en 100 segundos
             break;
         }
         case REINICIO: //caso al que se entra cuando se pierde una vida
         {
-            if(vidas_restantes == 0)
+            if(rene.llego == true)
             {
-                estado_juego = PERDER;
+                if (choque_en_proceso == 0) //significa que acabo de ganar
+                {
+                    choque_en_proceso = 20;
+                } 
+                else if (choque_en_proceso > 0)
+                {
+                    choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
+                    move_enemies();
+                    if (choque_en_proceso == 0)
+                    {
+                        rene.llego = false;
+                    }
+                }
+                else
+                {
+                    initialize_frog();
+                    move_frog(true);
+                    tiempo_restante = TIEMPO_TOTAL; 
+                    estado_juego = JUEGO;
+                }
             }
             else
             {
-                initialize_enemies (2);
-                initialize_frog();
-                estado_juego = JUEGO;
+                if(vidas_restantes == 0)
+                {
+                    estado_juego = PERDER;
+                    move_frog(true);
+                }
+
+                else if (rene.chocada == true && choque_en_proceso == 0) //significa que acabo de chocar
+                {
+                    choque_en_proceso = 20;
+                }
+
+                else if (choque_en_proceso > 0)
+                {
+                    choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
+                    move_enemies();
+                    if (choque_en_proceso == 0)
+                    {
+                        rene.chocada = false;
+                    }
+                }
+                else
+                {
+                    initialize_frog();
+                    move_frog(true);
+                    tiempo_restante = TIEMPO_TOTAL;
+                    estado_juego = JUEGO;
+                }
             }
+           
             
             break;
         }
         
-        case JUEGO:
+        case JUEGO: //caso en el que la rana está viva
         {
-            if (choque_en_proceso > 0)
-            {
-                choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
-            }
-            
-            else
+
+            if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante
             {
                 move_enemies();
+                
+                move_frog(false);
 
                 choque = colision();
-
-                move_frog(choque);
 
                 if(choque == true)
                 {
                     vidas_restantes--;
-                    choque_en_proceso = 15; //la idea de hacer esto es que cuando muera espere un ratito, despues hacemos otra cosa
+                    rene.chocada = true;
                     estado_juego = REINICIO;
                 }
 
                 if((rana_sobre_tronco() == false) && (rana_sobre_tortuga() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
                 {
                         vidas_restantes--;
+                        rene.chocada = true;
                         estado_juego = REINICIO;
                 }
-                
+
                 if((rene.y <= CASILLA_ALTO))
                 {
                     if(rana_llego() == true)
                     {
-                        initialize_frog();
+                        rene.llego = true;
+                        estado_juego = REINICIO;
                     }
-                    
+
                     else
                     {
                         vidas_restantes--;
+                        rene.chocada = true;
                         estado_juego = REINICIO;
                     }
                 }
+            }
+            else
+            {
+                vidas_restantes--;
+                rene.chocada = true;
+                estado_juego = REINICIO;
             }
             
             break;
@@ -161,13 +213,18 @@ void frogger (void)
         {
             if(!game_over())
             {
-                estado_juego = INICIO;
+                estado_juego = MENU;
             }
             break;
+        }
+        case MENU:
+        {
+            estado_juego = INICIO;
         }
      
     }
 }
+
 
 
 /******************************************************************************************
@@ -546,7 +603,7 @@ static int game_over (void)
     static int contador_de_frames = 0;
     if (contador_de_frames == 0)
     {
-        contador_de_frames = CANT_CASILLAS_FILA * CANT_CASILLAS_COLUMNA;
+        contador_de_frames = CANT_CASILLAS_FILA * (CANT_CASILLAS_COLUMNA + 1);
         rene.x = CASILLA_ANCHO / 2.0;
         rene.y = CASILLA_ALTO / 2.0;
     }
@@ -558,7 +615,7 @@ static int game_over (void)
     else
     {
         rene.x = CASILLA_ANCHO / 2.0;
-        rene.y = CASILLA_ALTO * (CANT_CASILLAS_FILA * CANT_CASILLAS_COLUMNA - contador_de_frames) + CASILLA_ALTO/2.0;
+        rene.y += CASILLA_ALTO;
     }
     return contador_de_frames;
 }

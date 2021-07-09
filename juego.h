@@ -15,6 +15,7 @@ enum ESTADO_JUEGO
 };
 
 extern int estado_juego;
+extern double tiempo_restante;
 
 /***************************************************
  * MUNDO Y VELOCIDAD DE JUEGO
@@ -30,6 +31,8 @@ extern int estado_juego;
 
 #define MUNDO_ALTO          (CANT_CASILLAS_COLUMNA * CASILLA_ALTO)
 #define MUNDO_ANCHO         (CANT_CASILLAS_FILA * CASILLA_ANCHO)
+
+#define TIEMPO_TOTAL (40 * REFRESCO)
 
 /***************************************************
  * MANEJO DE TECLAS DETECTADAS
@@ -59,6 +62,10 @@ typedef struct
     double x, y;
     double dx, dy;
     double dx_extra;
+    int direccion;
+    bool chocada;
+    bool llego;
+    
     
 }RANA;
 
