@@ -23,7 +23,7 @@
 #define BUFFER_W        MUNDO_ANCHO
 #define BUFFER_H        MUNDO_ALTO
 
-#define SCREEN_SCALE    1.5
+#define SCREEN_SCALE    1
 #define SCREEN_W        (BUFFER_W * SCREEN_SCALE)
 #define SCREEN_H        (BUFFER_H * SCREEN_SCALE)
 

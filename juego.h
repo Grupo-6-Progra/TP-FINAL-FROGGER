@@ -6,7 +6,7 @@
 #include <stdbool.h>  
 
 /************************+
- * 
+ * ESTADOS DEL JUEGO
  ************************/
 
 enum ESTADO_JUEGO
@@ -23,8 +23,8 @@ extern double tiempo_restante;
     
 #define REFRESCO            60.0    
 
-#define CASILLA_ANCHO       40.0
-#define CASILLA_ALTO        40.0
+#define CASILLA_ANCHO       50.0
+#define CASILLA_ALTO        50.0
 
 #define CANT_CASILLAS_FILA          14
 #define CANT_CASILLAS_COLUMNA       13
@@ -53,8 +53,8 @@ extern bool key_pressed[TECLAS_MAX];
  * RANA
 ***************************************************/
 
-#define RANA_ANCHO              (CASILLA_ANCHO - 10)         
-#define RANA_ALTO               (CASILLA_ALTO - 10)
+#define RANA_ANCHO              (CASILLA_ANCHO - 20)         
+#define RANA_ALTO               (CASILLA_ALTO - 20)
                 
 typedef struct
 {
