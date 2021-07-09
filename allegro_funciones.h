@@ -1,5 +1,8 @@
-#ifndef ALLEGRO_FUNCIONES_H
-#define ALLEGRO_FUNCIONES_H
+#define RASPI2
+#ifndef RASPI2
+
+//#ifndef ALLEGRO_FUNCIONES_H
+//#define ALLEGRO_FUNCIONES_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -53,4 +56,5 @@ void allegro_redraw(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-#endif /* ALLEGRO_FUNCIONES_H */
+//#endif /* ALLEGRO_FUNCIONES_H */
+#endif

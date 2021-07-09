@@ -13,7 +13,7 @@
 #define SALTO_RANA_ANCHO        CASILLA_ANCHO
 #define SALTO_RANA_ALTO         CASILLA_ALTO 
 
-#define APROX(x)                ((int)((x)+0.5))
+#define APROX(x)                ((x>0) ? (int)((x)+0.5) : ((int)((x)-0.5))
 
 #define TIEMPO_SALTO_ANCHO      (1.0/12) // tiempo que tarda en saltar a lo ancho
 #define FRAMES_POR_SALTO_ANCHO  (APROX(TIEMPO_SALTO_ANCHO * REFRESCO))
