@@ -141,6 +141,9 @@ extern TRONCO troncos[FILAS_DE_TRONCOS][TRONCOS_POR_FILA]; //Defino una sola mat
 #define TORTUGAS_POR_FILA       5
 #define FILAS_DE_TORTUGAS       2
 
+#define TORTUGAS_ANCHO              (CASILLA_ANCHO)         
+#define TORTUGAS_ALTO               (CASILLA_ALTO)
+
 #define TIEMPO_HASTA_HUNDIRSE   2
 #define FRAMES_HASTA_HUNDIRSE   ((int)(REFRESCO * TIEMPO_HASTA_HUNDIRSE))
 
@@ -152,6 +155,7 @@ typedef struct //Defino una estructura nueva para las tortugas
     double alto;
     unsigned int fila;          //Fila en la que se moverá LAS TORTUGAS
     bool hundirse;
+    int frames;
     
 }TORTUGAS;
 

@@ -509,9 +509,10 @@ static void initialize_tortugas(unsigned int nivel)
                 tortugas[j][k].fila = 7;                                                                                 //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
                 tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
-                tortugas[j][k].largo = CASILLA_ANCHO * 3;                          //Cada enemigo será tan ancho como una casilla
-                tortugas[j][k].alto = CASILLA_ALTO;
+                tortugas[j][k].largo = TORTUGAS_ANCHO*3;                          //Cada enemigo será tan ancho como una casilla
+                tortugas[j][k].alto = TORTUGAS_ALTO;
                 tortugas[j][k].hundirse = false;
+                tortugas[j][k].frames = 0;
             }
         }
         
@@ -523,9 +524,10 @@ static void initialize_tortugas(unsigned int nivel)
                 tortugas[j][k].fila = 10;                                                                                 //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
                 tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
-                tortugas[j][k].largo = CASILLA_ANCHO * 2;                          //Cada enemigo será tan ancho como una casilla
-                tortugas[j][k].alto = CASILLA_ALTO;
+                tortugas[j][k].largo = TORTUGAS_ANCHO*2;                          //Cada enemigo será tan ancho como una casilla
+                tortugas[j][k].alto = TORTUGAS_ALTO;
                 tortugas[j][k].hundirse = false;
+                tortugas[j][k].frames = 0;
             }
         }        
     }
@@ -635,6 +637,44 @@ static void move_tortugas(void)
         }
     }
     
+    if(timer_hundirse == (int)(FRAMES_HASTA_HUNDIRSE / (3.0/4.0)) )
+    {
+        int i,j;
+    
+        for(i=0; i < FILAS_DE_TORTUGAS; i++)
+        {
+            for(j=0; j < TORTUGAS_POR_FILA; j++)
+            {
+                if (tortugas[i][j].hundirse == false)
+                {
+                    tortugas[i][j].frames = 1;
+                }
+            }
+        }
+    }
+    
+    if(timer_hundirse == FRAMES_HASTA_HUNDIRSE / 2)
+    {
+        int i;
+        for (i=0; i<2; i++)
+        {
+            if (tortugas[i][0].hundirse == false)
+            {
+                tortugas[i][0].frames = 2;
+            }
+        }
+    }
+    if(timer_hundirse == FRAMES_HASTA_HUNDIRSE / 4)
+    {
+        int i;
+        for (i=0; i<2; i++)
+        {
+            if (tortugas[i][0].hundirse == false)
+            {
+                tortugas[i][0].frames = 3;
+            }
+        }
+    }
     if (timer_hundirse == 0)
     {
         int i;
@@ -643,10 +683,12 @@ static void move_tortugas(void)
             if (tortugas[i][0].hundirse == false)
             {
                 tortugas[i][0].hundirse = true;
+                tortugas[i][0].frames = 4;
             }
             else
             {
                 tortugas[i][0].hundirse = false;
+                tortugas[i][0].frames = 0;
             }
         }
         
