@@ -657,13 +657,13 @@ static void redraw_rana(void)
     if(rene.saltando == true)
     {
         al_draw_scaled_rotated_bitmap(sprites.al_rene[1],
-        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]),
+        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[1]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[1]),
         rene.direccion*ALLEGRO_PI/2, 0);
     }
     else
     {
         al_draw_scaled_rotated_bitmap(sprites.al_rene[0],
-        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]),
+        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[0]),
         rene.direccion*ALLEGRO_PI/2, 0);
     }
 }
