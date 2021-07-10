@@ -439,8 +439,8 @@ static void initialize_autos(unsigned int nivel)
                 autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
                 autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
                 autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
-                autos[j][k].largo = AUTO2_ANCHO;                          //Cada enemigo será tan ancho como una casilla
-                autos[j][k].alto = AUTO2_ALTO;
+                autos[j][k].largo = CAMION_ANCHO;                          //Cada enemigo será tan ancho como una casilla
+                autos[j][k].alto = CAMION_ALTO;
                 autos[j][k].direccion = IZQUIERDA;
             }
         }
@@ -613,6 +613,7 @@ static void move_tortugas(void)
 {
     unsigned int j, k;
     static unsigned int timer_hundirse = FRAMES_HASTA_HUNDIRSE;
+    static unsigned int timer_moverse = FRAMES_HASTA_HUNDIRSE / 4;
     
     for(j=0; j < FILAS_DE_TORTUGAS; j++)
     {
@@ -637,18 +638,36 @@ static void move_tortugas(void)
         }
     }
     
-    if(timer_hundirse == (int)(FRAMES_HASTA_HUNDIRSE / (3.0/4.0)) )
+    if(timer_moverse == 0)
     {
-        int i,j;
-    
-        for(i=0; i < FILAS_DE_TORTUGAS; i++)
+        int j,k;
+        
+        for(j=0; j < FILAS_DE_TORTUGAS; j++)
         {
-            for(j=0; j < TORTUGAS_POR_FILA; j++)
+            for(k=1; k < TORTUGAS_POR_FILA; k++)
             {
-                if (tortugas[i][j].hundirse == false)
+                if(tortugas[j][k].frames == 0)
                 {
-                    tortugas[i][j].frames = 1;
+                    tortugas[j][k].frames = 1;
                 }
+                else if(tortugas[j][k].frames == 1)
+                {
+                    tortugas[j][k].frames = 0;
+                }
+            }
+        }
+        
+        timer_moverse = FRAMES_HASTA_HUNDIRSE / 4;
+    }
+    
+    if(timer_hundirse == (int)(FRAMES_HASTA_HUNDIRSE * (3.0/4.0)) )
+    {
+        int i;
+        for (i=0; i<2; i++)
+        {
+            if (tortugas[i][0].hundirse == false)
+            {
+                tortugas[i][0].frames = 1;
             }
         }
     }
@@ -683,7 +702,7 @@ static void move_tortugas(void)
             if (tortugas[i][0].hundirse == false)
             {
                 tortugas[i][0].hundirse = true;
-                tortugas[i][0].frames = 4;
+                tortugas[i][0].frames = 0;
             }
             else
             {
@@ -697,6 +716,7 @@ static void move_tortugas(void)
     }
     
     timer_hundirse--;
+    timer_moverse--;
 }
 
 /**************************************

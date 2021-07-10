@@ -92,8 +92,11 @@ extern RANA rene;
 #define AUTO1_ANCHO              (CASILLA_ANCHO - 20)         
 #define AUTO1_ALTO               (CASILLA_ALTO - 20)
 
-#define AUTO2_ANCHO              (2*CASILLA_ANCHO - 20)         
-#define AUTO2_ALTO               (CASILLA_ALTO - 20)
+#define AUTO2_ANCHO              AUTO1_ANCHO        
+#define AUTO2_ALTO               AUTO1_ALTO
+
+#define CAMION_ANCHO              (2*CASILLA_ANCHO - 20)         
+#define CAMION_ALTO               (CASILLA_ALTO - 20)
 
 typedef struct //Defino una estructura nueva para los enemigos
 {
