@@ -1,5 +1,6 @@
 #include "juego.h"
 #include "colisiones.h"
+#include "menu.h"
 
 #include <math.h>
 #include <tgmath.h>
@@ -56,6 +57,10 @@ double tiempo_restante;
 
 char vidas_restantes = 3;
 
+int nivel = 1;
+
+int selector_menu = PLAY;
+
 bool key_pressed[TECLAS_MAX] = {false,false,false,false,false};
 
 RANA rene;
@@ -77,10 +82,12 @@ LLEGADA llegadas[CANT_CASILLAS_LLEGADA];
  ******************************************************************************************
 *******************************************************************************************/
 
-void frogger (void)
+bool frogger (void)
 {
+    static bool salir = false; //variable que indica si el programa debe terminar
     static int choque_en_proceso = 0;
-    static int nivel = 4;
+    static int esperar_menu = 0;
+    
     bool choque = false;
     switch(estado_juego)
     {
@@ -88,7 +95,7 @@ void frogger (void)
         case INICIO:
         {
             vidas_restantes = 3;
-            initialize_enemies (1);
+            initialize_enemies (nivel);
             initialize_frog();
             initialize_llegada();
             estado_juego = JUEGO;
@@ -219,10 +226,13 @@ void frogger (void)
         }
         case MENU:
         {
-            estado_juego = INICIO;
+            salir = menu_start();
+            
+            break;
         }
      
     }
+    return salir;
 }
 
 

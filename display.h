@@ -14,9 +14,6 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
     void redraw_disp(void);
     bool timer (void);
@@ -32,9 +29,7 @@ extern "C" {
 #define TAM_PIXEL RANA_ALTO/ALTO_RENE
 
 
-#ifdef __cplusplus
-}
-#endif
+
 
 #endif /* DISPLAY_H */
 

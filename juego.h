@@ -16,6 +16,8 @@ enum ESTADO_JUEGO
 
 extern int estado_juego;
 extern double tiempo_restante;
+extern int nivel;
+extern int selector_menu;
 
 /***************************************************
  * MUNDO Y VELOCIDAD DE JUEGO
@@ -153,7 +155,7 @@ extern LLEGADA llegadas[CANT_CASILLAS_LLEGADA];
  * DECLARACIÓN DE FUNCIONES GLOBALES
 ***************************************************/
 
-void frogger (void);
+bool frogger (void);
 
 
 

@@ -16,11 +16,17 @@
 
 
 #include "juego.h"
-static void level (void);
-static void menu_levels(void);
+
+enum SELECTOR
+{
+    PLAY, LEVEL, QUIT, MENU_LEVELS
+};
+
+static int level (void);
+static int menu_levels(void);
 static void play (void);
-static void quit(void);
-void menu_start(void);
+static bool quit(void);
+bool menu_start(void);
     
     
 

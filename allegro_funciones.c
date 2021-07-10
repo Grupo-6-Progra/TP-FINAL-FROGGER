@@ -2,6 +2,7 @@
 #ifndef RASPI_ALLEGRO
 #include "allegro_funciones.h"
 #include "juego.h"
+#include "menu.h"
 
 #include <stdbool.h>
 
@@ -372,6 +373,10 @@ bool allegro_teclas (ALLEGRO_EVENT * ev)
             case ALLEGRO_KEY_RIGHT:
                 key_pressed[KEY_RIGHT] = true;
                 break;
+                
+            case ALLEGRO_KEY_ENTER:
+                key_pressed[KEY_ENTER] = true;
+                break;
         }
     }
     
@@ -392,6 +397,10 @@ bool allegro_teclas (ALLEGRO_EVENT * ev)
 
             case ALLEGRO_KEY_RIGHT:
                 key_pressed[KEY_RIGHT] = false;
+                break;
+            
+            case ALLEGRO_KEY_ENTER:
+                key_pressed[KEY_ENTER] = false;
                 break;
 
             case ALLEGRO_KEY_ESCAPE:
@@ -446,56 +455,118 @@ void allegro_initialize_bitmaps(void)
 void allegro_redraw(void)
 {
     al_set_target_bitmap(mundo_buffer);
-    //al_clear_to_color(al_map_rgb(0,0,0));
-    al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
-
-    unsigned int i;
-    unsigned int j,k;
     
-    switch(vidas_restantes)
+    if(estado_juego != MENU)
     {
-        case 1:
+        al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
+
+        unsigned int i;
+        unsigned int j,k;
+
+        switch(vidas_restantes)
         {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "1");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
+            case 1:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "1");
+                //           fuente         color               ancho          alto    flag            texto
+                break;
+            }
+            case 2:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "2");
+                //           fuente         color               ancho          alto    flag            texto
+                break;
+            }
+            case 3:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "3");
+                //           fuente         color               ancho          alto    flag            texto
+                break;
+            }
+            default:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "Error, algo salió mal");
+                //           fuente         color               ancho          alto    flag            texto
+                break;
+            }
         }
-        case 2:
+
+        //IMPRESION DEL TIEMPO RESTANTE
+        redraw_tiempo();
+
+        //IMPRESION DE LOS AUTOS
+        redraw_autos();
+
+        //impresión de troncos
+        redraw_troncos();
+
+        //IMPRESIÓN DE TORTUGAS
+        redraw_tortugas();
+
+        //IMPRESIÓN DE LA RANA
+        al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
+    }
+    else
+    {
+        al_clear_to_color(al_map_rgb(0,0,0));
+        switch(selector_menu)
         {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "2");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
-        }
-        case 3:
-        {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "3");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
-        }
-        default:
-        {
-            al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "Error, algo salió mal");
-            //           fuente         color               ancho          alto    flag            texto
-            break;
+            case PLAY:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Play XD");
+                //           fuente         color               ancho          alto    flag            texto
+                break;
+            }
+            case LEVEL:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Presione enter para seleccionar nivel");
+                //           fuente         color               ancho          alto    flag            texto
+                break;
+            }
+            case QUIT:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Presione enter para salir del programa");
+                //           fuente         color               ancho          alto    flag            texto
+                break;
+            }
+            case MENU_LEVELS:
+            {
+                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Acá se selecciona el nivel");
+                //           fuente         color               ancho          alto    flag            texto
+                switch (nivel)
+                {
+                    case 1:
+                    {
+                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 1");
+                //           fuente         color               ancho          alto    flag            texto
+                        break;
+                    }
+                    case 2:
+                    {
+                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 2");
+                //           fuente         color               ancho          alto    flag            texto
+                        break;
+                    }
+                    case 3:
+                    {
+                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 3");
+                //           fuente         color               ancho          alto    flag            texto
+                        break;
+                    }
+                    case 4:
+                    {
+                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 4");
+                //           fuente         color               ancho          alto    flag            texto
+                        break;
+                    }
+                    default:
+                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "Próximamente");
+                //           fuente         color               ancho          alto    flag            texto
+                    
+                }    
+            }
         }
     }
-
-    //IMPRESION DEL TIEMPO RESTANTE
-    redraw_tiempo();
-    
-    //IMPRESION DE LOS AUTOS
-    redraw_autos();
-    
-    //impresión de troncos
-    redraw_troncos();
-    
-    //IMPRESIÓN DE TORTUGAS
-    redraw_tortugas();
-    
-    //IMPRESIÓN DE LA RANA
-    al_draw_bitmap(al_rene,rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, 0);
-    
-    
     
     al_set_target_backbuffer(display);
     al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);

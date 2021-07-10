@@ -47,7 +47,7 @@ int main (void)
                  * LÓGICA DEL JUEGO
                  ********************************************/
                
-                frogger();
+                do_exit = frogger();
          
                 redraw = true;
             }
