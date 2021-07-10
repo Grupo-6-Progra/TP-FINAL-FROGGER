@@ -55,7 +55,7 @@ int estado_juego = MENU;
 
 double tiempo_restante;
 
-char vidas_restantes = 3;
+int vidas_restantes = 3;
 
 int nivel = 1;
 
@@ -270,6 +270,7 @@ static void move_frog (bool choque)
             if(timer_up == 0)
             {
                 timer_up = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
+                rene.direccion = ARRIBA;
             }
 
             if(timer_up > TARDA_SALTO && rene.y >=  CASILLA_ALTO/2 + rene.dy)
@@ -286,6 +287,8 @@ static void move_frog (bool choque)
             if(timer_down == 0)
             {
                 timer_down = (int) (FRAMES_POR_SALTO_ALTO + TARDA_SALTO);
+                rene.direccion = ABAJO;
+            
             }
 
             if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - CASILLA_ALTO/2 -rene.dy)
@@ -301,6 +304,8 @@ static void move_frog (bool choque)
             if(timer_right == 0)
             {
                 timer_right = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
+                rene.direccion = DERECHA;
+                
             }
 
             if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - CASILLA_ANCHO/2 - rene.dx)
@@ -316,6 +321,7 @@ static void move_frog (bool choque)
             if(timer_left == 0)
             {
                 timer_left = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
+                rene.direccion = IZQUIERDA;
             }
 
             if(timer_left > TARDA_SALTO && rene.x >= CASILLA_ANCHO/2 + rene.dx)

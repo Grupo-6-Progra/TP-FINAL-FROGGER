@@ -25,15 +25,8 @@
  * 
  ***********************************************************************/
 
-extern ALLEGRO_DISPLAY * display;
 extern ALLEGRO_EVENT_QUEUE *event_queue;
 extern ALLEGRO_TIMER * timer;
-extern ALLEGRO_BITMAP * mundo_buffer;
-extern ALLEGRO_BITMAP * al_rene;
-extern ALLEGRO_BITMAP * al_auto_fila1;
-extern ALLEGRO_FONT * font;
-
-extern char vidas_restantes;
 
 
 /***************************************************

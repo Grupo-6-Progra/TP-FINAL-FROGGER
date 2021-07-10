@@ -14,4 +14,3 @@ bool rana_llego (void);
 
 #endif /* COLISIONES_H */
 
-
