@@ -89,6 +89,12 @@ extern RANA rene;
 #define AUTOS_POR_FILA      5
 #define FILAS_DE_AUTOS      5
 
+#define AUTO1_ANCHO              (CASILLA_ANCHO - 20)         
+#define AUTO1_ALTO               (CASILLA_ALTO - 20)
+
+#define AUTO2_ANCHO              (2*CASILLA_ANCHO - 20)         
+#define AUTO2_ALTO               (CASILLA_ALTO - 20)
+
 typedef struct //Defino una estructura nueva para los enemigos
 {
     double x, y;
@@ -96,6 +102,7 @@ typedef struct //Defino una estructura nueva para los enemigos
     double largo;               //Posición, velocidad y largo del enemigo
     double alto;
     unsigned int fila;          //Fila en la que se moverá el enemigo
+    int direccion;
 }AUTOS;
 
 extern AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA]; //Defino una sola matriz con todos los enemigos de un mismo tipo

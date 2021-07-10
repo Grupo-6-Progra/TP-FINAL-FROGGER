@@ -40,7 +40,6 @@ ALLEGRO_EVENT_QUEUE * event_queue;
 ***************************************************/
 static ALLEGRO_DISPLAY     * display;
 static ALLEGRO_BITMAP      * mundo_buffer;
-static ALLEGRO_BITMAP      * al_auto_fila1;
 static ALLEGRO_BITMAP      * al_tronco1;
 
 static ALLEGRO_BITMAP      * al_tronco2;
@@ -66,7 +65,8 @@ typedef struct SPRITES
 
     ALLEGRO_BITMAP* al_rene[RANA_FRAMES];
     
-    ALLEGRO_BITMAP* al_auto;
+    ALLEGRO_BITMAP* al_auto1;
+    ALLEGRO_BITMAP* al_auto2;
     ALLEGRO_BITMAP* al_camion;
 
     ALLEGRO_BITMAP* al_tronco1;
@@ -230,8 +230,8 @@ bool allegro_startup (void)
         return false;
     }
     
-    al_auto_fila1 = al_create_bitmap(CASILLA_ANCHO, CASILLA_ALTO);
-    if(!al_auto_fila1)
+    sprites.al_auto1 = al_create_sub_bitmap(sprites._sheet, 306, 482, 134, 69);
+    if(!sprites.al_auto1)
     {
         fprintf(stderr, "failed to create al_auto_fila1!\n");
         al_shutdown_font_addon();
@@ -244,6 +244,23 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
+        return false;
+    }
+    sprites.al_auto2 = al_create_sub_bitmap(sprites._sheet, 11, 406, 177, 65);
+    if(!sprites.al_auto1)
+    {
+        fprintf(stderr, "failed to create al_auto_fila1!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
         return false;
     }
     
@@ -261,7 +278,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
         return false;
     }
     
@@ -279,7 +297,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
         al_destroy_bitmap(al_tronco1);
         return false;
     }
@@ -298,7 +317,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
         al_destroy_bitmap(al_tronco1);
         al_destroy_bitmap(al_tronco2);
         return false;
@@ -318,7 +338,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
         al_destroy_bitmap(al_tronco1);
         al_destroy_bitmap(al_tronco2);
         al_destroy_bitmap(al_tronco3);
@@ -339,7 +360,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
         al_destroy_bitmap(al_tronco1);
         al_destroy_bitmap(al_tronco2);
         al_destroy_bitmap(al_tronco3);
@@ -361,7 +383,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
         al_destroy_bitmap(al_tronco1);
         al_destroy_bitmap(al_tronco2);
         al_destroy_bitmap(al_tronco3);
@@ -384,7 +407,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
         al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(al_auto_fila1);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
         al_destroy_bitmap(al_tronco1);
         al_destroy_bitmap(al_tronco2);
         al_destroy_bitmap(al_tronco3);
@@ -485,12 +509,7 @@ bool allegro_teclas (ALLEGRO_EVENT * ev)
 
 
 void allegro_initialize_bitmaps(void)
-{
-    
-    al_set_target_bitmap(al_auto_fila1);
-    al_clear_to_color(al_map_rgb(150,152,154));
-    
-    
+{    
     
     al_set_target_bitmap(al_tronco1);
     al_clear_to_color(al_map_rgb(80,40,0));
@@ -669,7 +688,20 @@ static void redraw_autos(void)
     {
         for(k=0; k<AUTOS_POR_FILA; k++)
         {
-            al_draw_bitmap(al_auto_fila1, autos[j][k].x - autos[j][k].largo/2, autos[j][k].y - autos[j][k].alto/2, 0);
+            if(j < 4)
+            {
+                al_draw_scaled_rotated_bitmap(sprites.al_auto1,
+                    al_get_bitmap_width(sprites.al_auto1)/2, al_get_bitmap_height(sprites.al_auto1)/2,
+                    autos[j][k].x, autos[j][k].y, AUTO1_ANCHO/al_get_bitmap_width(sprites.al_auto1), AUTO1_ALTO/al_get_bitmap_height(sprites.al_auto1),
+                    (autos[j][k].direccion +1)*ALLEGRO_PI/2, 0);
+            }
+            else
+            {
+                al_draw_scaled_rotated_bitmap(sprites.al_auto2,
+                    al_get_bitmap_width(sprites.al_auto2)/2, al_get_bitmap_height(sprites.al_auto2)/2,
+                    autos[j][k].x, autos[j][k].y, AUTO2_ANCHO/al_get_bitmap_width(sprites.al_auto2), AUTO2_ALTO/al_get_bitmap_height(sprites.al_auto2),
+                    (autos[j][k].direccion + 1)*ALLEGRO_PI/2, 0);
+            }
         }
     }
 }
@@ -743,7 +775,8 @@ void allegro_destroy(void)
     al_destroy_bitmap(mundo_buffer);
     al_destroy_bitmap(sprites.al_rene[0]);
     al_destroy_bitmap(sprites.al_rene[1]);
-    al_destroy_bitmap(al_auto_fila1);
+    al_destroy_bitmap(sprites.al_auto1);
+    al_destroy_bitmap(sprites.al_auto2);
     al_destroy_bitmap(al_tronco1);
     al_destroy_bitmap(al_tronco2);
     al_destroy_bitmap(al_tronco3);

@@ -411,14 +411,38 @@ static void initialize_autos(unsigned int nivel)
     int k;
     for(j=0; j < FILAS_DE_AUTOS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
     {
-        for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+        if(j < 4)
         {
-            autos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
-            autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
-            autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-            autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
-            autos[j][k].largo = CASILLA_ANCHO;                          //Cada enemigo será tan ancho como una casilla
-            autos[j][k].alto = CASILLA_ALTO;
+            for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+            {
+                autos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j+1);
+                autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
+                autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                autos[j][k].largo = AUTO1_ANCHO;                          //Cada enemigo será tan ancho como una casilla
+                autos[j][k].alto = AUTO1_ALTO;
+                if(j == 0 || j == 2)
+                {
+                    autos[j][k].direccion = IZQUIERDA;
+                }
+                else
+                {
+                    autos[j][k].direccion = DERECHA;
+                }
+            }
+        }
+        if(j == 4)
+        {    
+            for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+            {
+                autos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j+1);
+                autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
+                autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                autos[j][k].largo = AUTO2_ANCHO;                          //Cada enemigo será tan ancho como una casilla
+                autos[j][k].alto = AUTO2_ALTO;
+                autos[j][k].direccion = IZQUIERDA;
+            }
         }
     }
 }
