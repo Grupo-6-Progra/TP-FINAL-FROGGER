@@ -81,6 +81,7 @@ static void redraw_autos(void);
 static void redraw_troncos(void);
 static void redraw_tortugas(void);
 static void redraw_tiempo(void);
+static void redraw_llegada(void);
 
 
 
@@ -616,6 +617,9 @@ void allegro_redraw(void)
 
         //IMPRESIÓN DE TORTUGAS
         redraw_tortugas();
+        
+        //IMPRESION DE LAS CASILLAS DE LLEGADA
+        redraw_llegada();
 
         //IMPRESIÓN DE LA RANA
         redraw_rana();
@@ -849,6 +853,21 @@ static void redraw_tiempo(void)
     //           fuente         color               ancho          alto    flag            texto
 }
 
+static void redraw_llegada(void)
+{
+    int i;
+    
+    for (i = 0; i < CANT_CASILLAS_LLEGADA; i++)
+    {
+        
+        if (llegadas[i].ocupado == true)
+        {
+            al_draw_scaled_rotated_bitmap(sprites.al_rene[0],
+            al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, llegadas[i].x, llegadas[i].y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[0]),
+            0, 0);
+        }
+    }
+}
 
 
 
