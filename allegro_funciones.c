@@ -68,6 +68,9 @@ typedef struct SPRITES
     ALLEGRO_BITMAP* al_tronco3;
 
     ALLEGRO_BITMAP* al_tortugas[TORTUGAS_FRAMES];
+    
+    ALLEGRO_BITMAP* al_llegada;
+    ALLEGRO_BITMAP* al_fila_superior;
 
 }SPRITES;
 
@@ -82,6 +85,7 @@ static void redraw_troncos(void);
 static void redraw_tortugas(void);
 static void redraw_tiempo(void);
 static void redraw_llegada(void);
+static void redraw_fondo(void);
 
 
 
@@ -462,6 +466,61 @@ bool allegro_startup (void)
         return false;
     }
     
+    sprites.al_llegada = al_create_sub_bitmap(sprites._sheet, 511, 159, 55, 79);
+    if(!sprites.al_llegada)
+    {
+        fprintf(stderr, "failed to create al_llegada!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(fondo);
+    }
+    
+    sprites.al_fila_superior = al_create_sub_bitmap(sprites._sheet, 409, 159, 80, 79);
+    if(!sprites.al_fila_superior)
+    {
+        fprintf(stderr, "failed to create al_fila_superior!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(fondo);
+    }
+    
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display)
     {
@@ -487,6 +546,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_tortugas[2]);
         al_destroy_bitmap(sprites.al_tortugas[3]);
         al_destroy_bitmap(fondo);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
         return false;
     }
     
@@ -603,9 +664,9 @@ void allegro_redraw(void)
     {
         al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
 
-        unsigned int i;
-        unsigned int j,k;
-
+        //IMPRESION DEL FONDO
+        redraw_fondo();
+        
         //IMPRESION DEL TIEMPO RESTANTE
         redraw_tiempo();
 
@@ -863,10 +924,32 @@ static void redraw_llegada(void)
         if (llegadas[i].ocupado == true)
         {
             al_draw_scaled_rotated_bitmap(sprites.al_rene[0],
-            al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, llegadas[i].x, llegadas[i].y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[0]),
+            al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, llegadas[i].x, llegadas[i].y,
+            RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[0]),
             0, 0);
         }
     }
+}
+
+static void redraw_fondo(void)
+{
+    int i;
+    
+    for(i = 0; i < CANT_CASILLAS_FILA; i++)
+    {
+        al_draw_scaled_bitmap(sprites.al_fila_superior, 0,0,
+                        al_get_bitmap_width(sprites.al_fila_superior), al_get_bitmap_height(sprites.al_fila_superior),
+                        i * CASILLA_ANCHO, 0, CASILLA_ANCHO, CASILLA_ALTO, 0);
+    }
+    
+    for(i = 0; i < CANT_CASILLAS_LLEGADA; i++)
+    {
+        al_draw_scaled_bitmap(sprites.al_llegada, 0,0,
+                        al_get_bitmap_width(sprites.al_llegada), al_get_bitmap_height(sprites.al_llegada),
+                        llegadas[i].x-llegadas[i].ancho/2, llegadas[i].y - llegadas[i].alto/2, llegadas[i].ancho, llegadas[i].alto, 0);
+         
+    }
+   
 }
 
 
@@ -890,6 +973,8 @@ void allegro_destroy(void)
     al_destroy_bitmap(sprites.al_tortugas[2]);
     al_destroy_bitmap(sprites.al_tortugas[3]);
     al_destroy_bitmap(fondo);
+    al_destroy_bitmap(sprites.al_llegada);
+    al_destroy_bitmap(sprites.al_fila_superior);
     al_destroy_display(display);
 }
 
