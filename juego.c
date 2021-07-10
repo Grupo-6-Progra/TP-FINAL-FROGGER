@@ -267,6 +267,14 @@ static void move_frog (bool choque)
     {
         rene.x += rene.dx_extra; //se mueve la rana la velocidad extra adquirida por un tronco o tortuga
     }
+    else if ((rene.x > MUNDO_ANCHO - RANA_ANCHO/2 - rene.dx_extra) && (rene.dx_extra < 0)) //si llego al borde derecho y su velocidad extra es menor a 0 (hacia la izquierda)
+    {
+        rene.x += rene.dx_extra;
+    }
+    else if ((rene.x < RANA_ANCHO/2 + rene.dx_extra) && (rene.dx_extra > 0)) //si llego al borde izquierdo y su velocidad extra es mayor a 0 (hacia la derecha)
+    {
+        rene.x += rene.dx_extra;
+    }
     
     if (choque == true)
     {
