@@ -40,10 +40,7 @@ ALLEGRO_EVENT_QUEUE * event_queue;
 ***************************************************/
 static ALLEGRO_DISPLAY     * display;
 static ALLEGRO_BITMAP      * mundo_buffer;
-static ALLEGRO_BITMAP      * al_tronco1;
 
-static ALLEGRO_BITMAP      * al_tronco2;
-static ALLEGRO_BITMAP      * al_tronco3;
 static ALLEGRO_BITMAP      * al_tortuga1;
 static ALLEGRO_BITMAP      * al_tortuga2;
 static ALLEGRO_BITMAP      * fondo;
@@ -77,7 +74,7 @@ typedef struct SPRITES
 
 }SPRITES;
 
-SPRITES sprites;
+static SPRITES sprites;
 
 /***************************************************
  *  DECLARACIÓN DE FUNCIONES LOCALES
@@ -249,7 +246,7 @@ bool allegro_startup (void)
     sprites.al_auto2 = al_create_sub_bitmap(sprites._sheet, 11, 406, 177, 65);
     if(!sprites.al_auto1)
     {
-        fprintf(stderr, "failed to create al_auto_fila1!\n");
+        fprintf(stderr, "failed to create al_auto_fila2!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
         al_shutdown_primitives_addon();
@@ -264,8 +261,8 @@ bool allegro_startup (void)
         return false;
     }
     
-    al_tronco1 = al_create_bitmap(CASILLA_ANCHO*3, CASILLA_ALTO);
-    if(!al_tronco1)
+    sprites.al_tronco1 = al_create_sub_bitmap(sprites._sheet, 388, 254, 184, 64);
+    if(!sprites.al_tronco1)
     {
         fprintf(stderr, "failed to create al_tronco1!\n");
         al_shutdown_font_addon();
@@ -283,8 +280,8 @@ bool allegro_startup (void)
         return false;
     }
     
-    al_tronco2 = al_create_bitmap(CASILLA_ANCHO*5, CASILLA_ALTO);
-    if(!al_tronco2)
+    sprites.al_tronco2 = al_create_sub_bitmap(sprites._sheet, 14, 255, 353, 63);
+    if(!sprites.al_tronco2)
     {
         fprintf(stderr, "failed to create al_tronco2!\n");
         al_shutdown_font_addon();
@@ -299,14 +296,14 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_rene[1]);
         al_destroy_bitmap(sprites.al_auto1);
         al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco1);
         return false;
     }
     
-    al_tronco3 = al_create_bitmap(CASILLA_ANCHO*4, CASILLA_ALTO);
-    if(!al_tronco3)
+    sprites.al_tronco3 = al_create_sub_bitmap(sprites._sheet, 14, 325, 272, 64);
+    if(!sprites.al_tronco3)
     {
-        fprintf(stderr, "failed to create al_tronco3!\n");
+        fprintf(stderr, "failed to create al_tronco2!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
         al_shutdown_primitives_addon();
@@ -319,8 +316,8 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_rene[1]);
         al_destroy_bitmap(sprites.al_auto1);
         al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(al_tronco1);
-        al_destroy_bitmap(al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
         return false;
     }
     
@@ -340,9 +337,9 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_rene[1]);
         al_destroy_bitmap(sprites.al_auto1);
         al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(al_tronco1);
-        al_destroy_bitmap(al_tronco2);
-        al_destroy_bitmap(al_tronco3);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
         return false;
     }
     
@@ -362,9 +359,9 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_rene[1]);
         al_destroy_bitmap(sprites.al_auto1);
         al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(al_tronco1);
-        al_destroy_bitmap(al_tronco2);
-        al_destroy_bitmap(al_tronco3);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
         al_destroy_bitmap(al_tortuga1);
         return false;
     }
@@ -385,9 +382,9 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_rene[1]);
         al_destroy_bitmap(sprites.al_auto1);
         al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(al_tronco1);
-        al_destroy_bitmap(al_tronco2);
-        al_destroy_bitmap(al_tronco3);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
         al_destroy_bitmap(al_tortuga1);
         al_destroy_bitmap(al_tortuga2);
         return false;
@@ -409,9 +406,9 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_rene[1]);
         al_destroy_bitmap(sprites.al_auto1);
         al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(al_tronco1);
-        al_destroy_bitmap(al_tronco2);
-        al_destroy_bitmap(al_tronco3);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
         al_destroy_bitmap(al_tortuga1);
         al_destroy_bitmap(al_tortuga2);
         al_destroy_bitmap(fondo);
@@ -432,7 +429,8 @@ void allegro_fuentes(void)
 {
     font = al_load_ttf_font("Karumbi-Regular.ttf", 40, 0); //asigno la fuente que voy a usar
 
-    if (!font) {
+    if (!font)
+    {
 
         fprintf(stderr, "Could not load 'Karumbi-Regular.ttf'.\n");
 
@@ -509,16 +507,7 @@ bool allegro_teclas (ALLEGRO_EVENT * ev)
 
 
 void allegro_initialize_bitmaps(void)
-{    
-    
-    al_set_target_bitmap(al_tronco1);
-    al_clear_to_color(al_map_rgb(80,40,0));
-    
-    al_set_target_bitmap(al_tronco2);
-    al_clear_to_color(al_map_rgb(80,40,0));
-    
-    al_set_target_bitmap(al_tronco3);
-    al_clear_to_color(al_map_rgb(80,40,0));
+{ 
     
     
     al_set_target_bitmap(al_tortuga1);
@@ -716,15 +705,21 @@ static void redraw_troncos(void)
         {
             if(j == 0)
             {
-                al_draw_bitmap(al_tronco1, troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, 0);
+                al_draw_scaled_bitmap(sprites.al_tronco1,
+                        0,0, al_get_bitmap_width(sprites.al_tronco1), al_get_bitmap_height(sprites.al_tronco1),
+                        troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, TRONCO1_ANCHO , TRONCO1_ALTO, 0);
             }
             if(j == 1)
             {
-                al_draw_bitmap(al_tronco2, troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, 0);
+                al_draw_scaled_bitmap(sprites.al_tronco2, 0,0,
+                        al_get_bitmap_width(sprites.al_tronco2), al_get_bitmap_height(sprites.al_tronco2),
+                        troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, TRONCO2_ANCHO , TRONCO2_ALTO, 0);
             }
             if(j == 2)
             {
-                al_draw_bitmap(al_tronco3, troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, 0);
+                al_draw_scaled_bitmap(sprites.al_tronco3, 0,0,
+                        al_get_bitmap_width(sprites.al_tronco3), al_get_bitmap_height(sprites.al_tronco3),
+                        troncos[j][k].x - troncos[j][k].largo/2, troncos[j][k].y - troncos[j][k].alto/2, TRONCO3_ANCHO , TRONCO3_ALTO, 0);
             }
         }
     }
@@ -777,9 +772,9 @@ void allegro_destroy(void)
     al_destroy_bitmap(sprites.al_rene[1]);
     al_destroy_bitmap(sprites.al_auto1);
     al_destroy_bitmap(sprites.al_auto2);
-    al_destroy_bitmap(al_tronco1);
-    al_destroy_bitmap(al_tronco2);
-    al_destroy_bitmap(al_tronco3);
+    al_destroy_bitmap(sprites.al_tronco1);
+    al_destroy_bitmap(sprites.al_tronco2);
+    al_destroy_bitmap(sprites.al_tronco3);
     al_destroy_bitmap(al_tortuga1);
     al_destroy_bitmap(al_tortuga2);
     al_destroy_bitmap(fondo);

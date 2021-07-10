@@ -114,6 +114,15 @@ extern AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA]; //Defino una sola matriz con
 #define TRONCOS_POR_FILA        5
 #define FILAS_DE_TRONCOS        3
 
+#define TRONCO1_ANCHO              (3*CASILLA_ANCHO)         
+#define TRONCO1_ALTO               (CASILLA_ALTO)
+
+#define TRONCO2_ANCHO              (5*CASILLA_ANCHO)         
+#define TRONCO2_ALTO               (CASILLA_ALTO)
+
+#define TRONCO3_ANCHO              (4*CASILLA_ANCHO)         
+#define TRONCO3_ALTO               (CASILLA_ALTO)
+
 typedef struct //Defino una estructura nueva para los troncos
 {
     double x, y;
