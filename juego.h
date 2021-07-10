@@ -9,7 +9,7 @@
  * ESTADOS DEL JUEGO
  ************************/
 
-enum ESTADO_JUEGO
+enum ESTADOS
 {
     INICIO, REINICIO, PAUSA, JUEGO, PERDER, MENU
 };
@@ -71,6 +71,7 @@ typedef struct
     double dx, dy;
     double dx_extra;
     int direccion;
+    bool saltando;
     bool chocada;
     bool llego;
     

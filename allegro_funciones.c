@@ -82,6 +82,7 @@ SPRITES sprites;
 /***************************************************
  *  DECLARACIÓN DE FUNCIONES LOCALES
 ***************************************************/
+static void redraw_rana(void);
 static void redraw_autos(void);
 static void redraw_troncos(void);
 static void redraw_tortugas(void);
@@ -225,6 +226,7 @@ bool allegro_startup (void)
         al_destroy_timer(timer);
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
         return false;
     }
     
@@ -241,7 +243,7 @@ bool allegro_startup (void)
         al_destroy_event_queue(event_queue);
         al_destroy_bitmap(mundo_buffer);
         al_destroy_bitmap(sprites.al_rene[0]);
-    al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_rene[1]);
         return false;
     }
     
@@ -530,6 +532,21 @@ void allegro_redraw(void)
         unsigned int i;
         unsigned int j,k;
 
+        //IMPRESION DEL TIEMPO RESTANTE
+        redraw_tiempo();
+
+        //IMPRESION DE LOS AUTOS
+        redraw_autos();
+
+        //impresión de troncos
+        redraw_troncos();
+
+        //IMPRESIÓN DE TORTUGAS
+        redraw_tortugas();
+
+        //IMPRESIÓN DE LA RANA
+        redraw_rana();
+        
         switch(vidas_restantes)
         {
             case 1:
@@ -552,28 +569,12 @@ void allegro_redraw(void)
             }
             default:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "Error, algo salió mal");
+                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "PERDISTE");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
         }
-
-        //IMPRESION DEL TIEMPO RESTANTE
-        redraw_tiempo();
-
-        //IMPRESION DE LOS AUTOS
-        redraw_autos();
-
-        //impresión de troncos
-        redraw_troncos();
-
-        //IMPRESIÓN DE TORTUGAS
-        redraw_tortugas();
-
-        //IMPRESIÓN DE LA RANA
-        al_draw_scaled_rotated_bitmap(sprites.al_rene[0],
-   al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]),
-   rene.direccion*ALLEGRO_PI/2, 0);
+        
     }
     else
     {
@@ -641,6 +642,22 @@ void allegro_redraw(void)
     al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);
 
     al_flip_display();
+}
+
+static void redraw_rana(void)
+{
+    if(rene.saltando == true)
+    {
+        al_draw_scaled_rotated_bitmap(sprites.al_rene[1],
+        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]),
+        rene.direccion*ALLEGRO_PI/2, 0);
+    }
+    else
+    {
+        al_draw_scaled_rotated_bitmap(sprites.al_rene[0],
+        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]),
+        rene.direccion*ALLEGRO_PI/2, 0);
+    }
 }
 
 static void redraw_autos(void)

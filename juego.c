@@ -47,6 +47,7 @@ static void move_troncos(void);
 static void move_tortugas(void);
 
 static int game_over(void);
+
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
@@ -245,6 +246,19 @@ bool frogger (void)
  ******************************************************************************************
 *******************************************************************************************/
 
+static void initialize_frog(void)
+{
+    rene.x = 8 * CASILLA_ANCHO - CASILLA_ANCHO/2.0;
+    rene.y = MUNDO_ALTO - CASILLA_ALTO/2.0;
+    rene.dy = VELOCIDAD_RANA_ALTO;
+    rene.dx = VELOCIDAD_RANA_ANCHO;
+    rene.dx_extra = 0;
+    rene.chocada = false;
+    rene.llego = false;
+    rene.direccion = ARRIBA;
+    rene.saltando = false;
+}
+
 static void move_frog (bool choque)
 {
     static unsigned int timer_up = 0, timer_down = 0, timer_right = 0, timer_left = 0;
@@ -276,8 +290,12 @@ static void move_frog (bool choque)
             if(timer_up > TARDA_SALTO && rene.y >=  CASILLA_ALTO/2 + rene.dy)
             {
                  rene.y -= rene.dy;
+                 rene.saltando = true;
             }
-
+            else
+            {
+                rene.saltando = false;
+            }
             timer_up--;
 
         }
@@ -294,8 +312,12 @@ static void move_frog (bool choque)
             if (timer_down > TARDA_SALTO && rene.y <= MUNDO_ALTO - CASILLA_ALTO/2 -rene.dy)
             {
                 rene.y += rene.dy;
+                rene.saltando = true;
             }
-
+            else
+            {
+                rene.saltando = false;
+            }
             timer_down--;
         }
 
@@ -305,14 +327,20 @@ static void move_frog (bool choque)
             {
                 timer_right = (int) (FRAMES_POR_SALTO_ANCHO + TARDA_SALTO);
                 rene.direccion = DERECHA;
+                rene.saltando = true;
                 
             }
 
             if (timer_right > TARDA_SALTO && rene.x <= MUNDO_ANCHO - CASILLA_ANCHO/2 - rene.dx)
             {
                 rene.x += rene.dx;
+                rene.saltando = true;
             }
 
+            else
+            {
+                rene.saltando = false;
+            }
             timer_right--;
         }
 
@@ -327,19 +355,16 @@ static void move_frog (bool choque)
             if(timer_left > TARDA_SALTO && rene.x >= CASILLA_ANCHO/2 + rene.dx)
             {
                 rene.x -= rene.dx;
+                rene.saltando = true;
             }
 
+            else
+            {
+                rene.saltando = false;
+            }
             timer_left--;
         }
     }
-}
-
-static void initialize_frog(void)
-{
-    rene.x = 8 * CASILLA_ANCHO - CASILLA_ANCHO/2.0;
-    rene.y = MUNDO_ALTO - CASILLA_ALTO/2.0;
-    rene.dy = VELOCIDAD_RANA_ALTO;
-    rene.dx = VELOCIDAD_RANA_ANCHO;
 }
 
 /**************************************
