@@ -56,6 +56,7 @@ typedef struct SPRITES
     ALLEGRO_BITMAP* _sheet;
 
     ALLEGRO_BITMAP* al_rene[RANA_FRAMES];
+    ALLEGRO_BITMAP* al_rene_perdio;
     
     ALLEGRO_BITMAP* al_auto1;
     ALLEGRO_BITMAP* al_auto2;
@@ -580,6 +581,38 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_calle);
     }
     
+    sprites.al_rene_perdio = al_create_sub_bitmap(sprites._sheet, 301, 330, 69, 53);
+    if(!sprites.al_rene_perdio)
+    {
+        fprintf(stderr, "failed to create al_rene_perdio!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+        al_destroy_bitmap(sprites.al_calle);
+        al_destroy_bitmap(sprites.al_fila_segura);
+    }
+    
+    
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display)
     {
@@ -609,6 +642,7 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_agua);
         al_destroy_bitmap(sprites.al_calle);
         al_destroy_bitmap(sprites.al_fila_segura);
+        al_destroy_bitmap(sprites.al_rene_perdio);
         return false;
     }
     
@@ -924,17 +958,36 @@ static void redraw_fondo(void)
 
 static void redraw_rana(void)
 {
-    if(rene.saltando == true)
+    if (rene.chocada == false && rene.frame_chocada == 0)
     {
-        al_draw_scaled_rotated_bitmap(sprites.al_rene[1],
-        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[1]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[1]),
-        rene.direccion*ALLEGRO_PI/2, 0);
+        if(rene.saltando == true)
+        {
+            al_draw_scaled_rotated_bitmap(sprites.al_rene[1],
+            al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[1]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[1]),
+            rene.direccion*ALLEGRO_PI/2, 0);
+        }
+        else
+        {
+            al_draw_scaled_rotated_bitmap(sprites.al_rene[0],
+            al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[0]),
+            rene.direccion*ALLEGRO_PI/2, 0);
+        }
     }
-    else
+    
+    else if (rene.chocada == true)
     {
-        al_draw_scaled_rotated_bitmap(sprites.al_rene[0],
-        al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[0]),
-        rene.direccion*ALLEGRO_PI/2, 0);
+        if(estado_juego == PERDER)
+        {
+            al_draw_scaled_rotated_bitmap(sprites.al_rene[1],
+            al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[1]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[1]),
+            rene.direccion*ALLEGRO_PI/2, 0);
+        }
+        if(rene.frame_chocada == 1)
+        {
+            al_draw_scaled_bitmap(sprites.al_rene_perdio,
+                        0,0, al_get_bitmap_width(sprites.al_rene_perdio), al_get_bitmap_height(sprites.al_rene_perdio),
+                        rene.x - RANA_ANCHO/2, rene.y - RANA_ALTO/2, RANA_ANCHO , RANA_ALTO, 0);
+        }
     }
 }
 
@@ -1102,6 +1155,7 @@ void allegro_destroy(void)
     al_destroy_bitmap(sprites.al_agua);
     al_destroy_bitmap(sprites.al_calle);
     al_destroy_bitmap(sprites.al_fila_segura);
+    al_destroy_bitmap(sprites.al_rene_perdio);
     al_destroy_display(display);
 }
 

@@ -103,13 +103,14 @@ bool frogger (void)
             tiempo_restante = TIEMPO_TOTAL; //Inicializo el tiempo restante en 100 segundos
             break;
         }
+        
         case REINICIO: //caso al que se entra cuando se pierde una vida
         {
             if(rene.llego == true)
             {
                 if (choque_en_proceso == 0) //significa que acabo de ganar
                 {
-                    choque_en_proceso = 20;
+                    choque_en_proceso = 30;
                 } 
                 else if (choque_en_proceso > 0)
                 {
@@ -128,6 +129,7 @@ bool frogger (void)
                     estado_juego = JUEGO;
                 }
             }
+            
             else
             {
                 if(vidas_restantes == 0)
@@ -138,13 +140,16 @@ bool frogger (void)
 
                 else if (rene.chocada == true && choque_en_proceso == 0) //significa que acabo de chocar
                 {
-                    choque_en_proceso = 20;
+                    choque_en_proceso = 30;
+                    rene.frame_chocada = 1;
                 }
 
                 else if (choque_en_proceso > 0)
                 {
                     choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
+                    
                     move_enemies();
+                    
                     if (choque_en_proceso == 0)
                     {
                         rene.chocada = false;
@@ -213,10 +218,12 @@ bool frogger (void)
             
             break;
         }
+        
         case PAUSA:
         {
             break;
         }   
+        
         case PERDER:
         {
             if(!game_over())
@@ -225,6 +232,7 @@ bool frogger (void)
             }
             break;
         }
+        
         case MENU:
         {
             salir = menu_start();
@@ -257,6 +265,7 @@ static void initialize_frog(void)
     rene.llego = false;
     rene.direccion = ARRIBA;
     rene.saltando = false;
+    rene.frame_chocada = 0;
 }
 
 static void move_frog (bool choque)

@@ -73,6 +73,7 @@ typedef struct
     int direccion;
     bool saltando;
     bool chocada;
+    int frame_chocada; // 0 = no chocada, 1 = en el agua, 2 = mostrar perder
     bool llego;
     
     
