@@ -389,8 +389,8 @@ static void initialize_llegada(void)
     {
         llegadas[i].x = 0.5*CASILLA_ANCHO + i * (1.2+1.75) * CASILLA_ANCHO + 1.2*CASILLA_ANCHO/2.0;
         llegadas[i].y = CASILLA_ALTO / 2.0;
-        llegadas[i].alto = CASILLA_ALTO;
-        llegadas[i].ancho = 1.2 * CASILLA_ANCHO;
+        llegadas[i].alto = LLEGADA_ALTO;
+        llegadas[i].ancho = LLEGADA_ANCHO;
         llegadas[i].ocupado = false;
     }
     

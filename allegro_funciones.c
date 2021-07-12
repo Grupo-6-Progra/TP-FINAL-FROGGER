@@ -40,8 +40,6 @@ ALLEGRO_EVENT_QUEUE * event_queue;
 ***************************************************/
 static ALLEGRO_DISPLAY     * display;
 static ALLEGRO_BITMAP      * mundo_buffer;
-
-static ALLEGRO_BITMAP      * fondo;
 static ALLEGRO_FONT        * font;
 
 
@@ -71,6 +69,9 @@ typedef struct SPRITES
     
     ALLEGRO_BITMAP* al_llegada;
     ALLEGRO_BITMAP* al_fila_superior;
+    ALLEGRO_BITMAP* al_agua;
+    ALLEGRO_BITMAP* al_calle;
+    ALLEGRO_BITMAP* al_fila_segura;
 
 }SPRITES;
 
@@ -439,33 +440,6 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_tortugas[2]);
     }
     
-    fondo = al_load_bitmap("fondo2.png");
-    if(!fondo)
-    {
-        fprintf(stderr, "failed to create fondo!\n");
-        al_shutdown_font_addon();
-        al_shutdown_ttf_addon();
-        al_shutdown_primitives_addon();
-        al_shutdown_image_addon();
-        al_uninstall_keyboard();
-        al_destroy_timer(timer);
-        al_destroy_event_queue(event_queue);
-        al_destroy_bitmap(mundo_buffer);
-        al_destroy_bitmap(sprites.al_rene[0]);
-        al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(sprites.al_auto1);
-        al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(sprites.al_camion);
-        al_destroy_bitmap(sprites.al_tronco1);
-        al_destroy_bitmap(sprites.al_tronco2);
-        al_destroy_bitmap(sprites.al_tronco3);
-        al_destroy_bitmap(sprites.al_tortugas[0]);
-        al_destroy_bitmap(sprites.al_tortugas[1]);
-        al_destroy_bitmap(sprites.al_tortugas[2]);
-        al_destroy_bitmap(sprites.al_tortugas[3]);
-        return false;
-    }
-    
     sprites.al_llegada = al_create_sub_bitmap(sprites._sheet, 511, 159, 55, 79);
     if(!sprites.al_llegada)
     {
@@ -490,10 +464,9 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_tortugas[1]);
         al_destroy_bitmap(sprites.al_tortugas[2]);
         al_destroy_bitmap(sprites.al_tortugas[3]);
-        al_destroy_bitmap(fondo);
     }
     
-    sprites.al_fila_superior = al_create_sub_bitmap(sprites._sheet, 409, 159, 80, 79);
+    sprites.al_fila_superior = al_create_sub_bitmap(sprites._sheet, 409, 159, 79, 79);
     if(!sprites.al_fila_superior)
     {
         fprintf(stderr, "failed to create al_fila_superior!\n");
@@ -518,7 +491,93 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_tortugas[2]);
         al_destroy_bitmap(sprites.al_tortugas[3]);
         al_destroy_bitmap(sprites.al_llegada);
-        al_destroy_bitmap(fondo);
+    }
+    
+    sprites.al_agua = al_create_sub_bitmap(sprites._sheet, 230, 160, 76, 77);
+    if(!sprites.al_agua)
+    {
+        fprintf(stderr, "failed to create al_agua!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+    }
+    
+    sprites.al_calle = al_create_sub_bitmap(sprites._sheet, 319, 160, 79, 76);
+    if(!sprites.al_calle)
+    {
+        fprintf(stderr, "failed to create al_calle!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+    }
+    
+    sprites.al_fila_segura = al_create_sub_bitmap(sprites._sheet, 138, 159, 79, 79);
+    if(!sprites.al_fila_segura)
+    {
+        fprintf(stderr, "failed to create al_fila_segura!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+        al_destroy_bitmap(sprites.al_calle);
     }
     
     display = al_create_display(SCREEN_W, SCREEN_H);
@@ -545,9 +604,11 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_tortugas[1]);
         al_destroy_bitmap(sprites.al_tortugas[2]);
         al_destroy_bitmap(sprites.al_tortugas[3]);
-        al_destroy_bitmap(fondo);
         al_destroy_bitmap(sprites.al_llegada);
         al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+        al_destroy_bitmap(sprites.al_calle);
+        al_destroy_bitmap(sprites.al_fila_segura);
         return false;
     }
     
@@ -662,7 +723,6 @@ void allegro_redraw(void)
     
     if(estado_juego != MENU)
     {
-        al_draw_scaled_bitmap(fondo,0,0,448,422, 0, 0, BUFFER_W, BUFFER_H, 0);
 
         //IMPRESION DEL FONDO
         redraw_fondo();
@@ -782,6 +842,86 @@ void allegro_redraw(void)
     al_flip_display();
 }
 
+static void redraw_fondo(void)
+{
+    int i,j;
+    
+    //IMPRESIÓN DE LA CALLE
+    for(i = 0; i < 5; i++)
+    {
+        for(j = 0; j < CANT_CASILLAS_FILA; j++)
+        {
+            al_draw_scaled_bitmap(sprites.al_calle, 0,0,
+                al_get_bitmap_width(sprites.al_calle), al_get_bitmap_height(sprites.al_calle),
+                CASILLA_ANCHO * j, CASILLA_ALTO * (i+7), CASILLA_ANCHO, CASILLA_ALTO, 0);
+        }
+    }
+    
+    //IMPRESIÓN DEL AGUA
+    for(i = 0; i < 5; i++)
+    {
+        for(j = 0; j < CANT_CASILLAS_FILA; j++)
+        {
+            if (i % 2 == 0) //imprimimos el agua
+            {
+                al_draw_scaled_bitmap(sprites.al_agua, 0,0,
+                al_get_bitmap_width(sprites.al_agua), al_get_bitmap_height(sprites.al_agua),
+                CASILLA_ANCHO * j, CASILLA_ALTO * (i+1), CASILLA_ANCHO, CASILLA_ALTO, 0);
+            }
+            
+            else // en las filas impares, imprimimos el agua desplazada a la derecha, para que quede mejor visualmente
+            {
+                if(j == 0)
+                {
+                    al_draw_scaled_bitmap(sprites.al_agua, 0,0,
+                    al_get_bitmap_width(sprites.al_agua), al_get_bitmap_height(sprites.al_agua),
+                    CASILLA_ANCHO * (j-1) + CASILLA_ANCHO/2, CASILLA_ALTO * (i+1), CASILLA_ANCHO, CASILLA_ALTO, 0);
+                }
+                
+                al_draw_scaled_bitmap(sprites.al_agua, 0,0,
+                al_get_bitmap_width(sprites.al_agua), al_get_bitmap_height(sprites.al_agua),
+                CASILLA_ANCHO * j + CASILLA_ANCHO/2, CASILLA_ALTO * (i+1), CASILLA_ANCHO, CASILLA_ALTO, 0);
+            }
+            
+        }
+    }
+    
+    //IMPRESIÓN DE LAS FILAS SEGURAS (FILA INICIAL Y FILA INTERMEDIA)
+    for (i = 0; i < CANT_CASILLAS_FILA; i++)
+    {
+        al_draw_scaled_bitmap(sprites.al_fila_segura, 0,0,
+                al_get_bitmap_width(sprites.al_fila_segura), al_get_bitmap_height(sprites.al_fila_segura),
+                CASILLA_ANCHO * i, CASILLA_ALTO * 6, CASILLA_ANCHO, CASILLA_ALTO+2, 0);
+    }
+    
+    for (i = 0; i < CANT_CASILLAS_FILA; i++)
+    {
+        al_draw_scaled_bitmap(sprites.al_fila_segura, 0,0,
+                al_get_bitmap_width(sprites.al_fila_segura), al_get_bitmap_height(sprites.al_fila_segura),
+                CASILLA_ANCHO * i, CASILLA_ALTO * 12 -2, CASILLA_ANCHO, CASILLA_ALTO+2, 0);
+    }
+    
+    //IMPRESIÓN FILA DE LLEGADA
+    for(i = 0; i < CANT_CASILLAS_FILA; i++)
+    {
+        al_draw_scaled_bitmap(sprites.al_fila_superior, 0,0,
+                        al_get_bitmap_width(sprites.al_fila_superior), al_get_bitmap_height(sprites.al_fila_superior),
+                        i * CASILLA_ANCHO, 0, CASILLA_ANCHO, CASILLA_ALTO, 0);
+    }
+    
+    //IMPRESIÓN DE CASILLAS DE LLEGADA
+    for(i = 0; i < CANT_CASILLAS_LLEGADA; i++)
+    {
+        al_draw_scaled_bitmap(sprites.al_llegada, 0,0,
+                        al_get_bitmap_width(sprites.al_llegada), al_get_bitmap_height(sprites.al_llegada),
+                        llegadas[i].x-llegadas[i].ancho/2, llegadas[i].y - llegadas[i].alto/2, llegadas[i].ancho, llegadas[i].alto, 0);  
+    }
+    
+   
+}
+
+
+
 static void redraw_rana(void)
 {
     if(rene.saltando == true)
@@ -797,6 +937,7 @@ static void redraw_rana(void)
         rene.direccion*ALLEGRO_PI/2, 0);
     }
 }
+
 
 static void redraw_autos(void)
 {
@@ -831,6 +972,7 @@ static void redraw_autos(void)
         }
     }
 }
+
 
 static void redraw_troncos(void)
 {
@@ -904,6 +1046,7 @@ static void redraw_tortugas(void)
     }
 }
 
+
 static void redraw_tiempo(void)
 {
     static double xf;
@@ -913,6 +1056,7 @@ static void redraw_tiempo(void)
     al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 30, MUNDO_ALTO - 40, ALLEGRO_ALIGN_RIGHT, "Time");
     //           fuente         color               ancho          alto    flag            texto
 }
+
 
 static void redraw_llegada(void)
 {
@@ -931,26 +1075,7 @@ static void redraw_llegada(void)
     }
 }
 
-static void redraw_fondo(void)
-{
-    int i;
-    
-    for(i = 0; i < CANT_CASILLAS_FILA; i++)
-    {
-        al_draw_scaled_bitmap(sprites.al_fila_superior, 0,0,
-                        al_get_bitmap_width(sprites.al_fila_superior), al_get_bitmap_height(sprites.al_fila_superior),
-                        i * CASILLA_ANCHO, 0, CASILLA_ANCHO, CASILLA_ALTO, 0);
-    }
-    
-    for(i = 0; i < CANT_CASILLAS_LLEGADA; i++)
-    {
-        al_draw_scaled_bitmap(sprites.al_llegada, 0,0,
-                        al_get_bitmap_width(sprites.al_llegada), al_get_bitmap_height(sprites.al_llegada),
-                        llegadas[i].x-llegadas[i].ancho/2, llegadas[i].y - llegadas[i].alto/2, llegadas[i].ancho, llegadas[i].alto, 0);
-         
-    }
-   
-}
+
 
 
 
@@ -972,9 +1097,11 @@ void allegro_destroy(void)
     al_destroy_bitmap(sprites.al_tortugas[1]);
     al_destroy_bitmap(sprites.al_tortugas[2]);
     al_destroy_bitmap(sprites.al_tortugas[3]);
-    al_destroy_bitmap(fondo);
     al_destroy_bitmap(sprites.al_llegada);
     al_destroy_bitmap(sprites.al_fila_superior);
+    al_destroy_bitmap(sprites.al_agua);
+    al_destroy_bitmap(sprites.al_calle);
+    al_destroy_bitmap(sprites.al_fila_segura);
     al_destroy_display(display);
 }
 

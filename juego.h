@@ -169,6 +169,9 @@ extern TORTUGAS tortugas[FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA]; //Defino una sol
  **************************************************/
 #define CANT_CASILLAS_LLEGADA       5
 
+#define LLEGADA_ALTO                CASILLA_ALTO
+#define LLEGADA_ANCHO               (1.2 * CASILLA_ANCHO)
+
 typedef struct
 {
     double x,y;
