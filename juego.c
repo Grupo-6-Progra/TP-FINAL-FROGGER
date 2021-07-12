@@ -468,17 +468,19 @@ static void initialize_autos(unsigned int nivel)
                 }
             }
         }
+        
         if(j == 4)
         {    
             for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
-            {
-                autos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j+1);
+            {                
                 autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
                 autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 autos[j][k].largo = CAMION_ANCHO;                          //Cada enemigo será tan ancho como una casilla
                 autos[j][k].alto = CAMION_ALTO;
+                
+                autos[j][k].dx = -1;
                 autos[j][k].direccion = IZQUIERDA;
+                autos[j][k].x = k * MUNDO_ANCHO / (2.0 * nivel);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
             }
         }
     }
@@ -494,10 +496,11 @@ static void initialize_troncos(unsigned int nivel)
         {       
             for(k = 0; k < TRONCOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
             {
-                troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                troncos[j][k].dx = 0.5;
+                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                
                 troncos[j][k].fila = 8;                                                                                 //necesito que los autos empiecen en la fila 1
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 troncos[j][k].largo = TRONCO1_ANCHO ;                          //Cada enemigo será tan ancho como una casilla
                 troncos[j][k].alto = TRONCO1_ALTO;
             }
@@ -507,10 +510,11 @@ static void initialize_troncos(unsigned int nivel)
         {
             for(k = 0; k < TRONCOS_POR_FILA; k++) 
             {
-                troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
-                troncos[j][k].fila = 9;                                                                                      //necesito que los autos empiecen en la fila 1
-                troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                troncos[j][k].dx = 2;
                 troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                
+                troncos[j][k].fila = 9;//necesito que los autos empiecen en la fila 1               
+                troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
                 troncos[j][k].largo = TRONCO2_ANCHO ;                          //Cada enemigo será tan ancho como una casilla
                 troncos[j][k].alto = TRONCO3_ALTO;
             }
@@ -520,10 +524,11 @@ static void initialize_troncos(unsigned int nivel)
         {
             for(k = 0; k < TRONCOS_POR_FILA; k++) 
             {
-                troncos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                troncos[j][k].dx = 1;
+                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                
                 troncos[j][k].fila = 11;                                                                                      //necesito que los autos empiecen en la fila 1
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 troncos[j][k].largo = TRONCO3_ANCHO ;                          //Cada enemigo será tan ancho como una casilla
                 troncos[j][k].alto = TRONCO3_ALTO;
             }
@@ -542,10 +547,11 @@ static void initialize_tortugas(unsigned int nivel)
         {       
             for(k = 0; k < TORTUGAS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
             {
-                tortugas[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
+                tortugas[j][k].dx = -2;
+                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                
                 tortugas[j][k].fila = 7;                                                                                 //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 tortugas[j][k].largo = TORTUGAS_ANCHO*3;                          //Cada enemigo será tan ancho como una casilla
                 tortugas[j][k].alto = TORTUGAS_ALTO;
                 tortugas[j][k].hundirse = false;
@@ -557,8 +563,10 @@ static void initialize_tortugas(unsigned int nivel)
         {
             for(k = 0; k < TORTUGAS_POR_FILA; k++) 
             {
-                tortugas[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j);
-                tortugas[j][k].fila = 10;                                                                                 //necesito que los autos empiecen en la fila 1
+                tortugas[j][k].dx = -1;
+                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                
+                tortugas[j][k].fila = 10;    //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
                 tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 tortugas[j][k].largo = TORTUGAS_ANCHO*2;                          //Cada enemigo será tan ancho como una casilla
