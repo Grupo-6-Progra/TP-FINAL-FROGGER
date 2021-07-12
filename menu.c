@@ -1,7 +1,8 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<stdbool.h>
-#include"menu.h"
+#include "menu.h"
+#include "juego.h"
 
 
 
@@ -56,6 +57,7 @@ bool menu_start(void)
                     case QUIT:
                         return quit();
                         break;
+                    
                 }
             }
         }
@@ -107,11 +109,12 @@ static void play (void)
     //mostrar la palabra play
     if(key_pressed[KEY_ENTER])
     {
+        nivel = 1;
         estado_juego = INICIO;
     }
 }
-static bool quit(void)
 
+static bool quit(void)
 {
     if(key_pressed[KEY_ENTER])
     {

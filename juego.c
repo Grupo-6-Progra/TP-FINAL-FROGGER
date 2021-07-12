@@ -108,25 +108,45 @@ bool frogger (void)
         {
             if(rene.llego == true)
             {
-                if (choque_en_proceso == 0) //significa que acabo de ganar
+                int casillas_llegadas = 0;
+                int i;
+                
+                for (i = 0; i < 5; i++)
                 {
-                    choque_en_proceso = 30;
-                } 
-                else if (choque_en_proceso > 0)
-                {
-                    choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
-                    move_enemies();
-                    if (choque_en_proceso == 0)
+                    if(llegadas[i].ocupado == true)
                     {
-                        rene.llego = false;
+                        casillas_llegadas++;
                     }
                 }
+                
+                if(casillas_llegadas == 5)
+                {
+                    nivel++;
+                    estado_juego = INICIO;
+                }
+                
                 else
                 {
-                    initialize_frog();
-                    move_frog(true);
-                    tiempo_restante = TIEMPO_TOTAL; 
-                    estado_juego = JUEGO;
+                    if (choque_en_proceso == 0) //significa que acabo de ganar
+                    {
+                        choque_en_proceso = 30;
+                    } 
+                    else if (choque_en_proceso > 0)
+                    {
+                        choque_en_proceso--;
+                        move_enemies();
+                        if (choque_en_proceso == 0)
+                        {
+                            rene.llego = false;
+                        }
+                    }
+                    else
+                    {
+                        initialize_frog();
+                        move_frog(true);
+                        tiempo_restante = TIEMPO_TOTAL; 
+                        estado_juego = JUEGO;
+                    }
                 }
             }
             

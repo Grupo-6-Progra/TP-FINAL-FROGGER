@@ -26,7 +26,7 @@
 
 #define SCREEN_SCALE    1
 #define SCREEN_W        (BUFFER_W * SCREEN_SCALE)
-#define SCREEN_H        (BUFFER_H * SCREEN_SCALE)
+#define SCREEN_H        (BUFFER_H * SCREEN_SCALE * 17/15)
 
 
 /***************************************************
@@ -753,16 +753,13 @@ void allegro_initialize_bitmaps(void)
 
 void allegro_redraw(void)
 {
-    al_set_target_bitmap(mundo_buffer);
     
     if(estado_juego != MENU)
     {
+        al_set_target_bitmap(mundo_buffer);
 
         //IMPRESION DEL FONDO
         redraw_fondo();
-        
-        //IMPRESION DEL TIEMPO RESTANTE
-        redraw_tiempo();
 
         //IMPRESION DE LOS AUTOS
         redraw_autos();
@@ -779,29 +776,37 @@ void allegro_redraw(void)
         //IMPRESIÓN DE LA RANA
         redraw_rana();
         
+        al_set_target_backbuffer(display);
+        al_clear_to_color(al_map_rgb(0,0,0));
+        
+        al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, SCREEN_W/15, SCREEN_W, SCREEN_H-2*SCREEN_W/15, 0);
+        
+        //IMPRESION DEL TIEMPO RESTANTE
+        redraw_tiempo();
+        
         switch(vidas_restantes)
         {
             case 1:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "1");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "1");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case 2:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "2");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "2");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case 3:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "3");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "3");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             default:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 15, 0, ALLEGRO_ALIGN_RIGHT, "PERDISTE");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "PERDISTE");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
@@ -810,59 +815,61 @@ void allegro_redraw(void)
     }
     else
     {
+        al_set_target_backbuffer(display);
         al_clear_to_color(al_map_rgb(0,0,0));
+        
         switch(selector_menu)
         {
             case PLAY:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Play XD");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Play XD");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case LEVEL:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Presione enter para seleccionar nivel");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Presione enter para seleccionar nivel");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case QUIT:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Presione enter para salir del programa");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Presione enter para salir del programa");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case MENU_LEVELS:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), 0, 0, ALLEGRO_ALIGN_LEFT, "Acá se selecciona el nivel");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Acá se selecciona el nivel");
                 //           fuente         color               ancho          alto    flag            texto
                 switch (nivel)
                 {
                     case 1:
                     {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 1");
+                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 1");
                 //           fuente         color               ancho          alto    flag            texto
                         break;
                     }
                     case 2:
                     {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 2");
+                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 2");
                 //           fuente         color               ancho          alto    flag            texto
                         break;
                     }
                     case 3:
                     {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 3");
+                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 3");
                 //           fuente         color               ancho          alto    flag            texto
                         break;
                     }
                     case 4:
                     {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 4");
+                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 4");
                 //           fuente         color               ancho          alto    flag            texto
                         break;
                     }
                     default:
-                        al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO/2.0, MUNDO_ALTO/2.0, ALLEGRO_ALIGN_CENTER, "Próximamente");
+                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Próximamente");
                 //           fuente         color               ancho          alto    flag            texto
                     
                 }    
@@ -870,9 +877,6 @@ void allegro_redraw(void)
         }
     }
     
-    al_set_target_backbuffer(display);
-    al_draw_scaled_bitmap(mundo_buffer, 0, 0, BUFFER_W, BUFFER_H, 0, 0, SCREEN_W, SCREEN_H, 0);
-
     al_flip_display();
 }
 
@@ -1100,17 +1104,6 @@ static void redraw_tortugas(void)
 }
 
 
-static void redraw_tiempo(void)
-{
-    static double xf;
-    xf = (MUNDO_ANCHO - 100) * ((TIEMPO_TOTAL - tiempo_restante)/TIEMPO_TOTAL); //le resto 100 para poder escribir la palabra "time" a la derecha
-    al_draw_line(MUNDO_ANCHO - 100, MUNDO_ALTO, xf, MUNDO_ALTO, al_color_name("darkgreen"), 20);
-    //           x0            y0         xf        yf               color          thickness
-    al_draw_text(font, al_map_rgb(255, 255, 255), MUNDO_ANCHO - 30, MUNDO_ALTO - 40, ALLEGRO_ALIGN_RIGHT, "Time");
-    //           fuente         color               ancho          alto    flag            texto
-}
-
-
 static void redraw_llegada(void)
 {
     int i;
@@ -1128,7 +1121,18 @@ static void redraw_llegada(void)
     }
 }
 
-
+static void redraw_tiempo(void)
+{
+    
+    static double xf;
+    xf = (SCREEN_W - 100) * ((TIEMPO_TOTAL - tiempo_restante)/TIEMPO_TOTAL); //le resto 100 para poder escribir la palabra "time" a la derecha
+    al_draw_line(SCREEN_W  - 100, SCREEN_H, xf, SCREEN_H, al_color_name("darkgreen"), 20);
+    //           x0            y0         xf        yf               color          thickness
+    al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 30, SCREEN_H - 40, ALLEGRO_ALIGN_RIGHT, "Time");
+    //           fuente         color               ancho          alto    flag            texto
+    
+    
+}
 
 
 
