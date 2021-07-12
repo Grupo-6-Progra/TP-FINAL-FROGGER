@@ -107,47 +107,46 @@ bool frogger (void)
         case REINICIO: //caso al que se entra cuando se pierde una vida
         {
             if(rene.llego == true)
-            {
-                int casillas_llegadas = 0;
-                int i;
-                
-                for (i = 0; i < 5; i++)
+            {                              
+                if (choque_en_proceso == 0) //significa que acabo de ganar
                 {
-                    if(llegadas[i].ocupado == true)
-                    {
-                        casillas_llegadas++;
-                    }
+                    choque_en_proceso = 30;
                 }
-                
-                if(casillas_llegadas == 5)
+                else if (choque_en_proceso > 0)
                 {
-                    nivel++;
-                    estado_juego = INICIO;
-                }
-                
-                else
-                {
-                    if (choque_en_proceso == 0) //significa que acabo de ganar
+                    choque_en_proceso--;
+                    move_enemies();
+                    if (choque_en_proceso == 0)
                     {
-                        choque_en_proceso = 30;
-                    } 
-                    else if (choque_en_proceso > 0)
-                    {
-                        choque_en_proceso--;
-                        move_enemies();
-                        if (choque_en_proceso == 0)
+                        rene.llego = false;
+                        int casillas_llegadas = 0;
+                        int i;
+
+                        for (i = 0; i < 5; i++)
                         {
-                            rene.llego = false;
+                            if(llegadas[i].ocupado == true)
+                            {
+                                casillas_llegadas++;
+                            }
+                        }
+
+                        if(casillas_llegadas == 5)
+                        {
+                            nivel++;
+                            move_frog(true);
+                            estado_juego = INICIO;
+                        }
+
+                        else
+                        {
+                            initialize_frog();
+                            move_frog(true);
+                            tiempo_restante = TIEMPO_TOTAL; 
+                            estado_juego = JUEGO;
                         }
                     }
-                    else
-                    {
-                        initialize_frog();
-                        move_frog(true);
-                        tiempo_restante = TIEMPO_TOTAL; 
-                        estado_juego = JUEGO;
-                    }
                 }
+            
             }
             
             else
