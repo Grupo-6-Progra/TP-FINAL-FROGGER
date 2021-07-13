@@ -16,7 +16,7 @@
 
 #define THRESHOLD 40	//Límite a partir del cual se mueve el LED encendido
 
-#define APROX(x)                ((x>0) ? (int)((x)+0.5) : ((int)((x)-0.5)))
+#define APROX(x)                ((x>0) ? ((int)((x)+0.5)) : ((int)((x)-0.5)))
 
 
 void init_display()
@@ -46,7 +46,7 @@ void redraw_disp (void)
     
     
     
-    for (k=0 ; k<FILAS_DE_AUTOS ; k++)
+ /*   for (k=0 ; k<FILAS_DE_AUTOS ; k++)
     {
         for (l=0 ; l<AUTOS_POR_FILA ; l++)
         {
@@ -57,6 +57,10 @@ void redraw_disp (void)
 
         }
     }
+  */
+    
+    print_autos();
+  
        
     vidas(3);
 	
@@ -244,27 +248,67 @@ void print_autos (void)
     double autoy;
     for (i = 0 ; i< FILAS_DE_AUTOS ; i++)
     {
-        for (j= 0; j< AUTOS_POR_FILA ; j++)
+        for (j = 0; j< AUTOS_POR_FILA ; j++)
         {
-            autox = autos[i][j].x/TAM_PIXEL;
-            autoy = autos[i][j].y/TAM_PIXEL;
-            if ((autox - rene.x/TAM_PIXEL <= 9 && rene.x/TAM_PIXEL - autox <= 8)&&(autoy - rene.y/TAM_PIXEL <= 8 && rene.y/TAM_PIXEL - autoy <= 8))
-            {
-                 print_auto1(7+autox - rene.x/TAM_PIXEL,7+autoy - rene.y/TAM_PIXEL);
-                
-            }
-            
-           
+             //print_auto1(autos[i][j].x - rene.x, autos[i][j].y - rene.y, autos[i][j].direccion); //recibe diferencia de coordenadas auto-rana                   
+             print_auto1(autos[0][0].x - rene.x, autos[0][0].y - rene.y, autos[0][0].direccion);
         }
     
     }
+    //print_auto1(autos[0][4].x - rene.x, autos[0][4].y - rene.y, autos[0][4].direccion);
 }
 
 
-void print_auto1(double x, double y)
+void print_auto1(double x, double y, int direc)//posicion relativa entre la rana y el enemigo
 {
-    APROX(x);
-    APROX(y);
-}
+    int coordx = APROX(x/TAM_PIXEL)+7;//coordenadas del centro del auto
+    int coordy = APROX(y/TAM_PIXEL)+7;
+    
+    printf("%d",coordx);
+    //printf("%d",coordy);
+
+    dcoord_t coord;
+    
+    int i;
+    int j;   
+        for (i=0 ; i<3 ; i++)
+        {
+            for (j=0 ; j<3 ; j++)
+            {
+                if ((coordx - 1 + j < DISP_CANT_X_DOTS && coordx -1 +j >= 0)&&(coordy - 1 + i < DISP_CANT_Y_DOTS && coordy -1 +i >= 0))
+                {
+                    if (direc == DERECHA)
+                    {
+                        //if(((j+2)!=0 || i!=0) && ((j+2)!=0 || i!=2))
+                        //{
+                            coord.x = coordx + j -1;
+                            coord.y = coordy + i -1;
+                
+                         disp_write(coord, D_ON);                        
+                       //  }                       
+                    }
+                    
+                   else if (direc == IZQUIERDA)
+                    {
+                       // if((j!=0 || i!=0) && (j!=0 || i!=2))
+                       // {
+                            coord.x = coordx + j -1;
+                            coord.y = coordy + i -1;
+                
+                         disp_write(coord, D_ON);                        
+                        // }      
+                    }
+
+                }
+            }
+        }
+    
+
+    }
+    
+
+    
+    
+
 
 #endif

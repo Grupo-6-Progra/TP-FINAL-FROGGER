@@ -52,7 +52,7 @@ static int game_over(void);
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
-int estado_juego = MENU;
+int estado_juego = INICIO;//!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 double tiempo_restante;
 

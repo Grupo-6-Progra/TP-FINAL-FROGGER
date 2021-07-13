@@ -22,11 +22,13 @@
     void vidas(int);
     void init_display(void);
     void print_rene (void);
+    void print_autos(void);
+    void print_auto1 (double, double, int);
     
-#define ANCHO_RENE 3
-#define ALTO_RENE 3
+#define ANCHO_RENE 3.0
+#define ALTO_RENE 3.0
     
-#define TAM_PIXEL RANA_ALTO/ALTO_RENE
+#define TAM_PIXEL (RANA_ALTO/ALTO_RENE)
 
 
 
