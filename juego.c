@@ -566,7 +566,7 @@ static void initialize_troncos(unsigned int nivel)
             for(k = 0; k < TRONCOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
             {
                 troncos[j][k].dx = 0.5;
-                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                troncos[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3) - MUNDO_ANCHO/2;                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 
                 troncos[j][k].fila = 8;                                                                                 //necesito que los autos empiecen en la fila 1
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -594,7 +594,7 @@ static void initialize_troncos(unsigned int nivel)
             for(k = 0; k < TRONCOS_POR_FILA; k++) 
             {
                 troncos[j][k].dx = 1;
-                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 
                 troncos[j][k].fila = 11;                                                                                      //necesito que los autos empiecen en la fila 1
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -617,7 +617,7 @@ static void initialize_tortugas(unsigned int nivel)
             for(k = 0; k < TORTUGAS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
             {
                 tortugas[j][k].dx = -2;
-                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 
                 tortugas[j][k].fila = 7;                                                                                 //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -633,7 +633,7 @@ static void initialize_tortugas(unsigned int nivel)
             for(k = 0; k < TORTUGAS_POR_FILA; k++) 
             {
                 tortugas[j][k].dx = -1;
-                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].x = k * MUNDO_ANCHO / 3.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                 
                 tortugas[j][k].fila = 10;    //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -699,15 +699,15 @@ static void move_troncos(void)
             /* Analizo si los enemigos están dentro del campo de movimiento
              * , sino, los teletransporto al lado contrario de donde desaparecieron*/
             
-            if(troncos[j][k].x < -MUNDO_ANCHO || troncos[j][k].x > MUNDO_ANCHO*2.0)
+            if(troncos[j][k].x < -MUNDO_ANCHO/2 || troncos[j][k].x > MUNDO_ANCHO + MUNDO_ANCHO/2)
             {
-                if(troncos[j][k].x < -MUNDO_ANCHO)
+                if(troncos[j][k].x < -MUNDO_ANCHO/2)
                 {
-                    troncos[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO;
+                    troncos[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO/2;
                 }
                 else
                 {
-                    troncos[j][k].x = -MUNDO_ANCHO;
+                    troncos[j][k].x = -MUNDO_ANCHO/2;
                 }
             }
                         
@@ -730,15 +730,15 @@ static void move_tortugas(void)
             /* Analizo si los enemigos están dentro del campo de movimiento
              * , sino, los teletransporto al lado contrario de donde desaparecieron*/
             
-            if(tortugas[j][k].x < -MUNDO_ANCHO || tortugas[j][k].x > MUNDO_ANCHO*2.0)
+            if(tortugas[j][k].x < -MUNDO_ANCHO/2 || tortugas[j][k].x > MUNDO_ANCHO + MUNDO_ANCHO/2)
             {
-                if(tortugas[j][k].x < -MUNDO_ANCHO)
+                if(tortugas[j][k].x < -MUNDO_ANCHO/2)
                 {
-                    tortugas[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO;
+                    tortugas[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO/2;
                 }
                 else
                 {
-                    tortugas[j][k].x = -MUNDO_ANCHO;
+                    tortugas[j][k].x = -MUNDO_ANCHO/2;
                 }
             }
             tortugas[j][k].x += tortugas[j][k].dx;
