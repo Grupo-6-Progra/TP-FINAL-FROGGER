@@ -273,6 +273,13 @@ bool frogger (void)
  ******************************************************************************************
 *******************************************************************************************/
 
+
+ /******************************************************************************************
+ * 
+ *  FUNCIONES RELACIONADAS A LA INICIALIZACIÓN Y MOVIMIENTO DE LA RANA
+ * 
+ ******************************************************************************************/
+
 static void initialize_frog(void)
 {
     rene.x = 8 * CASILLA_ANCHO - CASILLA_ANCHO/2.0;
@@ -447,39 +454,102 @@ static void initialize_autos(unsigned int nivel)
     int k;
     for(j=0; j < FILAS_DE_AUTOS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
     {
-        if(j < 4)
+        if(j < 4) //inicializamos los autos (pequeños)
         {
-            for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+            for(k=0; k < AUTOS_POR_FILA; k++)                            
             {
-                autos[j][k].dx = (nivel/2.0 + 0.2*j) * pow(-1,j+1);
-                autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
+                autos[j][k].fila = j + 1;                                   
                 autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                autos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
-                autos[j][k].largo = AUTO1_ANCHO;                          //Cada enemigo será tan ancho como una casilla
+                autos[j][k].largo = AUTO1_ANCHO;                         
                 autos[j][k].alto = AUTO1_ALTO;
-                if(j == 0 || j == 2)
+                
+                if(j == 0)
                 {
-                    autos[j][k].direccion = IZQUIERDA;
+                    if(nivel < 5)
+                    {
+                        autos[j][k].dx = - (0.5 + (((double)nivel) / 4.0)) ;
+                        autos[j][k].x = (k - k % 3) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%3);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = IZQUIERDA;
+                    }
+                    else
+                    {
+                        autos[j][k].dx = 1.5;
+                        autos[j][k].x = (k + k % 3) * MUNDO_ANCHO/3.0+ MUNDO_ANCHO/5.0 * (k%3);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = IZQUIERDA;
+                    }
                 }
-                else
+                
+                else if (j == 1)
                 {
-                    autos[j][k].direccion = DERECHA;
+                    if(nivel < 5)
+                    {
+                        autos[j][k].dx = (1 + (((double)nivel) / 4.0)) ;
+                        autos[j][k].x =  k * MUNDO_ANCHO/3.0;                  //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = DERECHA;
+                    }
+                    else
+                    {
+                        autos[j][k].dx = 2;
+                        autos[j][k].x = k * MUNDO_ANCHO/3.0;                       //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = DERECHA;
+                    }
+                }
+                
+                else if (j == 2)
+                {
+                    if(nivel < 5)
+                    {
+                        autos[j][k].dx = - (1 + (((double)nivel) / 4.0)) ;
+                        autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = IZQUIERDA;
+                    }
+                    else
+                    {
+                        autos[j][k].dx = -2;
+                        autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);                    //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = IZQUIERDA;
+                    }
+                }
+                
+                else if (j == 3) //inicializamos la fila de autos veloces
+                {
+                    if(nivel < 5)
+                    {
+                        autos[j][k].dx = 4 + ((double)nivel);
+                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/5.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = DERECHA;
+                    }
+                    else
+                    {
+                        autos[j][k].dx = 8;
+                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/5.0 + MUNDO_ANCHO/5.0 * (k%2);                    //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].direccion = DERECHA;
+                    }
                 }
             }
         }
         
-        if(j == 4)
+        if(j == 4) //inicializamos los camiones
         {    
-            for(k=0; k < AUTOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
-            {                
-                autos[j][k].fila = j + 1;                                   //necesito que los autos empiecen en la fila 1
+            for(k=0; k < AUTOS_POR_FILA; k++)                              
+            {         
+                autos[j][k].fila = j + 1;                                   
                 autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                autos[j][k].largo = CAMION_ANCHO;                          //Cada enemigo será tan ancho como una casilla
+                autos[j][k].largo = CAMION_ANCHO;                          
                 autos[j][k].alto = CAMION_ALTO;
                 
-                autos[j][k].dx = -1;
-                autos[j][k].direccion = IZQUIERDA;
-                autos[j][k].x = k * MUNDO_ANCHO / (2.0 * nivel);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                if(nivel < 5)
+                {
+                    autos[j][k].dx = - (1.5 + (((double)nivel) / 4.0)) ;
+                    autos[j][k].direccion = IZQUIERDA;
+                    autos[j][k].x = k * MUNDO_ANCHO / (nivel);                  //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                }
+                else
+                {
+                    autos[j][k].dx = -2.5;
+                    autos[j][k].direccion = IZQUIERDA;
+                    autos[j][k].x = k * MUNDO_ANCHO / 4.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                }
             }
         }
     }
@@ -601,15 +671,15 @@ static void move_autos(void)
             /* Analizo si los enemigos están dentro del campo de movimiento
              * , sino, los teletransporto al lado contrario de donde desaparecieron*/
             
-            if(autos[j][k].x < -MUNDO_ANCHO || autos[j][k].x > MUNDO_ANCHO*2.0)
+            if(autos[j][k].x < -MUNDO_ANCHO/2 || autos[j][k].x > MUNDO_ANCHO + MUNDO_ANCHO/2)
             {
-                if(autos[j][k].x < -MUNDO_ANCHO)
+                if(autos[j][k].x < -MUNDO_ANCHO/2)
                 {
-                    autos[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO;
+                    autos[j][k].x = MUNDO_ANCHO + MUNDO_ANCHO/2;
                 }
                 else
                 {
-                    autos[j][k].x = -MUNDO_ANCHO;
+                    autos[j][k].x = -MUNDO_ANCHO/2;
                 }
             }
             
@@ -640,14 +710,7 @@ static void move_troncos(void)
                     troncos[j][k].x = -MUNDO_ANCHO;
                 }
             }
-            
-            /*El sentido de esta cuenta es hacer que si el enemigo se mueve a la izquierda, su posición al reaparecer sea la derecha
-             *el primer paréntesis devuelve el signo y lo que sigue (Según sea el signo obtenido) suma o resta "un mundo" desde el centro
-             * del mundo (significado del primer MUNDO_ANCHO/2.0)
-             * Si se mueve a la izquierda "dx" es negativo, entonces la cuenta es MUNDO_ANCHO/2.0 + (MUNDO_ANCHO)
-             * El significado de sumar un mundo desde el centro es que tarden en volver a desaparecer/ aparecer lo que tardan en recorren un mundo
-             */
-            
+                        
             troncos[j][k].x += troncos[j][k].dx;
         }
     }
@@ -714,8 +777,7 @@ static void move_tortugas(void)
                 tortugas[i][0].frames = 1;
             }
         }
-    }
-    
+    }    
     if(timer_hundirse == FRAMES_HASTA_HUNDIRSE / 2)
     {
         int i;
