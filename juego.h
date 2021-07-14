@@ -24,7 +24,7 @@ extern int selector_menu;
  * MUNDO Y VELOCIDAD DE JUEGO
 ***************************************************/
     
-#define REFRESCO            60.0    
+#define REFRESCO            60.0
 
 #define CASILLA_ANCHO       50.0
 #define CASILLA_ALTO        50.0
@@ -56,8 +56,8 @@ extern bool key_pressed[TECLAS_MAX];
  * RANA
 ***************************************************/
 
-#define RANA_ANCHO              (CASILLA_ANCHO - 20)         
-#define RANA_ALTO               (CASILLA_ALTO - 20)
+#define RANA_ANCHO              (CASILLA_ANCHO - 20.0)         
+#define RANA_ALTO               (CASILLA_ALTO - 20.0)
               
 enum direcciones
 {
@@ -73,7 +73,7 @@ typedef struct
     int direccion;
     bool saltando;
     bool chocada;
-    int frame_chocada; // 0 = no chocada, 1 = en el agua, 2 = mostrar perder
+    int frame_chocada; // 0 = no chocada, 2 = mostrar perder
     bool llego;
     
     
@@ -155,6 +155,7 @@ typedef struct //Defino una estructura nueva para las tortugas
 {
     double x, y;
     double dx, dy;
+    int direccion;
     double largo;               //Posición, velocidad y largo de LAS TORUGAS
     double alto;
     unsigned int fila;          //Fila en la que se moverá LAS TORTUGAS

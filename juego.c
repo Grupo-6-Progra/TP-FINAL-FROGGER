@@ -41,10 +41,10 @@ static void initialize_troncos(unsigned int);
 static void initialize_tortugas(unsigned int nivel);
 static void initialize_llegada(void);
 
-static void move_enemies(void);
-static void move_autos(void);
-static void move_troncos(void);
-static void move_tortugas(void);
+static void move_enemies(int nivel);
+static void move_autos(int nivel);
+static void move_troncos(int nivel);
+static void move_tortugas(int nivel);
 
 static int game_over(void);
 
@@ -115,7 +115,7 @@ bool frogger (void)
                 else if (choque_en_proceso > 0)
                 {
                     choque_en_proceso--;
-                    move_enemies();
+                    move_enemies(nivel);
                     if (choque_en_proceso == 0)
                     {
                         rene.llego = false;
@@ -167,7 +167,7 @@ bool frogger (void)
                 {
                     choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
                     
-                    move_enemies();
+                    move_enemies(nivel);
                     
                     if (choque_en_proceso == 0)
                     {
@@ -192,7 +192,7 @@ bool frogger (void)
 
             if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante
             {
-                move_enemies();
+                move_enemies(nivel);
                 
                 move_frog(false);
 
@@ -460,6 +460,7 @@ static void initialize_autos(unsigned int nivel)
             {
                 autos[j][k].fila = j + 1;                                   
                 autos[j][k].y = (CANT_CASILLAS_COLUMNA - autos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
+                autos[j][k].dy = 0;
                 autos[j][k].largo = AUTO1_ANCHO;                         
                 autos[j][k].alto = AUTO1_ALTO;
                 
@@ -467,14 +468,14 @@ static void initialize_autos(unsigned int nivel)
                 {
                     if(nivel < 5)
                     {
-                        autos[j][k].dx = - (0.5 + (((double)nivel) / 4.0)) ;
+                        autos[j][k].dx = - (1 + (((double)nivel) / 2.0)) ;
                         autos[j][k].x = (k - k % 3) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%3);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = IZQUIERDA;
                     }
                     else
                     {
-                        autos[j][k].dx = 1.5;
-                        autos[j][k].x = (k + k % 3) * MUNDO_ANCHO/3.0+ MUNDO_ANCHO/5.0 * (k%3);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].dx = -3;
+                        autos[j][k].x = (k - k % 3) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%3);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = IZQUIERDA;
                     }
                 }
@@ -483,13 +484,13 @@ static void initialize_autos(unsigned int nivel)
                 {
                     if(nivel < 5)
                     {
-                        autos[j][k].dx = (1 + (((double)nivel) / 4.0)) ;
+                        autos[j][k].dx = (0.5 + (((double)nivel) / 2.0)) ;
                         autos[j][k].x =  k * MUNDO_ANCHO/3.0;                  //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = DERECHA;
                     }
                     else
                     {
-                        autos[j][k].dx = 2;
+                        autos[j][k].dx = 2.5;
                         autos[j][k].x = k * MUNDO_ANCHO/3.0;                       //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = DERECHA;
                     }
@@ -499,13 +500,13 @@ static void initialize_autos(unsigned int nivel)
                 {
                     if(nivel < 5)
                     {
-                        autos[j][k].dx = - (1 + (((double)nivel) / 4.0)) ;
+                        autos[j][k].dx = - (1 + (((double)nivel) / 2.0)) ;
                         autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = IZQUIERDA;
                     }
                     else
                     {
-                        autos[j][k].dx = -2;
+                        autos[j][k].dx = -3;
                         autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);                    //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = IZQUIERDA;
                     }
@@ -515,14 +516,14 @@ static void initialize_autos(unsigned int nivel)
                 {
                     if(nivel < 5)
                     {
-                        autos[j][k].dx = 4 + ((double)nivel);
+                        autos[j][k].dx = 2 + ((double)nivel);
                         autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/5.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = DERECHA;
                     }
                     else
                     {
-                        autos[j][k].dx = 8;
-                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/5.0 + MUNDO_ANCHO/5.0 * (k%2);                    //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].dx = 6;
+                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/5.0 * (k%2);                    //Hago que aparezcan como máximo 3 enemigos por fila a la vez
                         autos[j][k].direccion = DERECHA;
                     }
                 }
@@ -565,8 +566,16 @@ static void initialize_troncos(unsigned int nivel)
         {       
             for(k = 0; k < TRONCOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
             {
-                troncos[j][k].dx = 0.5;
-                troncos[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3) - MUNDO_ANCHO/2;                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                if(nivel < 5)
+                {
+                    troncos[j][k].dx = 0.5 + (((double)nivel) / 4.0);
+                    troncos[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3) - MUNDO_ANCHO/2;
+                }
+                else
+                {
+                    troncos[j][k].dx = 0.5 + 1;
+                    troncos[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3) - MUNDO_ANCHO/2;
+                }
                 
                 troncos[j][k].fila = 8;                                                                                 //necesito que los autos empiecen en la fila 1
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -579,8 +588,17 @@ static void initialize_troncos(unsigned int nivel)
         {
             for(k = 0; k < TRONCOS_POR_FILA; k++) 
             {
-                troncos[j][k].dx = 2;
-                troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                if(nivel < 5)
+                {
+                    troncos[j][k].dx = 2 + (((double)nivel) / 4.0);
+                    troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                }
+                else
+                {
+                    troncos[j][k].dx = 2 + 1;
+                    troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                }
+
                 
                 troncos[j][k].fila = 9;//necesito que los autos empiecen en la fila 1               
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -593,8 +611,16 @@ static void initialize_troncos(unsigned int nivel)
         {
             for(k = 0; k < TRONCOS_POR_FILA; k++) 
             {
-                troncos[j][k].dx = 1;
-                troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                if(nivel < 5)
+                {
+                    troncos[j][k].dx = 1.5 + (((double)nivel) / 4.0);
+                    troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                }
+                else
+                {
+                    troncos[j][k].dx = 1.5 + 1;
+                    troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                }
                 
                 troncos[j][k].fila = 11;                                                                                      //necesito que los autos empiecen en la fila 1
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -616,8 +642,16 @@ static void initialize_tortugas(unsigned int nivel)
         {       
             for(k = 0; k < TORTUGAS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
             {
-                tortugas[j][k].dx = -2;
+                if(nivel < 5)
+                {
+                    tortugas[j][k].dx = -2 - (((double)nivel) / 4.0);
+                }
+                else
+                {
+                    tortugas[j][k].dx = -2 - 1;
+                }
                 tortugas[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].direccion = IZQUIERDA;
                 
                 tortugas[j][k].fila = 7;                                                                                 //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -632,8 +666,17 @@ static void initialize_tortugas(unsigned int nivel)
         {
             for(k = 0; k < TORTUGAS_POR_FILA; k++) 
             {
-                tortugas[j][k].dx = -1;
+                if(nivel < 5)
+                {
+                    tortugas[j][k].dx = -1 - (((double)nivel) / 4.0);
+                }
+                else
+                {
+                    tortugas[j][k].dx = -1 - 1;
+                }
+
                 tortugas[j][k].x = k * MUNDO_ANCHO / 3.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].direccion = IZQUIERDA;
                 
                 tortugas[j][k].fila = 10;    //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
@@ -653,16 +696,19 @@ static void initialize_tortugas(unsigned int nivel)
  *  
  ***************************************/
 
-static void move_enemies(void)
+static void move_enemies(int nivel)
 {
-    move_autos();
-    move_troncos();
-    move_tortugas();
+    move_autos(nivel);
+    move_troncos(nivel);
+    move_tortugas(nivel);
 }
 
-static void move_autos(void)
+static void move_autos(int nivel)
 {
-    unsigned int j, k;
+    static int contador_cambiar_carril = 0;
+    static int contador_cambiar_velocidad = 100;
+    
+    unsigned int i, j, k;
     for(j=0; j < FILAS_DE_AUTOS; j++)
     {
         
@@ -686,9 +732,107 @@ static void move_autos(void)
             autos[j][k].x += autos[j][k].dx;
         }
     }
+
+    
+    if (nivel > 2) //autos que cambien de carril
+    {
+
+        if(contador_cambiar_carril == 0)
+        {
+            if(autos[0][3].fila == 1)
+            {
+                if(autos[0][3].y > CASILLA_ALTO * 10 - CASILLA_ALTO/2)
+                {
+                    autos[0][3].dy = -4;
+                    autos[0][3].y += autos[0][3].dy;
+
+                }
+                else
+                {
+                    autos[0][3].fila = 3;
+                    autos[0][3].dx = autos[2][0].dx;
+                    autos[0][3].direccion = IZQUIERDA;
+                    contador_cambiar_carril = 100;
+                }
+            }
+            else if (autos[0][3].fila == 3)
+            {
+                if(autos[0][3].y < CASILLA_ALTO * 12 - CASILLA_ALTO/2)
+                {
+                    autos[0][3].dy = 4;
+                    autos[0][3].y += autos[0][3].dy;
+                }
+                else
+                {
+                    autos[0][3].fila = 1;
+                    autos[0][3].dx = autos[0][1].dx;
+                    autos[0][3].direccion = IZQUIERDA;
+                    contador_cambiar_carril = 100;
+                }
+            }
+        }
+        else
+        {
+            contador_cambiar_carril--;
+        }
+    }
+    
+    enum ACELERACION
+    {
+        ACELERA, DESACELERA
+    };
+    
+    static int aceleracion = ACELERA;
+    
+    if (nivel > 3) //autos que cambien de carril
+    {
+        switch (aceleracion)
+        {
+            case ACELERA:
+            {
+                if(autos[1][0].dx < 4)
+                {
+                    for(i=0; i < AUTOS_POR_FILA; i++)
+                    {
+                        autos[1][i].dx += 0.01;
+                    }
+                }
+                else if(contador_cambiar_velocidad != 0)
+                {
+                    contador_cambiar_velocidad--;
+                }
+                else
+                {
+                    contador_cambiar_velocidad = 100;
+                    aceleracion = DESACELERA;
+                }
+                break;
+            }
+            case DESACELERA:
+            {
+                if(autos[1][0].dx > -4)
+                {
+                    for(i=0; i < AUTOS_POR_FILA; i++)
+                    {
+                        autos[1][i].dx -= 0.01;
+                    }
+                }
+                else if(contador_cambiar_velocidad != 0)
+                {
+                    contador_cambiar_velocidad--;
+                }
+                else
+                {
+                    contador_cambiar_velocidad = 100;
+                    aceleracion = ACELERA;
+                }
+                break;
+            }
+        }
+    }
 }
 
-static void move_troncos(void)
+static void move_troncos(int nivel)
 {
     unsigned int j, k;
     for(j=0; j < FILAS_DE_TRONCOS; j++)
@@ -716,7 +860,7 @@ static void move_troncos(void)
     }
 }
 
-static void move_tortugas(void)
+static void move_tortugas(int nivel)
 {
     unsigned int j, k;
     static unsigned int timer_hundirse = FRAMES_HASTA_HUNDIRSE;
