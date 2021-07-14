@@ -6,6 +6,8 @@
 #include <tgmath.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 
 /***************************************************
  * VELOCIDADES Y TIEMPOS DE LA RANA
@@ -45,6 +47,7 @@ static void move_enemies(int nivel);
 static void move_autos(int nivel);
 static void move_troncos(int nivel);
 static void move_tortugas(int nivel);
+static void move_cocodrilo(int nivel);
 
 static int game_over(void);
 
@@ -427,6 +430,7 @@ static void initialize_llegada(void)
         llegadas[i].alto = LLEGADA_ALTO;
         llegadas[i].ancho = LLEGADA_ANCHO;
         llegadas[i].ocupado = false;
+        llegadas[i].cocodrilo = false;
     }
     
 }
@@ -701,6 +705,7 @@ static void move_enemies(int nivel)
     move_autos(nivel);
     move_troncos(nivel);
     move_tortugas(nivel);
+    move_cocodrilo(nivel);
 }
 
 static void move_autos(int nivel)
@@ -969,6 +974,57 @@ static void move_tortugas(int nivel)
     timer_moverse--;
 }
 
+
+static void move_cocodrilo(int nivel)
+{
+    static int timer_sin_cocodrilo;
+    static int timer_con_cocodrilo = 50;
+    
+    int tiempo;
+    int i;
+    
+    if (nivel < 5)
+    {
+        tiempo = 400/ nivel;
+    }
+    
+    else
+    {
+        tiempo = 100;
+    }
+    
+    timer_sin_cocodrilo = tiempo;
+    
+    if (timer_sin_cocodrilo == 0)
+    {
+        if (timer_con_cocodrilo == 50)
+        {
+            i = rand() % 5;
+            
+            if(llegadas[i].ocupado == false)
+            {
+                llegadas[i].cocodrilo = true;
+                timer_con_cocodrilo--;
+            }
+            else
+            {
+                timer_sin_cocodrilo = tiempo;
+            }
+        }
+        else
+        {
+            timer_con_cocodrilo--;
+            if(timer_con_cocodrilo == 0)
+            {
+                llegadas[i].cocodrilo = false;
+                timer_con_cocodrilo = 50;
+                timer_sin_cocodrilo = tiempo;
+            }
+        }
+    }
+    
+    timer_sin_cocodrilo--;
+}
 /**************************************
  * 
  * GAMER_OVER():

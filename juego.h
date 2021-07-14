@@ -166,6 +166,7 @@ typedef struct //Defino una estructura nueva para las tortugas
 
 extern TORTUGAS tortugas[FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA]; //Defino una sola matriz con todas las tortugas
 
+
 /***************************************************
  * CASILLAS DE LLEGADA
  **************************************************/
@@ -180,6 +181,7 @@ typedef struct
     double ancho;
     double alto;
     bool ocupado;
+    bool cocodrilo;
 
 }LLEGADA;
 
