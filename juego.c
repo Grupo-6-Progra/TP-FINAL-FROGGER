@@ -61,7 +61,7 @@ double tiempo_restante;
 
 int vidas_restantes = 3;
 
-int nivel = 1;
+int nivel = 4;
 
 int selector_menu = PLAY;
 
