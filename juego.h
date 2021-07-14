@@ -35,7 +35,7 @@ extern int selector_menu;
 #define MUNDO_ALTO          (CANT_CASILLAS_COLUMNA * CASILLA_ALTO)
 #define MUNDO_ANCHO         (CANT_CASILLAS_FILA * CASILLA_ANCHO)
 
-#define TIEMPO_TOTAL (40 * REFRESCO)
+#define TIEMPO_TOTAL        (40 * REFRESCO)
 
 /***************************************************
  * MANEJO DE TECLAS DETECTADAS
@@ -148,8 +148,6 @@ extern TRONCO troncos[FILAS_DE_TRONCOS][TRONCOS_POR_FILA]; //Defino una sola mat
 #define TORTUGAS_ANCHO              (CASILLA_ANCHO)         
 #define TORTUGAS_ALTO               (CASILLA_ALTO)
 
-#define TIEMPO_HASTA_HUNDIRSE   2
-#define FRAMES_HASTA_HUNDIRSE   ((int)(REFRESCO * TIEMPO_HASTA_HUNDIRSE))
 
 typedef struct //Defino una estructura nueva para las tortugas
 {
