@@ -18,6 +18,23 @@
 
 #define APROX(x)                ((x>0) ? ((int)((x)+0.5)) : ((int)((x)-0.5)))
 
+static void redraw_rana_d (void);
+static void redraw_autos_d(void);
+static void print_auto1 (int,int, int);
+static void print_auto2 (int,int, int);
+static void redraw_troncos_d(void);
+static void print_tronco1(int, int);
+static void print_tronco2(int, int);
+static void print_tronco3(int, int);
+static void redraw_tortugas_d(void);
+static void print_tortuga1(int,int,int);
+static void print_tortuga2(int,int,int);
+static void print_tortuga3(int,int,int);
+//static void redraw_tiempo_d(void);
+//static void redraw_llegada_d(void);
+//static void redraw_fondo_d(void);
+static void vidas(int);
+static void delete_disp(void);
 
 void init_display()
 {
@@ -28,64 +45,37 @@ void init_display()
 
 void redraw_disp (void) 
 {
-    int i;
-    int j;
-    int k;
-    int l;
-    dcoord_t coord;
-    for (i=0 ; i<DISP_CANT_X_DOTS ; i++)
+        if(estado_juego != MENU)
     {
-        for (j=0 ; j<DISP_CANT_Y_DOTS ; j++)
-        {
-            coord.x = i;
-            coord.y = j;
-            disp_write(coord, D_OFF);
-        }
-    }
-    print_rene();
-    
-    
-    
- /*   for (k=0 ; k<FILAS_DE_AUTOS ; k++)
-    {
-        for (l=0 ; l<AUTOS_POR_FILA ; l++)
-        {
-            if ((autos[k][l].x/CASILLA_ANCHO < DISP_CANT_X_DOTS)&&(autos[k][l].x/CASILLA_ANCHO > 0))
-            {
-                print_object_display(autos[k][l].x, autos[k][l].y,D_ON); 
-            }
+        delete_disp();
+        //IMPRESION DEL FONDO
+        //redraw_fondo_d();
 
-        }
+        //IMPRESION DE LOS AUTOS
+        redraw_autos_d();
+
+        //impresión de troncos
+        redraw_troncos_d();
+
+        //IMPRESIÓN DE TORTUGAS
+        redraw_tortugas_d();
+        
+        //IMPRESION DE LAS CASILLAS DE LLEGADA
+       // redraw_llegada_d();
+
+        //IMPRESIÓN DE LA RANA
+        redraw_rana_d();
+        vidas(3);     
     }
-  */
-    
-    print_autos();
-  
-       
-    vidas(3);
-	
-	
-		
-/*		disp_update();	//Actualiza el display con el contenido del buffer
-		joy_update();	//Mide las coordenadas del joystick
-		coord = joy_get_coord();	//Guarda las coordenadas medidas
-		
-		
-		
-		disp_write(pos,D_OFF);	//apaga la posición vieja en el buffer
-		disp_write(npos,D_ON);	//enciende la posición nueva en el buffer
-		pos = npos;				//actualiza la posición actual
-		
-        }
-*/
     disp_update();
+
 }
 
 
-void vidas(int numero)
+static void vidas(int numero)
 {
-	dcoord_t tresVidas = {13,15};
-	dcoord_t dosVidas = {14,15};
+    dcoord_t tresVidas = {13,15};
+    dcoord_t dosVidas = {14,15};
     dcoord_t unaVida = {15,15};
     int i;
     int j;
@@ -102,9 +92,7 @@ void vidas(int numero)
     			}   		
     		}
 
-		//	sleep(5);
-    	//	disp_clear();
-    		
+
     		break;
     	
     	
@@ -183,22 +171,14 @@ void display_teclas (void)
     
     if(joy_get_switch() == J_NOPRESS)
     {
-        key_pressed[KEY_ENTER] = true;
+        key_pressed[KEY_ENTER] = false;
     }
     else
     {
-        key_pressed[KEY_ENTER] = false;
+        key_pressed[KEY_ENTER] = true;
     }
 }
 
-void print_object_display (double x, double y, int estado)
-{
-    dcoord_t coordenadas;
-    coordenadas.x =(int) (x / CASILLA_ANCHO);
-    coordenadas.y =(int) (y / CASILLA_ALTO);
-    
-    disp_write(coordenadas,estado);	//enciende o apaga una posición en el buffer
-}
 
 bool timer(void)
 {
@@ -222,7 +202,7 @@ bool timer(void)
     }
 }
  
-void print_rene (void)
+static void redraw_rana_d (void)
 {
     int i;
     int j;
@@ -236,37 +216,39 @@ void print_rene (void)
             disp_write(coord, D_ON);
         }
     }
-      
-    
+
 }
 
-void print_autos (void)
+static void redraw_autos_d (void)
 {
     int i;
     int j;
-    double autox;
-    double autoy;
+    int coordx;
+    int coordy;
     for (i = 0 ; i< FILAS_DE_AUTOS ; i++)
     {
         for (j = 0; j< AUTOS_POR_FILA ; j++)
-        {
-             //print_auto1(autos[i][j].x - rene.x, autos[i][j].y - rene.y, autos[i][j].direccion); //recibe diferencia de coordenadas auto-rana                   
-             print_auto1(autos[0][0].x - rene.x, autos[0][0].y - rene.y, autos[0][0].direccion);
+        { 
+             coordx = APROX((autos[i][j].x - rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
+             coordy = APROX((autos[i][j].y - rene.y)/TAM_PIXEL)+7;
+             
+             if (i<4)
+             {
+                print_auto1(coordx, coordy, autos[i][j].direccion); //recibe diferencia de coordenadas auto-rana   
+             }
+             else 
+             {
+                 print_auto2(coordx, coordy, autos[i][j].direccion); //recibe diferencia de coordenadas auto-rana 
+             }
         }
     
     }
-    //print_auto1(autos[0][4].x - rene.x, autos[0][4].y - rene.y, autos[0][4].direccion);
+
 }
 
 
-void print_auto1(double x, double y, int direc)//posicion relativa entre la rana y el enemigo
+static void print_auto1(int coordx, int coordy, int direc)//posicion relativa entre la rana y el enemigo
 {
-    int coordx = APROX(x/TAM_PIXEL)+7;//coordenadas del centro del auto
-    int coordy = APROX(y/TAM_PIXEL)+7;
-    
-    printf("%d",coordx);
-    //printf("%d",coordy);
-
     dcoord_t coord;
     
     int i;
@@ -275,28 +257,28 @@ void print_auto1(double x, double y, int direc)//posicion relativa entre la rana
         {
             for (j=0 ; j<3 ; j++)
             {
-                if ((coordx - 1 + j < DISP_CANT_X_DOTS && coordx -1 +j >= 0)&&(coordy - 1 + i < DISP_CANT_Y_DOTS && coordy -1 +i >= 0))
+                if ((coordx - 1 + j < DISP_CANT_X_DOTS && coordx -1 +j >= 0)&&(coordy - 1 + i < DISP_CANT_Y_DOTS -1 && coordy -1 +i >= 0))
                 {
                     if (direc == DERECHA)
                     {
-                        //if(((j+2)!=0 || i!=0) && ((j+2)!=0 || i!=2))
-                        //{
+                        if((j!=2 || i!=0) && (j!=2 || i!=2))
+                        {
                             coord.x = coordx + j -1;
                             coord.y = coordy + i -1;
                 
                          disp_write(coord, D_ON);                        
-                       //  }                       
+                        }                       
                     }
                     
                    else if (direc == IZQUIERDA)
                     {
-                       // if((j!=0 || i!=0) && (j!=0 || i!=2))
-                       // {
+                        if((j!=0 || i!=0) && (j!=0 || i!=2))
+                        {
                             coord.x = coordx + j -1;
                             coord.y = coordy + i -1;
                 
                          disp_write(coord, D_ON);                        
-                        // }      
+                        }      
                     }
 
                 }
@@ -306,9 +288,389 @@ void print_auto1(double x, double y, int direc)//posicion relativa entre la rana
 
     }
     
-
+static void print_auto2(int coordx, int coordy, int direc)
+{
+    dcoord_t coord;
     
+    int i;
+    int j;   
+        for (i=0 ; i<3 ; i++)
+        {
+            for (j=0 ; j<8 ; j++)
+            {
+                if ((coordx - 3 + j < DISP_CANT_X_DOTS && coordx -3 +j >= 0)&&(coordy - 1 + i < DISP_CANT_Y_DOTS -1 && coordy -1 +i >= 0))
+                {
+                    if (direc == DERECHA)
+                    {
+                        if((j!=7 || i!=0) && (j!=7 || i!=2))
+                        {
+                            coord.x = coordx + j -3;
+                            coord.y = coordy + i -1;
+                
+                         disp_write(coord, D_ON);                        
+                        }                       
+                    }
+                    
+                   else if (direc == IZQUIERDA)
+                    {
+                        if((j!=0 || i!=0) && (j!=0 || i!=2))
+                        {
+                            coord.x = coordx + j -3;
+                            coord.y = coordy + i -1;
+                
+                         disp_write(coord, D_ON);                        
+                        }      
+                    }
+
+                }
+            }
+        }
     
+}
+
+static void delete_disp(void)
+{
+    int i;
+    int j;
+
+    dcoord_t coord;
+    for (i=0 ; i<DISP_CANT_X_DOTS ; i++)
+    {
+        for (j=0 ; j<DISP_CANT_Y_DOTS ; j++)
+        {
+            coord.x = i;
+            coord.y = j;
+            disp_write(coord, D_OFF);
+        }
+    }
+}
+
+static void redraw_troncos_d(void)
+{
+    unsigned int j,k;
+    int coordx;
+    int coordy;
+    //impresión de troncos
+    for(j=0; j < FILAS_DE_TRONCOS; j++)
+    {
+        for(k=0; k < TRONCOS_POR_FILA; k++)
+        {
+            coordx = APROX((troncos[j][k].x - rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
+            coordy = APROX((troncos[j][k].y - rene.y)/TAM_PIXEL)+7;
+            
+            if(j == 0)
+            {
+                print_tronco1(coordx, coordy);
+            }
+            if(j == 1)
+            {
+                print_tronco2(coordx, coordy);
+            }
+            if(j == 2)
+            {
+                print_tronco3(coordx,coordy);
+            }
+        }
+    }
+}
+    
+static void print_tronco1(int coordx, int coordy)
+{
+    dcoord_t coord;
+    
+    int i;
+    int j;   
+        for (i=0 ; i<5 ; i++)
+        {
+            for (j=0 ; j<15 ; j++)
+            {
+                if ((coordx - 7 + j < DISP_CANT_X_DOTS && coordx -7 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+                {
+                    if (j==0 || j==14 || i==0 || i==4)
+                    {
+                        coord.x = coordx + j -7;
+                        coord.y = coordy + i -2;
+
+                        disp_write(coord, D_ON);                         
+                    }
+
+                }
+            }
+        }
+}
+
+static void print_tronco2(int coordx, int coordy)
+{
+    dcoord_t coord;
+    
+    int i;
+    int j;   
+        for (i=0 ; i<5 ; i++)
+        {
+            for (j=0 ; j<25 ; j++)
+            {
+                if ((coordx - 12 + j < DISP_CANT_X_DOTS && coordx -12 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+                {
+                    if (j==0 || j==24 || i==0 || i==4)
+                    {
+                        coord.x = coordx + j -12;
+                        coord.y = coordy + i -2;
+
+                        disp_write(coord, D_ON);                         
+                    }
+
+                }
+            }
+        }
+}
 
 
+
+static void print_tronco3(int coordx, int coordy)
+{
+    dcoord_t coord;
+    
+    int i;
+    int j;   
+        for (i=0 ; i<5 ; i++)
+        {
+            for (j=0 ; j<20 ; j++)
+            {
+                if ((coordx - 9 + j < DISP_CANT_X_DOTS && coordx -9 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+                {
+                    if (j==0 || j==19 || i==0 || i==4)
+                    {
+                        coord.x = coordx + j -9;
+                        coord.y = coordy + i -2;
+
+                        disp_write(coord, D_ON);                         
+                    }
+
+                }
+            }
+        }
+}
+static void redraw_tortugas_d(void)
+{
+    unsigned int j,k;
+    int coordx;
+    int coordy;
+    //impresión de troncos
+    for(j=0; j < FILAS_DE_TORTUGAS; j++)
+    {
+        for(k=0; k < TORTUGAS_POR_FILA; k++)
+        {
+            coordx = APROX((tortugas[j][k].x - rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
+            coordy = APROX((tortugas[j][k].y - rene.y)/TAM_PIXEL)+7;
+            
+            if(tortugas[j][k].hundirse == false)
+            {
+                if(j == 0)
+                {
+                    if (tortugas[j][k].frames == 0 || tortugas[j][k].frames == 1)
+                    {
+                        print_tortuga1(coordx-5, coordy ,tortugas[j][k].direccion);
+                        print_tortuga1(coordx, coordy ,tortugas[j][k].direccion);
+                        print_tortuga1(coordx+5, coordy ,tortugas[j][k].direccion);
+                    }
+                    else if (tortugas[j][k].frames == 2)
+                    {
+                        print_tortuga2(coordx-5, coordy ,tortugas[j][k].direccion);
+                        print_tortuga2(coordx, coordy ,tortugas[j][k].direccion);
+                        print_tortuga2(coordx+5, coordy ,tortugas[j][k].direccion);                        
+                    }
+                    
+                    else if (tortugas[j][k].frames == 3)
+                    {
+                        print_tortuga3(coordx-5, coordy ,tortugas[j][k].direccion);
+                        print_tortuga3(coordx, coordy ,tortugas[j][k].direccion);
+                        print_tortuga3(coordx+5, coordy ,tortugas[j][k].direccion);                        
+                    }
+
+                }
+
+                if(j == 1)
+                {                   
+                    if (tortugas[j][k].frames == 0 || tortugas[j][k].frames == 1)
+                    {
+                        print_tortuga1(coordx-2, coordy ,tortugas[j][k].direccion);
+                        print_tortuga1(coordx+3, coordy ,tortugas[j][k].direccion);
+                    }
+                    else if (tortugas[j][k].frames == 2)
+                    {
+                        print_tortuga2(coordx-2, coordy ,tortugas[j][k].direccion);
+                        print_tortuga2(coordx+3, coordy ,tortugas[j][k].direccion);                        
+                    }
+                    
+                    else if (tortugas[j][k].frames == 3)
+                    {
+                        print_tortuga3(coordx-2, coordy ,tortugas[j][k].direccion);
+                        print_tortuga3(coordx+3, coordy ,tortugas[j][k].direccion);                    
+                    }
+                    
+                }
+            }
+         
+        }
+    }
+}
+
+static void print_tortuga1(int coordx, int coordy, int direc)
+{
+    dcoord_t coord;
+    int i;
+    int j;
+    
+    int mat_izq[5][5]={{1,0,0,0,1},   
+                   {0,1,1,1,0},
+                   {1,0,0,1,0},
+                   {0,1,1,1,0},
+                   {1,0,0,0,1}};  
+    
+    int mat_der[5][5]={{1,0,0,0,1},   
+                   {0,1,1,1,0},
+                   {0,1,0,0,1},
+                   {0,1,1,1,0},
+                   {1,0,0,0,1}};  
+  
+  
+ /*  
+.   .
+ ...
+.  .
+ ...      
+.   .      
+ 
+ */
+    for (i=0 ; i<5 ; i++)
+    {
+        for(j=0 ; j<5 ; j++)
+        {
+            if ((coordx - 2 + j < DISP_CANT_X_DOTS && coordx -2 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+            {
+                if (direc == IZQUIERDA)
+                {
+                    if (mat_izq[i][j]==1)
+                    {
+                        coord.x = coordx -2 + j;
+
+                        coord.y = coordy -2 + i;
+
+                        disp_write(coord, D_ON);
+                    }
+                }
+                else if (direc == DERECHA)
+                {
+                    if (mat_der[i][j]==1)
+                    {
+                        coord.x = coordx -2 + j;
+
+                        coord.y = coordy -2 + i;
+
+                        disp_write(coord, D_ON);
+                    }
+                }
+                
+            }
+                    
+        }
+    }
+}
+
+static void print_tortuga2(int coordx, int coordy, int direc)
+{
+     dcoord_t coord;
+    int i;
+    int j;
+    
+    int mat[5][5]={{0,0,0,0,0},   
+                   {0,1,1,1,0},
+                   {0,1,0,1,0},
+                   {0,1,1,1,0},
+                   {0,0,0,0,0}};  
+  
+  
+ /*  
+.   .
+ ...
+.  .
+ ...      
+.   .      
+ 
+ */
+    for (i=0 ; i<5 ; i++)
+    {
+        for(j=0 ; j<5 ; j++)
+        {
+            if ((coordx - 2 + j < DISP_CANT_X_DOTS && coordx -2 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+            {
+
+                    if (mat[i][j]==1)
+                    {
+                        coord.x = coordx -2 + j;
+
+                        coord.y = coordy -2 + i;
+
+                        disp_write(coord, D_ON);
+                    }
+
+               
+            }
+                
+        }
+                    
+        
+    }
+}
+
+
+static void print_tortuga3(int coordx, int coordy, int direc)
+{
+    dcoord_t coord;
+    int i;
+    int j;
+    
+    int mat[5][5]={{0,0,0,0,0},   
+                   {0,0,0,0,0},
+                   {0,0,1,0,0},
+                   {0,0,0,0,0},
+                   {0,0,0,0,0}};  
+  
+  
+ /*  
+.   .
+ ...
+.  .
+ ...      
+.   .      
+ 
+ */
+    for (i=0 ; i<5 ; i++)
+    {
+        for(j=0 ; j<5 ; j++)
+        {
+            if ((coordx - 2 + j < DISP_CANT_X_DOTS && coordx -2 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+            {
+
+                    if (mat[i][j]==1)
+                    {
+                        coord.x = coordx -2 + j;
+
+                        coord.y = coordy -2 + i;
+
+                        disp_write(coord, D_ON);
+                    }
+
+               
+            }
+                
+        }
+                    
+        
+    }
+}
 #endif
+
+
+
+
