@@ -69,7 +69,7 @@ bool rana_llego (void)
     
     for (i = 0; i < CANT_CASILLAS_LLEGADA; i++)
     {   
-        if (llegadas[i].ocupado == false)
+        if (llegadas[i].ocupado == false && llegadas[i].cocodrilo == false)
         {
             if (choque (llegadas[i].x, llegadas[i].y, llegadas[i].ancho, llegadas[i].alto, rene.x, rene.y, 1, 1) == true)
             {

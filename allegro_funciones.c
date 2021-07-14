@@ -41,7 +41,7 @@ ALLEGRO_EVENT_QUEUE * event_queue;
 static ALLEGRO_DISPLAY     * display;
 static ALLEGRO_BITMAP      * mundo_buffer;
 static ALLEGRO_FONT        * font;
-
+static ALLEGRO_BITMAP      * al_cocodrilo;
 
 /************************************************+
  * 
@@ -612,6 +612,38 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_fila_segura);
     }
     
+    al_cocodrilo= al_load_bitmap("cocodrilo.png");
+    if (!al_cocodrilo)
+    {
+        fprintf(stderr, "failed to create al_cocodrilo!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+        al_destroy_bitmap(sprites.al_calle);
+        al_destroy_bitmap(sprites.al_fila_segura);
+        al_destroy_bitmap(sprites.al_rene_perdio);
+        return false;
+    }
     
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display)
@@ -643,6 +675,7 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_calle);
         al_destroy_bitmap(sprites.al_fila_segura);
         al_destroy_bitmap(sprites.al_rene_perdio);
+        al_destroy_bitmap(al_cocodrilo);
         return false;
     }
     
@@ -1118,6 +1151,13 @@ static void redraw_llegada(void)
             RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[0]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[0]),
             0, 0);
         }
+        
+        if(llegadas[i].cocodrilo == true)
+        {
+            al_draw_scaled_bitmap(al_cocodrilo, 0,0,
+                        al_get_bitmap_width(al_cocodrilo), al_get_bitmap_height(al_cocodrilo),
+                        llegadas[i].x - llegadas[i].ancho/2, llegadas[i].y - llegadas[i].alto/2, llegadas[i].ancho, llegadas[i].alto, 0);
+        }
     }
 }
 
@@ -1160,6 +1200,7 @@ void allegro_destroy(void)
     al_destroy_bitmap(sprites.al_calle);
     al_destroy_bitmap(sprites.al_fila_segura);
     al_destroy_bitmap(sprites.al_rene_perdio);
+    al_destroy_bitmap(al_cocodrilo);
     al_destroy_display(display);
 }
 

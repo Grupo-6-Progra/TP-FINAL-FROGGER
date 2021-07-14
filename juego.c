@@ -977,11 +977,10 @@ static void move_tortugas(int nivel)
 
 static void move_cocodrilo(int nivel)
 {
-    static int timer_sin_cocodrilo;
-    static int timer_con_cocodrilo = 50;
+    static int timer_sin_cocodrilo = 0;
+    static int timer_con_cocodrilo = 200;
     
     int tiempo;
-    int i;
     
     if (nivel < 5)
     {
@@ -993,13 +992,12 @@ static void move_cocodrilo(int nivel)
         tiempo = 100;
     }
     
-    timer_sin_cocodrilo = tiempo;
-    
     if (timer_sin_cocodrilo == 0)
     {
-        if (timer_con_cocodrilo == 50)
+        if (timer_con_cocodrilo == 200)
         {
-            i = rand() % 5;
+            int i;
+            i = rand() % CANT_CASILLAS_LLEGADA;
             
             if(llegadas[i].ocupado == false)
             {
@@ -1008,6 +1006,7 @@ static void move_cocodrilo(int nivel)
             }
             else
             {
+                timer_con_cocodrilo = 200;
                 timer_sin_cocodrilo = tiempo;
             }
         }
@@ -1016,14 +1015,24 @@ static void move_cocodrilo(int nivel)
             timer_con_cocodrilo--;
             if(timer_con_cocodrilo == 0)
             {
-                llegadas[i].cocodrilo = false;
-                timer_con_cocodrilo = 50;
-                timer_sin_cocodrilo = tiempo;
+                int j;
+                for (j = 0; j < CANT_CASILLAS_LLEGADA; j++)
+                {
+                    if(llegadas[j].cocodrilo == true)
+                    {
+                        llegadas[j].cocodrilo = false;
+                        timer_con_cocodrilo = 200;
+                        timer_sin_cocodrilo = tiempo;
+                    }
+              
+                }
             }
         }
     }
-    
-    timer_sin_cocodrilo--;
+    else
+    {
+        timer_sin_cocodrilo--;
+    }
 }
 /**************************************
  * 
