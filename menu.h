@@ -19,13 +19,11 @@
 
 enum SELECTOR
 {
-    PLAY, LEVEL, QUIT, MENU_LEVELS
+    MENU_LEVELS, PLAY, LEVEL, QUIT, MAIN_MENU, RESUME
 };
 
-static int level (void);
-static int menu_levels(void);
-static void play (void);
-static bool quit(void);
+
+bool menu_pausa(void);
 bool menu_start(void);
     
     

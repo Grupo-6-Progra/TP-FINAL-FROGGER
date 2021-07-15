@@ -16,8 +16,8 @@ enum ESTADOS
 
 extern int estado_juego;
 extern double tiempo_restante;
-extern int nivel;
-extern int vidas_restantes;
+extern char nivel;
+extern char vidas_restantes;
 extern int selector_menu;
 
 /***************************************************

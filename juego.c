@@ -99,9 +99,9 @@ int estado_juego = MENU;//!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 double tiempo_restante;
 
-int vidas_restantes = 3;
+char vidas_restantes = 3;
 
-int nivel = 1;
+char nivel = 1;
 
 int selector_menu = PLAY;
 
@@ -113,9 +113,9 @@ AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
 
 TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA];
 
-TORTUGAS tortugas[FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA];
+TORTUGAS tortugas [FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA];
 
-LLEGADA llegadas[CANT_CASILLAS_LLEGADA];
+LLEGADA llegadas [CANT_CASILLAS_LLEGADA];
 
 
 /******************************************************************************************
@@ -195,7 +195,6 @@ bool frogger (void)
                         }
                     }
                 }
-            
             }
             
             else
@@ -239,7 +238,11 @@ bool frogger (void)
         case JUEGO: //caso en el que la rana está viva
         {
 
-            if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante
+            if(key_pressed[KEY_ENTER] == true)
+            {
+                estado_juego = PAUSA;
+            }
+            else if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante
             {
                 move_enemies(nivel);
                 
@@ -289,6 +292,7 @@ bool frogger (void)
         
         case PAUSA:
         {
+            salir = menu_pausa();
             break;
         }   
         

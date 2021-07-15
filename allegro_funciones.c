@@ -786,6 +786,8 @@ void allegro_initialize_bitmaps(void)
 
 void allegro_redraw(void)
 {
+    static char print_string[2] = {0, 0}; //Creo un arreglo que "simularía" un string (el último elemento es 0 por ser el terminador)
+    static const char *p_to_string = print_string; //creo un puntero constante para usar en "al_draw_text"
     
     if(estado_juego != MENU)
     {
@@ -817,33 +819,22 @@ void allegro_redraw(void)
         //IMPRESION DEL TIEMPO RESTANTE
         redraw_tiempo();
         
-        switch(vidas_restantes)
-        {
-            case 1:
-            {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "1");
-                //           fuente         color               ancho          alto    flag            texto
-                break;
-            }
-            case 2:
-            {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "2");
-                //           fuente         color               ancho          alto    flag            texto
-                break;
-            }
-            case 3:
-            {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "3");
-                //           fuente         color               ancho          alto    flag            texto
-                break;
-            }
-            default:
-            {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 15, 0, ALLEGRO_ALIGN_RIGHT, "PERDISTE");
-                //           fuente         color               ancho          alto    flag            texto
-                break;
-            }
-        }
+        
+        //***********************************************************************
+        //ZONA DE PRUEBAS DE tratar de imprimir variables con allegro
+        //***********************************************************************
+        
+        
+        print_string[0] = vidas_restantes + '0'; //Defino el primer elemento (primer caracter del string) con el char correspondiente a las vidas restantes actuales
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 100, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
+        
+        /* El mismo concepto lo puedo usar para imprimir el nivel actual, ya que está previsto que haya menos de 10 niveles*/
+        print_string[0] = nivel + '0';
+        al_draw_text(font, al_map_rgb(255, 255, 255), 5, 0, ALLEGRO_ALIGN_LEFT, "Nivel: "); //Imprimo el "string" creado que contiene las vidas restantes
+        al_draw_text(font, al_map_rgb(255, 255, 255), 100, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
+
+        
+        
         
     }
     else
@@ -873,39 +864,15 @@ void allegro_redraw(void)
             }
             case MENU_LEVELS:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Acá se selecciona el nivel");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/4.0, ALLEGRO_ALIGN_CENTER, "Acá se selecciona el nivel");
+                
+                print_string[0] = nivel + '0';  //Hago que el destino del arreglo sea imprimir el valor actual de nivel (recordar que print_string es un arreglo 
+                                                //destinado a usar exclusivamente en al_draw_text
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL ");
                 //           fuente         color               ancho          alto    flag            texto
-                switch (nivel)
-                {
-                    case 1:
-                    {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 1");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0 + 100, SCREEN_H/2.0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
                 //           fuente         color               ancho          alto    flag            texto
-                        break;
-                    }
-                    case 2:
-                    {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 2");
-                //           fuente         color               ancho          alto    flag            texto
-                        break;
-                    }
-                    case 3:
-                    {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 3");
-                //           fuente         color               ancho          alto    flag            texto
-                        break;
-                    }
-                    case 4:
-                    {
-                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL 4");
-                //           fuente         color               ancho          alto    flag            texto
-                        break;
-                    }
-                    default:
-                        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Próximamente");
-                //           fuente         color               ancho          alto    flag            texto
-                    
-                }    
+                  
             }
         }
     }
