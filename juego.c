@@ -105,6 +105,8 @@ char vidas_restantes = 3;
 
 char nivel = 1;
 
+int puntaje_juego=0;
+
 int selector_menu = PLAY;
 
 int timer_pasar_nivel = 0;
@@ -231,6 +233,7 @@ bool frogger (void)
                     if(rana_llego() == true)
                     {
                         rene.llego = true;
+                        puntaje_juego+=100;
                         estado_juego = REINICIO;
                     }
 
