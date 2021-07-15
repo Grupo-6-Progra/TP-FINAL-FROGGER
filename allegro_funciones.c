@@ -789,7 +789,7 @@ void allegro_redraw(void)
     static char print_string[2] = {0, 0}; //Creo un arreglo que "simularía" un string (el último elemento es 0 por ser el terminador)
     static const char *p_to_string = print_string; //creo un puntero constante para usar en "al_draw_text"
     
-    if(estado_juego != MENU)
+    if(estado_juego != MENU && estado_juego != PAUSA)
     {
         al_set_target_bitmap(mundo_buffer);
 
@@ -846,7 +846,7 @@ void allegro_redraw(void)
         {
             case PLAY:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Play XD");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Play");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
@@ -874,6 +874,18 @@ void allegro_redraw(void)
                 //           fuente         color               ancho          alto    flag            texto
                   
             }
+            case MAIN_MENU:
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL/REINICIAR JUEGO");
+                //           fuente         color               ancho          alto    flag            texto
+ 
+                break;
+                break;
+
+            case RESUME:
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "REANUDAR");
+                //           fuente         color               ancho          alto    flag            texto
+ 
+                break;
         }
     }
     

@@ -1,14 +1,12 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include "menu.h"
 #include "juego.h"
 
 
-static int level (void);
-static int menu_levels(void);
+static void menu_levels(void);
 static void play (void);
-static bool quit(void);
 
 
 bool menu_start(void)
@@ -17,6 +15,7 @@ bool menu_start(void)
     
     static int esperar = 0;
     static int esperar_play = 0;
+    
     if(esperar != 0)
     {
         esperar--;
@@ -57,6 +56,7 @@ bool menu_start(void)
                 }
                 else if (enter_prev == true && key_pressed[KEY_ENTER] == false)
                 {
+                    enter_prev = false;
                     esperar = 10;
                     switch(selector_menu)
                     {
@@ -67,24 +67,34 @@ bool menu_start(void)
                             break;
 
                         case LEVEL:
-                            level();
+                            selector_menu = MENU_LEVELS; //hago que empiece a entrar siempre a este menú, hasta que se seleccione un nivel.
                             break;
 
                         case QUIT:
-                            return quit();
+                            return true;
                             break;
                     }
                 }
+
             }
         }
         else
         {
-            if (esperar == 0 && key_pressed[KEY_ENTER] == true)
+            menu_levels();
+            
+            if ((key_pressed[KEY_ENTER] == true) || (enter_prev == true))
             {
-                estado_juego = INICIO;
-                selector_menu = RESUME;
+                if (enter_prev == false)
+                {
+                    enter_prev = true;
+                }
+                else if (enter_prev == true && key_pressed[KEY_ENTER] == false)
+                {
+                    enter_prev = false;
+                    estado_juego = INICIO;
+                    selector_menu = RESUME;
+                }
             }
-            esperar = menu_levels();
             
         }
         
@@ -94,66 +104,43 @@ bool menu_start(void)
 
 }
 
-static int level (void)
+static void menu_levels(void)
 {
-    if(key_pressed[KEY_ENTER])
+    
+    static int esperar = 0;
+    
+    if(esperar != 0)
     {
-        selector_menu = MENU_LEVELS; //hago que empiece a entrar siempre a este menú, hasta que se seleccione un nivel.
-        return menu_levels();
+        esperar--;
     }
-    return 0;
-}
+    
+    else
+    {
+        if(key_pressed[KEY_LEFT]) //Si se presiona la tecla hacia la izquierda, se sale del submenú y se vuelve al menú principal
+        {
+            esperar = 10;
+            selector_menu = LEVEL;
+        }
 
-static int menu_levels(void)
-{
+        if(key_pressed[KEY_DOWN]) //Si el usuario se desplaza a abajo, se aumenta en 1 el nivel seleccionado
+        {
+            esperar = 10;
+            nivel++;
+        }
+
+        if(key_pressed[KEY_UP]) //Si el usuario se desplaza arriba, se decrementa en 1 el nivel seleccionado
+        {
+            esperar = 10;
+            nivel--;
+        }
     
-    static int esperar;
-    esperar = 0;
-    
-    if(key_pressed[KEY_LEFT]) //Si se presiona la tecla hacia arriba, se sale del submenú y se vuelve al menú principal
-    {
-        esperar = 10;
-        selector_menu = LEVEL;
     }
-    
-    if(key_pressed[KEY_DOWN]) //Si el usuario se desplaza a la derecha, se aumenta en 1 el nivel seleccionado
-    {
-        esperar = 10;
-        nivel++;
-    }
-    
-    if(key_pressed[KEY_UP]) //Si el usuario se desplaza a la izquierda, se decrementa en 1 el nivel seleccionado
-    {
-        esperar = 10;
-        nivel--;
-    }
-    
-    if(key_pressed[KEY_ENTER]) 
-        /*
-         * Si se presiona ENTER, no hago nada porque evalúo por fuera del submenú
-         *      El sentido de evaluar por fuera del submenú es que la primera vez que entra al mismo, 
-         *      el estado del arreglo de teclas no se actualizó, entonces apenas entre va a salir por este if,
-         *      que es algo que no estamos buscando en este caso.
-         */
-    {
-        esperar = 10;
-    }
-    return esperar; //Si se presionó algo dentro del submenú, hago que el programa espere un momento para darle tiempo
-                    //al usuario de soltar la tecla que presionó.
+
 }
 
 
 
-static bool quit(void)
-{
-    if(key_pressed[KEY_ENTER])
-    {
-        return true;
-    }
-}
-
-
-bool menu_pausa(void)                           //función del menú en pausa, tiene 3 opciones regidas por variables globales
+/*bool menu_pausa(void)                           //función del menú en pausa, tiene 3 opciones regidas por variables globales
 {    
     /*if(key_pressed[KEY_DOWN]== true)                       //ve si toco hacia abajo el stick //key_pressed[KEY_DOWN]== true  // se elige ir hacia abajo para cambiar de opción
     {
@@ -181,7 +168,7 @@ bool menu_pausa(void)                           //función del menú en pausa, t
     else if(key_pressed[KEY_ENTER]== true)   //si fue tocado enter entonces vuelve al juego
     {
         estado_juego =JUEGO;	//vuelve al estado de juego      
-    }*/
+    }/
     static int esperar = 0;
     if(esperar != 0)
     {
@@ -214,7 +201,7 @@ bool menu_pausa(void)                           //función del menú en pausa, t
                 selector_menu--;
             }
         }
-        else if(key_pressed[KEY_ENTER])
+        else if(key_pressed[KEY_ENTER] == true)
         {
             esperar = 10;
             
@@ -229,12 +216,85 @@ bool menu_pausa(void)                           //función del menú en pausa, t
                         break;
 
                     case QUIT:
-                        return quit();
+                        return true;
                         break;
                 }
             
         }
         
+    }
+    return false;
+    
+
+}*/
+
+bool menu_pausa(void)
+{  
+    static bool enter_prev = false;
+    
+    static int esperar = 0;
+    static int esperar_play = 0;
+    
+    if(esperar != 0)
+    {
+        esperar--;
+    }
+    else
+    {
+        
+        if (key_pressed[KEY_DOWN] == true) 
+        {
+            esperar = 10;
+            if(selector_menu == QUIT)
+            {
+                selector_menu = RESUME;
+            }
+            else
+            {
+                selector_menu--;
+            }
+        }
+        else if (key_pressed[KEY_UP] == true)
+        {
+            esperar = 10;
+            if(selector_menu == RESUME)
+            {
+                selector_menu = QUIT;
+            }
+            else
+            {
+                selector_menu++;
+            }
+        }
+        else if((key_pressed[KEY_ENTER] == true) || (enter_prev == true))
+        {
+            if (enter_prev == false)
+            {
+                enter_prev = true;
+            }
+            else if (enter_prev == true && key_pressed[KEY_ENTER] == false)
+            {
+                enter_prev = false;
+                esperar = 10;
+                switch(selector_menu)
+                {
+                    case RESUME:
+                        estado_juego = JUEGO;
+                        break;
+
+                    case MAIN_MENU:
+                        selector_menu = PLAY;
+                        estado_juego = MENU;
+                        break;
+
+                    case QUIT:
+                        return true;
+                        break;
+                }
+            }
+
+        }
+     
     }
     return false;
     

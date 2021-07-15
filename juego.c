@@ -137,6 +137,7 @@ bool frogger (void)
     static bool salir = false; //variable que indica si el programa debe terminar
     static int choque_en_proceso = 0;
     static int esperar_menu = 0;
+    static bool enter_prev = false;
     
     bool choque = false;
     switch(estado_juego)
@@ -238,9 +239,17 @@ bool frogger (void)
         case JUEGO: //caso en el que la rana está viva
         {
 
-            if(key_pressed[KEY_ENTER] == true)
+            if((key_pressed[KEY_ENTER] == true) || (enter_prev == true))
             {
-                estado_juego = PAUSA;
+                if (enter_prev == false)
+                {
+                    enter_prev = true;
+                }
+                else if (enter_prev == true && key_pressed[KEY_ENTER] == false)
+                {
+                    enter_prev = false;
+                    estado_juego = PAUSA;
+                }
             }
             else if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante
             {
