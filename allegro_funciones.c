@@ -789,7 +789,7 @@ void allegro_redraw(void)
     static char print_string[2] = {0, 0}; //Creo un arreglo que "simularía" un string (el último elemento es 0 por ser el terminador)
     static const char *p_to_string = print_string; //creo un puntero constante para usar en "al_draw_text"
     
-    if(estado_juego != MENU && estado_juego != PAUSA)
+    if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL)
     {
         al_set_target_bitmap(mundo_buffer);
 
@@ -837,6 +837,24 @@ void allegro_redraw(void)
         
         
     }
+    
+    else if(estado_juego == PASAR_NIVEL)
+    {
+        al_set_target_backbuffer(display);
+        al_clear_to_color(al_map_rgb(0,0,0));
+        
+        if(timer_pasar_nivel > UN_SEGUNDO*5)
+        {
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Puntaje ");
+        }
+        else
+        {
+            print_string[0] = nivel + 1 + '0';
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0 - 100, ALLEGRO_ALIGN_CENTER, "Nivel ");
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, p_to_string);
+        }
+    }
+    
     else
     {
         al_set_target_backbuffer(display);
@@ -872,8 +890,9 @@ void allegro_redraw(void)
                 //           fuente         color               ancho          alto    flag            texto
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0 + 100, SCREEN_H/2.0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
                 //           fuente         color               ancho          alto    flag            texto
-                  
+                break;
             }
+            
             case MAIN_MENU:
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL/REINICIAR JUEGO");
                 //           fuente         color               ancho          alto    flag            texto

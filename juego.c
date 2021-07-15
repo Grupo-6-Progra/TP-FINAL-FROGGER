@@ -32,6 +32,8 @@
 /***************************************************
  * VELOCIDADES Y TIEMPOS POR DEFAULT
 ***************************************************/
+#define UN_SEGUNDO                (1*REFRESCO)
+
 #define TIEMPO_UNITARIO_ANCHO     (5.0/6.0) //en segundos
 #define TIEMPO_UNITARIO_ALTO      (5.0/6.0)
 
@@ -95,7 +97,7 @@ static int game_over(void);
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
-int estado_juego = MENU;//!!!!!!!!!!!!!!!!!!!!!!!!!!
+int estado_juego = MENU;
 
 double tiempo_restante;
 
@@ -104,6 +106,11 @@ char vidas_restantes = 3;
 char nivel = 1;
 
 int selector_menu = PLAY;
+
+int timer_pasar_nivel = 0;
+
+int timer_perder = 0;
+
 
 bool key_pressed[TECLAS_MAX] = {false,false,false,false,false};
 
@@ -137,13 +144,21 @@ bool frogger (void)
     static bool salir = false; //variable que indica si el programa debe terminar
     static int choque_en_proceso = 0;
     static int esperar_menu = 0;
+    
     static bool enter_prev = false;
     
     bool choque = false;
     switch(estado_juego)
     {
         
-        case INICIO:
+        case MENU: //menu de inicio
+        {
+            salir = menu_start();
+            
+            break;
+        }
+        
+        case INICIO: //inicio de un nivel
         {
             vidas_restantes = 3;
             initialize_enemies (nivel);
@@ -154,84 +169,22 @@ bool frogger (void)
             break;
         }
         
-        case REINICIO: //caso al que se entra cuando se pierde una vida
+        case PASAR_NIVEL:
         {
-            if(rene.llego == true)
-            {                              
-                if (choque_en_proceso == 0) //significa que acabo de ganar
-                {
-                    choque_en_proceso = FRAMES_CHOQUE;
-                }
-                else if (choque_en_proceso > 0)
-                {
-                    choque_en_proceso--;
-                    move_enemies(nivel);
-                    if (choque_en_proceso == 0)
-                    {
-                        rene.llego = false;
-                        int casillas_llegadas = 0;
-                        int i;
-
-                        for (i = 0; i < 5; i++)
-                        {
-                            if(llegadas[i].ocupado == true)
-                            {
-                                casillas_llegadas++;
-                            }
-                        }
-
-                        if(casillas_llegadas == 5)
-                        {
-                            nivel++;
-                            move_frog(true);
-                            estado_juego = INICIO;
-                        }
-
-                        else
-                        {
-                            initialize_frog();
-                            move_frog(true);
-                            tiempo_restante = TIEMPO_TOTAL; 
-                            estado_juego = JUEGO;
-                        }
-                    }
-                }
+            if(timer_pasar_nivel == 0)
+            {
+                timer_pasar_nivel = UN_SEGUNDO*10;
             }
-            
             else
             {
-                if(vidas_restantes == 0)
+                timer_pasar_nivel--;
+                if(timer_pasar_nivel == 0)
                 {
-                    estado_juego = PERDER;
+                    nivel++;
                     move_frog(true);
-                }
-
-                else if (rene.chocada == true && choque_en_proceso == 0) //significa que acabo de chocar
-                {
-                    choque_en_proceso = FRAMES_CHOQUE;
-                    rene.frame_chocada = 1;
-                }
-
-                else if (choque_en_proceso > 0)
-                {
-                    choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
-                    
-                    move_enemies(nivel);
-                    
-                    if (choque_en_proceso == 0)
-                    {
-                        rene.chocada = false;
-                    }
-                }
-                else
-                {
-                    initialize_frog();
-                    move_frog(true);
-                    tiempo_restante = TIEMPO_TOTAL;
-                    estado_juego = JUEGO;
+                    estado_juego = INICIO;
                 }
             }
-           
             
             break;
         }
@@ -299,6 +252,86 @@ bool frogger (void)
             break;
         }
         
+        case REINICIO: //caso al que se entra cuando se pierde una vida
+        {
+            if(rene.llego == true)
+            {                              
+                if (choque_en_proceso == 0) //significa que acabo de ganar
+                {
+                    choque_en_proceso = FRAMES_CHOQUE;
+                }
+                else if (choque_en_proceso > 0)
+                {
+                    choque_en_proceso--;
+                    move_enemies(nivel);
+                    if (choque_en_proceso == 0)
+                    {
+                        rene.llego = false;
+                        int casillas_llegadas = 0;
+                        int i;
+
+                        for (i = 0; i < 5; i++)
+                        {
+                            if(llegadas[i].ocupado == true)
+                            {
+                                casillas_llegadas++;
+                            }
+                        }
+
+                        if(casillas_llegadas == 5) //se completaron todas las casillas y se pasó de nivel
+                        {
+                            estado_juego = PASAR_NIVEL;
+                        }
+
+                        else //se llegó al otro lado, pero no se completaron todas las casillas
+                        {
+                            initialize_frog();
+                            move_frog(true);
+                            tiempo_restante = TIEMPO_TOTAL; 
+                            estado_juego = JUEGO;
+                        }
+                    }
+                }
+            }
+            
+            else
+            {
+                if(vidas_restantes == 0)
+                {
+                    estado_juego = PERDER;
+                    move_frog(true);
+                }
+
+                else if (rene.chocada == true && choque_en_proceso == 0) //significa que acabo de chocar
+                {
+                    choque_en_proceso = FRAMES_CHOQUE;
+                    rene.frame_chocada = 1;
+                }
+
+                else if (choque_en_proceso > 0)
+                {
+                    choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
+                    
+                    move_enemies(nivel);
+                    
+                    if (choque_en_proceso == 0)
+                    {
+                        rene.chocada = false;
+                    }
+                }
+                else
+                {
+                    initialize_frog();
+                    move_frog(true);
+                    tiempo_restante = TIEMPO_TOTAL;
+                    estado_juego = JUEGO;
+                }
+            }
+           
+            
+            break;
+        }
+        
         case PAUSA:
         {
             salir = menu_pausa();
@@ -307,19 +340,29 @@ bool frogger (void)
         
         case PERDER:
         {
-            if(!game_over())
+            if(timer_perder == 0)
             {
-                estado_juego = MENU;
+                timer_perder = UN_SEGUNDO*10;
             }
+            else
+            {
+                timer_perder--;
+                if(timer_perder == 0)
+                {
+                    selector_menu = PLAY;
+                    estado_juego = MENU;
+                }
+            }
+            
+           /* if(game_over() == 0)
+            {
+                
+                selector_menu = PLAY;
+                estado_juego = MENU;
+            }*/
             break;
         }
         
-        case MENU:
-        {
-            salir = menu_start();
-            
-            break;
-        }
      
     }
     return salir;
@@ -1182,4 +1225,5 @@ static int game_over (void)
         rene.y += CASILLA_ALTO;
     }
     return contador_de_frames;
+    
 }

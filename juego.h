@@ -11,7 +11,7 @@
 
 enum ESTADOS
 {
-    INICIO, REINICIO, PAUSA, JUEGO, PERDER, MENU
+    INICIO, REINICIO, PAUSA, JUEGO, PERDER, MENU, PASAR_NIVEL
 };
 
 extern int estado_juego;
@@ -19,6 +19,9 @@ extern double tiempo_restante;
 extern char nivel;
 extern char vidas_restantes;
 extern int selector_menu;
+extern int timer_pasar_nivel;
+extern int timer_perder;
+#define UN_SEGUNDO                (1*REFRESCO)
 
 /***************************************************
  * MUNDO Y VELOCIDAD DE JUEGO
