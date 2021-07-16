@@ -786,10 +786,10 @@ void allegro_initialize_bitmaps(void)
 
 void allegro_redraw(void)
 {
-    char print_string[100] = {0, 0}; //Creo un arreglo que "simularía" un string (el último elemento es 0 por ser el terminador)
+    char print_string[100]; //Creo un arreglo que "simularía" un string (el último elemento es 0 por ser el terminador)
     const char *p_to_string = print_string; //creo un puntero constante para usar en "al_draw_text"
     
-    if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL)
+    if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL && estado_juego != PERDER)
     {
         al_set_target_bitmap(mundo_buffer);
 
@@ -824,17 +824,18 @@ void allegro_redraw(void)
         //ZONA DE PRUEBAS DE tratar de imprimir variables con allegro
         //***********************************************************************
         
-        
-        print_string[0] = vidas_restantes + '0'; //Defino el primer elemento (primer caracter del string) con el char correspondiente a las vidas restantes actuales
+        sprintf(print_string, "%u", vidas_restantes);
+                                           
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 100, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
         
         /* El mismo concepto lo puedo usar para imprimir el nivel actual, ya que está previsto que haya menos de 10 niveles*/
-        print_string[0] = nivel + '0';
+        sprintf(print_string, "%u", nivel);
+        
         al_draw_text(font, al_map_rgb(255, 255, 255), 5, 0, ALLEGRO_ALIGN_LEFT, "Nivel: "); //Imprimo el "string" creado que contiene las vidas restantes
         al_draw_text(font, al_map_rgb(255, 255, 255), 100, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
 
         
-        sprintf(print_string, "%d", puntaje_juego);
+        sprintf(print_string, "%lu", puntaje_juego);
         
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, 0, ALLEGRO_ALIGN_LEFT, "Puntaje ");
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, 0, ALLEGRO_ALIGN_LEFT, p_to_string);
@@ -851,16 +852,43 @@ void allegro_redraw(void)
         
         if(timer_pasar_nivel > UN_SEGUNDO*5)
         {
-            sprintf(print_string, "%d", puntaje_juego);
+            sprintf(print_string, "%lu", puntaje_juego);
         
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_LEFT, "Puntaje ");
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H*2/3, ALLEGRO_ALIGN_LEFT, p_to_string);
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "Puntaje ");
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H*2/3, ALLEGRO_ALIGN_CENTER, p_to_string);
         }
         else
         {
-            print_string[0] = nivel + 1 + '0';
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0 - 100, ALLEGRO_ALIGN_CENTER, "Nivel ");
+            sprintf(print_string, "%u", nivel);
+  
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "Nivel ");
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, p_to_string);
+        }
+    }
+    
+    else if(estado_juego == PERDER)
+    {
+        al_set_target_backbuffer(display);
+        al_clear_to_color(al_map_rgb(0,0,0));
+        
+        if(timer_perder > UN_SEGUNDO*5)
+        {
+            sprintf(print_string, "%u", nivel);
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "NIVEL ALCANZADO");
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, p_to_string);
+                       
+        }
+        
+        else
+        {
+            sprintf(print_string, "%d", puntaje_juego);
+        
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/3, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "SU PUNTAJE: ");
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/3, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, p_to_string);
+            
+            sprintf(print_string, "%d", high_score);
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "HIGHSCORE: ");
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, p_to_string);
         }
     }
     

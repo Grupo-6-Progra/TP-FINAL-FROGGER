@@ -16,9 +16,11 @@ enum ESTADOS
 
 extern int estado_juego;
 extern double tiempo_restante;
-extern char nivel;
-extern char vidas_restantes;
+extern unsigned int nivel;
+extern unsigned int vidas_restantes;
+
 extern unsigned long int puntaje_juego;
+extern unsigned long int high_score;
 
 extern int selector_menu;
 extern int timer_pasar_nivel;

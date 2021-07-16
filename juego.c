@@ -93,6 +93,12 @@ static void move_cocodrilo(int nivel);
 
 static void sumar_puntaje_salto(void);
 
+static unsigned long int get_high_score(int *);
+
+static int save_new_highscore(unsigned long int);
+    
+
+
 static int game_over(void);
 
 /***************************************************
@@ -103,11 +109,13 @@ int estado_juego = MENU;
 
 double tiempo_restante;
 
-char vidas_restantes = 3;
+unsigned int vidas_restantes = 3;
 
-char nivel = 1;
+unsigned int nivel = 1;
 
 unsigned long int puntaje_juego=0;
+
+unsigned long int high_score;
 
 int selector_menu = PLAY;
 
@@ -235,7 +243,7 @@ bool frogger (void)
                     if(rana_llego() == true)
                     {
                         rene.llego = true;
-                        puntaje_juego += APROX(100 * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1));
+                        puntaje_juego += APROX(100 * nivel * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1));
                         estado_juego = REINICIO;
                     }
 
@@ -349,15 +357,32 @@ bool frogger (void)
         
         case PERDER:
         {
+            int error;
+            
             if(timer_perder == 0)
             {
                 timer_perder = UN_SEGUNDO*10;
+                
+                high_score = get_high_score(&error); //busco el puntaje máximo hasta el momento
+                if(error != 0)
+                {
+                    salir = true;
+                }
             }
             else
             {
                 timer_perder--;
                 if(timer_perder == 0)
                 {
+                    if(puntaje_juego > high_score)
+                    {
+                        error = save_new_highscore(puntaje_juego);
+                        if(error != 0)
+                        {
+                            salir = true;
+                        }
+                    }
+                    
                     puntaje_juego = 0;
                     nivel = 1;
                     selector_menu = PLAY;
@@ -1261,4 +1286,56 @@ static int game_over (void)
     }
     return contador_de_frames;
     
+}
+
+static unsigned long int get_high_score(int * error)
+{
+    FILE * p_highscore;
+    int c;
+    unsigned long int high_score = 0;
+    
+    p_highscore = fopen("high_score.txt", "r");
+    
+    if(p_highscore == NULL)
+    {
+        fprintf(stderr, "failed to open file p_highscore\n");
+        *error = -1;
+        return 0;
+    }
+    
+    *error = 0;
+      
+    
+    while ((c = fgetc(p_highscore)) != EOF && c != '\n') //mientras no se llegue al final del archivo o al final de una línea
+    {
+        if(c >= '0' && c <= '9')
+        {
+            c = c -'0';
+            high_score = high_score * 10 + c;
+        }
+    }
+    
+    fclose(p_highscore);
+    
+    return high_score;
+}
+
+static int save_new_highscore(unsigned long int new_high_score)
+{
+    FILE * p_highscore;
+    int c;
+    
+    p_highscore = fopen("high_score.txt", "w");
+    
+    if(p_highscore == NULL)
+    {
+        fprintf(stderr, "failed to open file p_highscore\n");
+        return -1;
+    }
+    
+    fprintf(p_highscore, "%lu", new_high_score);
+    
+    fclose(p_highscore);
+    
+    return 0;
 }
