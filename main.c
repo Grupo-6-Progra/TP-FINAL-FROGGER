@@ -5,7 +5,7 @@
 
 #include "juego.h"
 
-
+//#define RASPI
 #ifndef RASPI
 
 
@@ -79,6 +79,7 @@ int main (void)
     
 #else
    #include "display.h"
+    #include "/home/pi/libs/joydisp/disdrv.h"
   int main (void)
   {
       bool redraw = false;
@@ -89,7 +90,7 @@ int main (void)
         if (timer())
         {   
             redraw = true;  //paso un frame  
-            frogger();
+            do_exit = frogger();
         }
         else 
         {
@@ -102,6 +103,8 @@ int main (void)
             redraw = false;
         }
       }
+      
+      disp_clear();
       
       return 0;
       

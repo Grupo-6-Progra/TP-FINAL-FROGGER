@@ -1,3 +1,4 @@
+
 //#define RASPI_DISPLAY
 #ifdef RASPI_DISPLAY 
 
@@ -8,6 +9,7 @@
 #include "juego.h"
 #include "colisiones.h"
 #include "display.h"
+#include "menu.h"
 
 #include "/home/pi/libs/joydisp/disdrv.h"
 #include "/home/pi/libs/joydisp/joydrv.h"
@@ -31,8 +33,8 @@ static void print_tortuga2(int,int,int);
 static void print_tortuga3(int,int,int);
 //static void redraw_tiempo_d(void);
 //static void redraw_llegada_d(void);
-//static void redraw_fondo_d(void);
-static void vidas(int);
+static void redraw_fondo_d(void);
+static void vidas(void);
 static void delete_disp(void);
 
 void init_display()
@@ -44,11 +46,12 @@ void init_display()
 
 void redraw_disp (void) 
 {
-        if(estado_juego != MENU)
+    delete_disp();
+    if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL)
     {
-        delete_disp();
+
         //IMPRESION DEL FONDO
-        //redraw_fondo_d();
+        redraw_fondo_d();
 
         //IMPRESION DE LOS AUTOS
         redraw_autos_d();
@@ -64,14 +67,229 @@ void redraw_disp (void)
 
         //IMPRESIÓN DE LA RANA
         redraw_rana_d();
-        vidas(3);     
+        vidas();     
+    }
+    else if (estado_juego == MENU || estado_juego == PAUSA)
+    {
+        switch(selector_menu)
+        {
+            case PLAY:
+            {    
+                int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,1,1,1,0,1,0,0,1,1,1,0,1,0,1,0},
+                                    {0,1,0,1,0,1,0,0,1,0,1,0,1,0,1,0},
+                                    {0,1,1,1,0,1,0,0,1,1,1,0,1,1,1,0},
+                                    {0,1,0,0,0,1,0,0,1,0,1,0,0,1,0,0},
+                                    {0,1,0,0,0,1,1,0,1,0,1,0,0,1,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0}};
+                int i,j;
+                dcoord_t coord;
+                for(i=0;i<DISP_CANT_Y_DOTS;i++)
+                {
+                    for (j=0;j<DISP_CANT_X_DOTS;j++)
+                    {
+                        if(mat[i][j]==1)
+                        {
+                            coord.x = j;
+                            coord.y = i;
+                            disp_write(coord,D_ON);
+                        }
+                    }
+                }
+               
+                
+                break;
+            }
+            case LEVEL:
+            {
+                int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                    {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                    {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                    {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                    {1,1,0,1,1,0,0,1,0,0,1,1,0,1,1,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0}};
+                int i,j;
+                dcoord_t coord;
+                for(i=0;i<DISP_CANT_Y_DOTS;i++)
+                {
+                    for (j=0;j<DISP_CANT_X_DOTS;j++)
+                    {
+                        if(mat[i][j]==1)
+                        {
+                            coord.x = j;
+                            coord.y = i;
+                            disp_write(coord,D_ON);
+                        }
+                    }
+                }
+                break;
+            }
+            case QUIT:
+            {
+                int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0},
+                                    {0,0,1,0,1,0,1,0,1,0,1,0,0,1,0,0},
+                                    {0,0,1,0,1,0,1,0,1,0,1,0,0,1,0,0},
+                                    {0,0,1,1,1,0,1,0,1,0,1,0,0,1,0,0},
+                                    {0,0,1,1,1,0,1,1,1,0,1,0,0,1,0,0},
+                                    {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0}};
+                int i,j;
+                dcoord_t coord;
+                for(i=0;i<DISP_CANT_Y_DOTS;i++)
+                {
+                    for (j=0;j<DISP_CANT_X_DOTS;j++)
+                    {
+                        if(mat[i][j]==1)
+                        {
+                            coord.x = j;
+                            coord.y = i;
+                            disp_write(coord,D_ON);
+                        }
+                    }
+                }
+                
+                break;
+            }
+            case MENU_LEVELS:
+            {
+                int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0},
+                                    {0,0,1,0,1,0,1,0,1,0,1,0,0,1,0,0},
+                                    {0,0,1,0,1,0,1,0,1,0,1,0,0,1,0,0},
+                                    {0,0,1,1,1,0,1,0,1,0,1,0,0,1,0,0},
+                                    {0,0,1,1,1,0,1,1,1,0,1,0,0,1,0,0},
+                                    {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0}};
+                int i,j;
+                dcoord_t coord;
+                for(i=0;i<DISP_CANT_Y_DOTS;i++)
+                {
+                    for (j=0;j<DISP_CANT_X_DOTS;j++)
+                    {
+                        if(mat[i][j]==1)
+                        {
+                            coord.x = j;
+                            coord.y = i;
+                            disp_write(coord,D_ON);
+                        }
+                    }
+                }
+                break;
+            }
+            
+            case MAIN_MENU:
+            {
+                 int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {1,0,1,0,1,1,1,0,1,0,0,1,0,1,0,1},
+                                    {1,1,1,0,1,0,0,0,1,1,0,1,0,1,0,1},
+                                    {1,1,1,0,1,1,1,0,1,1,1,1,0,1,0,1},
+                                    {1,0,1,0,1,0,0,0,1,0,1,1,0,1,0,1},
+                                    {1,0,1,0,1,1,1,0,1,0,0,1,0,1,1,1},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0}};
+                int i,j;
+                dcoord_t coord;
+                for(i=0;i<DISP_CANT_Y_DOTS;i++)
+                {
+                    for (j=0;j<DISP_CANT_X_DOTS;j++)
+                    {
+                        if(mat[i][j]==1)
+                        {
+                            coord.x = j;
+                            coord.y = i;
+                            disp_write(coord,D_ON);
+                        }
+                    }
+                }
+ 
+                break;
+            }
+            case RESUME:
+            {
+                int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {1,1,1,0,1,1,1,0,1,0,1,0,1,1,1,0},
+                                    {1,0,1,0,1,0,0,0,1,1,1,0,1,0,0,0},
+                                    {1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0},
+                                    {1,1,0,0,0,0,1,0,1,0,1,0,1,0,0,0},
+                                    {1,0,1,0,1,1,1,0,1,0,1,0,1,1,1,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0}};
+                int i,j;
+                dcoord_t coord;
+                for(i=0;i<DISP_CANT_Y_DOTS;i++)
+                {
+                    for (j=0;j<DISP_CANT_X_DOTS;j++)
+                    {
+                        if(mat[i][j]==1)
+                        {
+                            coord.x = j;
+                            coord.y = i;
+                            disp_write(coord,D_ON);
+                        }
+                    }
+                }
+                break;
+            }
+        }
     }
     disp_update();
 
 }
 
 
-static void vidas(int numero)
+static void vidas(void)
 {
     dcoord_t tresVidas = {13,15};
     dcoord_t dosVidas = {14,15};
@@ -79,19 +297,12 @@ static void vidas(int numero)
     int i;
     int j;
     
-    switch (numero)
+    switch (vidas_restantes)
     {
     	case 0: 
-    		for (i=0; i<=DISP_MAX_X ; i++)
-    		{
-    			for (j=0; j<=DISP_MAX_Y;j++)
-    			{
-    				dcoord_t pintar = {i,j};
-    				disp_write(pintar,D_ON);	
-    			}   		
-    		}
-
-
+                disp_write(unaVida, D_OFF);
+    		disp_write(dosVidas, D_OFF);
+    		disp_write(tresVidas, D_OFF);
     		break;
     	
     	
@@ -667,6 +878,140 @@ static void print_tortuga3(int coordx, int coordy, int direc)
                     
         
     }
+}
+
+static void redraw_fondo_d(void)
+{
+    int derecha;
+    int izquierda;
+    int abajo;
+    int arriba;
+
+    dcoord_t coord;
+    
+    derecha = APROX((MUNDO_ANCHO - rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
+    abajo = APROX((MUNDO_ALTO - rene.y)/TAM_PIXEL)+7;
+    izquierda = APROX((0- rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
+    arriba = APROX((0- rene.y)/TAM_PIXEL)+7;
+    
+    int i;
+    int j;
+    if(derecha < DISP_CANT_X_DOTS)
+    {
+        if(abajo < DISP_CANT_Y_DOTS)
+        {
+            for (i=0; i<=derecha ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo;
+                disp_write(coord, D_ON);
+            }
+            for (j=0 ; j<=abajo;j++)//for de derecha
+            {
+                coord.x = derecha;
+                coord.y=j;
+                disp_write(coord,D_ON);
+            }
+        }
+        else if(arriba >= 0)
+        {
+            for (i=0; i<=derecha ; i++)//for de arriba
+            {                
+                coord.x = i;
+                coord.y = arriba;
+                disp_write(coord, D_ON);
+            }
+            for (j=arriba ; j<DISP_CANT_Y_DOTS;j++)
+            {
+                coord.x = derecha;
+                coord.y=j;
+                disp_write(coord,D_ON);
+            }
+        }
+        else
+        {
+            for(i=0 ; i<DISP_CANT_X_DOTS ; i++)
+            {
+                coord.x = derecha;
+                coord.y = i;
+                disp_write(coord,D_ON);
+                        
+            }
+                 
+        }
+
+    }
+    
+    else if(izquierda >= 0)
+    {
+        if(abajo < DISP_CANT_Y_DOTS)
+        {
+            for (i=izquierda; i<DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo;
+                disp_write(coord, D_ON);
+            }
+            for (j=0 ; j<=abajo;j++)//for de izquierda
+            {
+                coord.x = izquierda;
+                coord.y=j;
+                disp_write(coord,D_ON);
+            }
+        }
+        else if(arriba >= 0)
+        {
+            for (i=izquierda; i<DISP_CANT_X_DOTS ; i++)//for de arriba
+            {                
+                coord.x = i;
+                coord.y = arriba;
+                disp_write(coord, D_ON);
+            }
+            for (j=arriba ; j<DISP_CANT_Y_DOTS;j++)
+            {
+                coord.x = izquierda;
+                coord.y=j;
+                disp_write(coord,D_ON);
+            }
+        }
+        else
+        {
+            for(i=0 ; i<DISP_CANT_X_DOTS ; i++)
+            {
+                coord.x = izquierda;
+                coord.y = i;
+                disp_write(coord,D_ON);
+                        
+            }
+                 
+        }
+     
+
+    }
+   
+    else if (arriba>=0)
+    {
+        for(i=0 ; i<DISP_CANT_X_DOTS ; i++)
+            {
+                coord.x = i;
+                coord.y = arriba;
+                disp_write(coord,D_ON);
+                        
+            }
+    }
+  
+    else if (abajo<DISP_CANT_Y_DOTS)
+    {
+        for(i=0 ; i<DISP_CANT_X_DOTS ; i++)
+            {
+                coord.x = i;
+                coord.y = abajo;
+                disp_write(coord,D_ON);
+                        
+            }
+    }
+    
+   
 }
 #endif
 
