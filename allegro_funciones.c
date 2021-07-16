@@ -859,7 +859,7 @@ void allegro_redraw(void)
         }
         else
         {
-            sprintf(print_string, "%u", nivel);
+            sprintf(print_string, "%u", nivel+1);
   
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "Nivel ");
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, p_to_string);
@@ -901,19 +901,19 @@ void allegro_redraw(void)
         {
             case PLAY:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Play");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "PLAY");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case LEVEL:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Presione enter para seleccionar nivel");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "PRESIONE ENTER PARA SELECCIONAR NIVEL");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case QUIT:
             {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Presione enter para salir del programa");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SALIR");
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
@@ -931,7 +931,7 @@ void allegro_redraw(void)
             }
             
             case MAIN_MENU:
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL/REINICIAR JUEGO");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL / REINICIAR JUEGO");
                 //           fuente         color               ancho          alto    flag            texto
  
                 break;
