@@ -919,7 +919,6 @@ void allegro_redraw(void)
             }
             case MENU_LEVELS:
             { 
-           
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/4.0, ALLEGRO_ALIGN_CENTER, "Acá se selecciona el nivel");
                 
                 sprintf(print_string, "%u", nivel);
