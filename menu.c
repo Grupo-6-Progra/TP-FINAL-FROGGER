@@ -283,6 +283,8 @@ bool menu_pausa(void)
                         break;
 
                     case MAIN_MENU:
+                        puntaje_juego = 0;
+                        nivel = 1;
                         selector_menu = PLAY;
                         estado_juego = MENU;
                         break;

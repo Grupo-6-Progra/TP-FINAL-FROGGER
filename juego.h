@@ -18,6 +18,8 @@ extern int estado_juego;
 extern double tiempo_restante;
 extern char nivel;
 extern char vidas_restantes;
+extern unsigned long int puntaje_juego;
+
 extern int selector_menu;
 extern int timer_pasar_nivel;
 extern int timer_perder;
@@ -78,6 +80,7 @@ typedef struct
     bool chocada;
     int frame_chocada; // 0 = no chocada, 2 = mostrar perder
     bool llego;
+    int fila_max; //máxima fila a la cual llegó
     
     
 }RANA;

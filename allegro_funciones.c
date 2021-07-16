@@ -786,8 +786,8 @@ void allegro_initialize_bitmaps(void)
 
 void allegro_redraw(void)
 {
-    static char print_string[2] = {0, 0}; //Creo un arreglo que "simularía" un string (el último elemento es 0 por ser el terminador)
-    static const char *p_to_string = print_string; //creo un puntero constante para usar en "al_draw_text"
+    char print_string[100] = {0, 0}; //Creo un arreglo que "simularía" un string (el último elemento es 0 por ser el terminador)
+    const char *p_to_string = print_string; //creo un puntero constante para usar en "al_draw_text"
     
     if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL)
     {
@@ -834,6 +834,12 @@ void allegro_redraw(void)
         al_draw_text(font, al_map_rgb(255, 255, 255), 100, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
 
         
+        sprintf(print_string, "%d", puntaje_juego);
+        
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, 0, ALLEGRO_ALIGN_LEFT, "Puntaje ");
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, 0, ALLEGRO_ALIGN_LEFT, p_to_string);
+        
+        
         
         
     }
@@ -845,7 +851,10 @@ void allegro_redraw(void)
         
         if(timer_pasar_nivel > UN_SEGUNDO*5)
         {
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "Puntaje ");
+            sprintf(print_string, "%d", puntaje_juego);
+        
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_LEFT, "Puntaje ");
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H*2/3, ALLEGRO_ALIGN_LEFT, p_to_string);
         }
         else
         {
@@ -897,7 +906,6 @@ void allegro_redraw(void)
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL/REINICIAR JUEGO");
                 //           fuente         color               ancho          alto    flag            texto
  
-                break;
                 break;
 
             case RESUME:

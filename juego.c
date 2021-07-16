@@ -91,6 +91,8 @@ static void move_troncos(int nivel);
 static void move_tortugas(int nivel);
 static void move_cocodrilo(int nivel);
 
+static void sumar_puntaje_salto(void);
+
 static int game_over(void);
 
 /***************************************************
@@ -105,7 +107,7 @@ char vidas_restantes = 3;
 
 char nivel = 1;
 
-int puntaje_juego=0;
+unsigned long int puntaje_juego=0;
 
 int selector_menu = PLAY;
 
@@ -233,7 +235,7 @@ bool frogger (void)
                     if(rana_llego() == true)
                     {
                         rene.llego = true;
-                        puntaje_juego+=100;
+                        puntaje_juego += APROX(100 * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1));
                         estado_juego = REINICIO;
                     }
 
@@ -244,6 +246,9 @@ bool frogger (void)
                         estado_juego = REINICIO;
                     }
                 }
+                
+                sumar_puntaje_salto();
+                
             }
             else
             {
@@ -283,6 +288,7 @@ bool frogger (void)
 
                         if(casillas_llegadas == 5) //se completaron todas las casillas y se pasó de nivel
                         {
+                            puntaje_juego += 500*nivel;
                             estado_juego = PASAR_NIVEL;
                         }
 
@@ -352,6 +358,8 @@ bool frogger (void)
                 timer_perder--;
                 if(timer_perder == 0)
                 {
+                    puntaje_juego = 0;
+                    nivel = 1;
                     selector_menu = PLAY;
                     estado_juego = MENU;
                 }
@@ -403,6 +411,7 @@ static void initialize_frog(void)
     rene.direccion = ARRIBA;
     rene.saltando = false;
     rene.frame_chocada = 0;
+    rene.fila_max = 0;
 }
 
  /******************************************************************************************
@@ -1200,6 +1209,29 @@ static void move_cocodrilo(int nivel)
         timer_sin_cocodrilo--;
     }
 }
+
+
+static void sumar_puntaje_salto(void)
+{
+    int i;
+    int fila_actual;
+    
+    for (i = 0; i < CANT_CASILLAS_COLUMNA; i++)
+    {
+        if(rene.y > CASILLA_ALTO * (CANT_CASILLAS_COLUMNA - 1 - i) && rene.y < CASILLA_ALTO * (CANT_CASILLAS_COLUMNA-i))
+        {
+            fila_actual = i;
+            if(fila_actual > rene.fila_max)
+            {
+                rene.fila_max++;
+                puntaje_juego += 10;
+            }
+        }
+    }
+    
+    
+}
+
 
 /**************************************
  * 
