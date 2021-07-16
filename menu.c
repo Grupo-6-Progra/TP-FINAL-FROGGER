@@ -124,14 +124,20 @@ static void menu_levels(void)
 
         if(key_pressed[KEY_DOWN]) //Si el usuario se desplaza a abajo, se aumenta en 1 el nivel seleccionado
         {
-            esperar = 10;
-            nivel++;
+            if(nivel < 6)
+            {
+                esperar = 10;
+                nivel++;                
+            }
         }
 
         if(key_pressed[KEY_UP]) //Si el usuario se desplaza arriba, se decrementa en 1 el nivel seleccionado
         {
-            esperar = 10;
-            nivel--;
+            if(nivel > 1)
+            {
+                esperar = 10;
+                nivel--;
+            }
         }
     
     }
