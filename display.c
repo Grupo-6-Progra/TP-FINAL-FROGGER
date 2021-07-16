@@ -20,21 +20,30 @@
 #define APROX(x)                ((x>0) ? ((int)((x)+0.5)) : ((int)((x)-0.5)))
 
 static void redraw_rana_d (void);
+
 static void redraw_autos_d(void);
 static void print_auto1 (int,int, int);
 static void print_auto2 (int,int, int);
+
 static void redraw_troncos_d(void);
 static void print_tronco1(int, int);
 static void print_tronco2(int, int);
 static void print_tronco3(int, int);
+
 static void redraw_tortugas_d(void);
 static void print_tortuga1(int,int,int);
 static void print_tortuga2(int,int,int);
 static void print_tortuga3(int,int,int);
 //static void redraw_tiempo_d(void);
-//static void redraw_llegada_d(void);
+static void redraw_llegada_d(void);
+static void print_llegada_vacia(int, int);
+static void print_llegada_cocodrilo(int, int);
+static void print_llegada_llena(int, int);
+
 static void redraw_fondo_d(void);
+
 static void vidas(void);
+
 static void delete_disp(void);
 
 void init_display()
@@ -215,7 +224,7 @@ void redraw_disp (void)
             
             case MAIN_MENU:
             {
-                 int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
+                 int mat[16][16] = {{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
                                     {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
                                     {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
                                     {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
@@ -284,6 +293,7 @@ void redraw_disp (void)
             }
         }
     }
+    
     disp_update();
 
 }
@@ -801,11 +811,11 @@ static void print_tortuga2(int coordx, int coordy, int direc)
   
   
  /*  
-.   .
+   
  ...
-.  .
+ . .
  ...      
-.   .      
+        
  
  */
     for (i=0 ; i<5 ; i++)
@@ -898,7 +908,7 @@ static void redraw_fondo_d(void)
     int j;
     if(derecha < DISP_CANT_X_DOTS)
     {
-        if(abajo < DISP_CANT_Y_DOTS)
+        if(abajo < DISP_CANT_Y_DOTS-1)
         {
             for (i=0; i<=derecha ; i++)//for de abajo
             {                
@@ -921,7 +931,7 @@ static void redraw_fondo_d(void)
                 coord.y = arriba;
                 disp_write(coord, D_ON);
             }
-            for (j=arriba ; j<DISP_CANT_Y_DOTS;j++)
+            for (j=arriba ; j<DISP_CANT_Y_DOTS-1;j++)
             {
                 coord.x = derecha;
                 coord.y=j;
@@ -944,7 +954,7 @@ static void redraw_fondo_d(void)
     
     else if(izquierda >= 0)
     {
-        if(abajo < DISP_CANT_Y_DOTS)
+        if(abajo < DISP_CANT_Y_DOTS-1)
         {
             for (i=izquierda; i<DISP_CANT_X_DOTS ; i++)//for de abajo
             {                
@@ -967,7 +977,7 @@ static void redraw_fondo_d(void)
                 coord.y = arriba;
                 disp_write(coord, D_ON);
             }
-            for (j=arriba ; j<DISP_CANT_Y_DOTS;j++)
+            for (j=arriba ; j<DISP_CANT_Y_DOTS-1;j++)
             {
                 coord.x = izquierda;
                 coord.y=j;
@@ -1000,7 +1010,7 @@ static void redraw_fondo_d(void)
             }
     }
   
-    else if (abajo<DISP_CANT_Y_DOTS)
+    else if (abajo<DISP_CANT_Y_DOTS-1)
     {
         for(i=0 ; i<DISP_CANT_X_DOTS ; i++)
             {
@@ -1011,8 +1021,302 @@ static void redraw_fondo_d(void)
             }
     }
     
+    /*
+     * 
+     * Ahora, imprimimos las líneas divisiorias de las filas "seguras"
+     * 
+     */
    
+    /*
+     * fila inferior    
+     */
+    
+    if(abajo - 4 < DISP_CANT_Y_DOTS - 1)
+    {
+        if(derecha < DISP_CANT_X_DOTS)
+        {
+            for (i=0; i<=derecha ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 4;
+                disp_write(coord, D_ON);
+            }
+        }
+        else if(izquierda >= 0)
+        {
+           for (i=izquierda; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 4;
+                disp_write(coord, D_ON);
+            } 
+        }
+        else
+        {
+            for (i=0; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 4;
+                disp_write(coord, D_ON);
+            } 
+        }
+    }
+    
+    /*
+     * 
+     * Fila del medio
+     * 
+     */
+    
+    if(abajo - 30 < DISP_CANT_Y_DOTS - 1)
+    {
+        if(derecha < DISP_CANT_X_DOTS)
+        {
+            for (i=0; i<=derecha ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 30;
+                disp_write(coord, D_ON);
+            }
+        }
+        else if(izquierda >= 0)
+        {
+           for (i=izquierda; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 30;
+                disp_write(coord, D_ON);
+            } 
+        }
+        else
+        {
+            for (i=0; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 30;
+                disp_write(coord, D_ON);
+            } 
+        }
+    }
+    
+    if(abajo - 35 < DISP_CANT_Y_DOTS - 1)
+    {
+        if(derecha < DISP_CANT_X_DOTS)
+        {
+            for (i=0; i<=derecha ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 35;
+                disp_write(coord, D_ON);
+            }
+        }
+        else if(izquierda >= 0)
+        {
+           for (i=izquierda; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 35;
+                disp_write(coord, D_ON);
+            } 
+        }
+        else
+        {
+            for (i=0; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = abajo - 35;
+                disp_write(coord, D_ON);
+            } 
+        }
+    }
+    
+    /*
+     * 
+     * Fila superior
+     * 
+     */
+    
+    if(arriba + 4 >= 0)
+    {
+        if(derecha < DISP_CANT_X_DOTS)
+        {
+            for (i=0; i<=derecha ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = arriba + 4;
+                disp_write(coord, D_ON);
+            }
+        }
+        else if(izquierda >= 0)
+        {
+           for (i=izquierda; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = arriba + 4;
+                disp_write(coord, D_ON);
+            } 
+        }
+        else
+        {
+            for (i=0; i < DISP_CANT_X_DOTS ; i++)//for de abajo
+            {                
+                coord.x = i;
+                coord.y = arriba + 4;
+                disp_write(coord, D_ON);
+            } 
+        }
+    }
+    
+    
 }
+
+
+static void redraw_llegada_d(void)
+{
+    unsigned int i;
+    int coordx;
+    int coordy;
+    //impresión de troncos
+    for(i=0; i < CANT_CASILLAS_LLEGADA; j++)
+    {
+        coordx = APROX((llegadas[i].x - rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
+        coordy = APROX((llegadas[i].y - rene.y)/TAM_PIXEL)+7;
+        
+        if (llegadas[i].ocupado == true)
+        {
+            print_llegada_llena(coordx, coordy);
+        }
+        
+        else if(llegadas[i].cocodrilo == true)
+        {
+            print_llegada_cocodrilo(coordx, coordy);
+        }
+        
+        else
+        {
+            print_llegada_vacia(coordx, coordy);
+        }
+    }
+}
+
+static void print_llegada_vacia(int coordx, int coordy)
+{
+    dcoord_t coord;
+    
+    int mat[5][6]={{1,1,1,1,1,1},   
+                   {1,0,0,0,0,1},
+                   {1,0,0,0,0,1},
+                   {1,0,0,0,0,1},
+                   {1,0,0,0,0,1}};  
+    
+    int i;
+    int j;   
+    for (i=0 ; i<5 ; i++)
+    {
+        for (j=0 ; j<6 ; j++)
+        {
+            if ((coordx - 2 + j < DISP_CANT_X_DOTS && coordx - 2 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+            {
+                if (mat[i][j] == 1)
+                {
+                    coord.x = coordx + j - 2;
+                    coord.y = coordy + i - 2;
+
+                    disp_write(coord, D_ON);                         
+                }
+                else
+                {
+                    coord.x = coordx + j - 2;
+                    coord.y = coordy + i - 2;
+
+                    disp_write(coord, D_OFF); 
+                }
+
+            }
+        }
+    }
+    
+}
+
+static void print_llegada_cocodrilo(int coordx, int coordy)
+{
+    dcoord_t coord;
+    
+    int mat[5][6]={{1,1,1,1,1,1},   
+                   {1,0,0,1,0,1},
+                   {1,0,1,0,0,1},
+                   {1,1,0,0,0,1},
+                   {1,0,1,1,0,1}};  
+    
+    int i;
+    int j;   
+    for (i=0 ; i<5 ; i++)
+    {
+        for (j=0 ; j<6 ; j++)
+        {
+            if ((coordx - 2 + j < DISP_CANT_X_DOTS && coordx - 2 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+            {
+                if (mat[i][j] == 1)
+                {
+                    coord.x = coordx + j - 2;
+                    coord.y = coordy + i - 2;
+
+                    disp_write(coord, D_ON);                         
+                }
+                else
+                {
+                    coord.x = coordx + j - 2;
+                    coord.y = coordy + i - 2;
+
+                    disp_write(coord, D_OFF); 
+                }
+
+            }
+        }
+    }
+  
+}
+
+static void print_llegada_llena(int coordx, int coordy)
+{
+    dcoord_t coord;
+    
+    int mat[5][6]={{1,1,1,1,1,1},   
+                   {1,0,0,0,0,1},
+                   {1,0,1,1,0,1},
+                   {1,0,1,1,0,1},
+                   {1,1,1,1,1,1}};  
+    
+    int i;
+    int j;   
+    for (i=0 ; i<5 ; i++)
+    {
+        for (j=0 ; j<6 ; j++)
+        {
+            if ((coordx - 2 + j < DISP_CANT_X_DOTS && coordx - 2 +j >= 0)&&(coordy - 2 + i < DISP_CANT_Y_DOTS -1 && coordy -2 +i >= 0))
+            {
+                if (mat[i][j] == 1)
+                {
+                    coord.x = coordx + j - 2;
+                    coord.y = coordy + i - 2;
+
+                    disp_write(coord, D_ON);                         
+                }
+                else
+                {
+                    coord.x = coordx + j - 2;
+                    coord.y = coordy + i - 2;
+
+                    disp_write(coord, D_OFF); 
+                }
+
+            }
+        }
+    }
+    
+    
+}
+
 #endif
 
 
