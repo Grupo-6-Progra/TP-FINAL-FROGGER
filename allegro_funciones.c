@@ -918,11 +918,12 @@ void allegro_redraw(void)
                 break;
             }
             case MENU_LEVELS:
-            {
+            { 
+           
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/4.0, ALLEGRO_ALIGN_CENTER, "Acá se selecciona el nivel");
                 
-                print_string[0] = nivel + '0';  //Hago que el destino del arreglo sea imprimir el valor actual de nivel (recordar que print_string es un arreglo 
-                                                //destinado a usar exclusivamente en al_draw_text
+                sprintf(print_string, "%u", nivel);
+                
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL ");
                 //           fuente         color               ancho          alto    flag            texto
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0 + 100, SCREEN_H/2.0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
