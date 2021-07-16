@@ -1004,6 +1004,7 @@ static void move_autos(int nivel)
                                 }
                                 else
                                 {
+                                    autos[1][i].dx -= 0.01 * VELOCIDAD_UNITARIA_ANCHO;
                                     contador_cambiar_velocidad = FRAMES_CAMBIAR_VELOCIDAD;
                                     aceleracion = DESACELERA;
                                 }
@@ -1049,6 +1050,7 @@ static void move_autos(int nivel)
                                 }
                                 else
                                 {
+                                    autos[1][i].dx += 0.01 * VELOCIDAD_UNITARIA_ANCHO;
                                     contador_cambiar_velocidad = FRAMES_CAMBIAR_VELOCIDAD;
                                     aceleracion = ACELERA;
                                 }

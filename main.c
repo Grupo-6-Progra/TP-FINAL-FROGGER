@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <time.h>
 #include <stdbool.h>
 
 #include "juego.h"
@@ -20,6 +20,8 @@ int main (void)
     bool redraw = false;
     bool do_exit = false;
 
+    srand(time(NULL));
+    
     if(allegro_startup() == false)
     {
         return -1;
@@ -84,6 +86,9 @@ int main (void)
   {
       bool redraw = false;
       bool do_exit = false;
+      
+      srand(time(NULL));
+      
       init_display();
       while (!do_exit)
       {
