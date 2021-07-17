@@ -105,30 +105,30 @@ static int game_over(void);
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
-int estado_juego = MENU;
+int estado_juego = MENU;       //es una variable que definirá en qué estado se encuentra el juego,si en menúnpausa,etc
 
-double tiempo_restante;
+double tiempo_restante;         
 
-unsigned int vidas_restantes = 3;
+unsigned int vidas_restantes = 3;   //varaible que se inicializa con la cantidad de vidas de la rana
 
-unsigned int nivel = 1;
+unsigned int nivel = 1;         //varaible que indica el nivel en el que se encuentra
 
-unsigned long int puntaje_juego=0;
+unsigned long int puntaje_juego=0;  //es la variable que indicará el puntaje a medida que avance la rana
 
-unsigned long int high_score;
+unsigned long int high_score;      //variable del puntaje máximo
 
-int selector_menu = PLAY;
+int selector_menu = PLAY;       
 
-int timer_pasar_nivel = 0;
+int timer_pasar_nivel = 0;      //es un timer para esperar a pasar entre niveles
 
 int timer_perder = 0;
 
 
 bool key_pressed[TECLAS_MAX] = {false,false,false,false,false};
 
-RANA rene;
+RANA rene;  //estructura de la rana
 
-AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];
+AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];    //estructura de autos 
 
 TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA];
 
@@ -160,41 +160,41 @@ bool frogger (void)
     static bool enter_prev = false;
     
     bool choque = false;
-    switch(estado_juego)
+    switch(estado_juego)        //se analizan los posibles estados del juego y dependiendo de cada uno se realizan operaciones
     {
         
         case MENU: //menu de inicio
         {
-            salir = menu_start();
+            salir = menu_start();   //se llama al menú del inicio
             
             break;
         }
         
         case INICIO: //inicio de un nivel
         {
-            vidas_restantes = 3;
-            initialize_enemies (nivel);
-            initialize_frog();
-            initialize_llegada();
-            estado_juego = JUEGO;
+            vidas_restantes = 3;    //se inicializan las vidas en 3 
+            initialize_enemies (nivel); //se inicializa a los enemigos en función del nivel que sea
+            initialize_frog();  //se inicializa a la rana
+            initialize_llegada();   //se inicializa la llegada
+            estado_juego = JUEGO;   //el estado del juego es juego ahora porque comienza a jugarse
             tiempo_restante = TIEMPO_TOTAL; //Inicializo el tiempo restante en 100 segundos
             break;
         }
         
-        case PASAR_NIVEL:
+        case PASAR_NIVEL:       //caso en el que se pasa de nivel
         {
-            if(timer_pasar_nivel == 0)
+            if(timer_pasar_nivel == 0)  
             {
                 timer_pasar_nivel = UN_SEGUNDO*10;
             }
             else
             {
-                timer_pasar_nivel--;
+                timer_pasar_nivel--;       //se decrementa y se vuelve a preguntar si no llegó a 0
                 if(timer_pasar_nivel == 0)
                 {
-                    nivel++;
-                    move_frog(true);
-                    estado_juego = INICIO;
+                    nivel++;            //se pasa de nivel
+                    move_frog(true);    //
+                    estado_juego = INICIO;  //se vuelve a iniciar el estado del juego ya que es un nuevo nivel
                 }
             }
             
@@ -210,10 +210,10 @@ bool frogger (void)
                 {
                     enter_prev = true;
                 }
-                else if (enter_prev == true && key_pressed[KEY_ENTER] == false)
+                else if (enter_prev == true && key_pressed[KEY_ENTER] == false) //se analiza si se tocaron las teclas correspondientes
                 {
                     enter_prev = false;
-                    estado_juego = PAUSA;
+                    estado_juego = PAUSA;   //el juego se pone en estado de pausa
                 }
             }
             else if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante
@@ -224,37 +224,37 @@ bool frogger (void)
 
                 choque = colision();
 
-                if(choque == true)
+                if(choque == true)      //se ve si la rana efectivamente chocó
                 {
-                    vidas_restantes--;
-                    rene.chocada = true;
-                    estado_juego = REINICIO;
+                    vidas_restantes--;  //se resta una vida
+                    rene.chocada = true;    //se coloca el estado de la rana chocada
+                    estado_juego = REINICIO; //el juego se reinicia
                 }
 
                 if((rana_sobre_tronco() == false) && (rana_sobre_tortuga() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
                 {
-                        vidas_restantes--;
+                        vidas_restantes--;      //se resta una vida
                         rene.chocada = true;
-                        estado_juego = REINICIO;
+                        estado_juego = REINICIO;    //se reinicia el juego
                 }
 
-                if((rene.y <= CASILLA_ALTO))
+                if((rene.y <= CASILLA_ALTO))        
                 {
-                    if(rana_llego() == true)
+                    if(rana_llego() == true)        //se ve el caso en el que la rana llega
                     {
-                        rene.llego = true;
-                        if(nivel <= 5)
+                        rene.llego = true;          //cambia el estado de la rana
+                        if(nivel <= 5)              //se ve que el nivel esté dentro de la cantidad posible de niveles
                         {
-                            puntaje_juego += APROX(100 * nivel * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1));
+                            puntaje_juego += APROX(100 * nivel * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1));     //se realiza una suma al puntaje por haber llegado y además dependiendo del tiempo que le quedaba
                         }
-                        else
+                        else        //caso en el que superó el último nivel
                         {
-                            puntaje_juego += APROX(100 * 6 * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1));
+                            puntaje_juego += APROX(100 * 6 * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1)); //se suma el puntaje correspondiente
                         }
-                        estado_juego = REINICIO;
+                        estado_juego = REINICIO;    // se reinicia el juego directamente
                     }
 
-                    else
+                    else        //en caso contrario es porque no llegó
                     {
                         vidas_restantes--;
                         rene.chocada = true;
@@ -283,7 +283,7 @@ bool frogger (void)
                 {
                     choque_en_proceso = FRAMES_CHOQUE;
                 }
-                else if (choque_en_proceso > 0)
+                else if (choque_en_proceso > 0) 
                 {
                     choque_en_proceso--;
                     move_enemies(nivel);
@@ -320,9 +320,9 @@ bool frogger (void)
             
             else
             {
-                if(vidas_restantes == 0)
+                if(vidas_restantes == 0)        //se ve que la rana se quedó sin vidas
                 {
-                    estado_juego = PERDER;
+                    estado_juego = PERDER;      //el estado del juego cambia a perder
                     move_frog(true);
                 }
 
@@ -356,17 +356,17 @@ bool frogger (void)
             break;
         }
         
-        case PAUSA:
+        case PAUSA:     //el juego entra en el estado de pausa
         {
-            salir = menu_pausa();
+            salir = menu_pausa();   //entra a la función del menú de pausa
             break;
         }   
         
-        case PERDER:
+        case PERDER:    //caso en el que el jugador pierde
         {
             int error;
             
-            if(timer_perder == 0)
+            if(timer_perder == 0)       //caso en el que el tiempo se termine
             {
                 timer_perder = UN_SEGUNDO*10;
                 
@@ -381,7 +381,7 @@ bool frogger (void)
                 timer_perder--;
                 if(timer_perder == 0)
                 {
-                    if(puntaje_juego > high_score)
+                    if(puntaje_juego > high_score)      //se analiza si el puntaje obtenido es mayor o menor al high score
                     {
                         error = save_new_highscore(puntaje_juego);
                         if(error != 0)
@@ -390,10 +390,10 @@ bool frogger (void)
                         }
                     }
                     
-                    puntaje_juego = 0;
-                    nivel = 1;
+                    puntaje_juego = 0;      //se reinicia el puntaje del juego 
+                    nivel = 1;               //se inicia el nivel 1
                     selector_menu = PLAY;
-                    estado_juego = MENU;
+                    estado_juego = MENU;       //vuelve al estado de menú comun
                 }
             }
             
@@ -433,12 +433,12 @@ bool frogger (void)
  ******************************************************************************************/
 static void initialize_frog(void)
 {
-    rene.x = 8 * CASILLA_ANCHO - CASILLA_ANCHO/2.0;
-    rene.y = MUNDO_ALTO - CASILLA_ALTO/2.0;
+    rene.x = 8 * CASILLA_ANCHO - CASILLA_ANCHO/2.0;     //se inicializa la posición de la rana en x
+    rene.y = MUNDO_ALTO - CASILLA_ALTO/2.0;             //se inicializa la posición de la rana en y
     rene.dy = VELOCIDAD_RANA_ALTO;
     rene.dx = VELOCIDAD_RANA_ANCHO;
     rene.dx_extra = 0;
-    rene.chocada = false;
+    rene.chocada = false;                   //el estado de la rana se coloca por defecto en no chocada
     rene.llego = false;
     rene.direccion = ARRIBA;
     rene.saltando = false;
@@ -578,7 +578,7 @@ static void initialize_llegada(void)
 {
     int i;
     
-    for(i = 0; i < CANT_CASILLAS_LLEGADA; i++)
+    for(i = 0; i < CANT_CASILLAS_LLEGADA; i++)      //se hace una secuencia para llenar las casillas e inicializar las de llegada
     {
         llegadas[i].x = 0.5*CASILLA_ANCHO + i * (1.2+1.75) * CASILLA_ANCHO + 1.2*CASILLA_ANCHO/2.0;
         llegadas[i].y = CASILLA_ALTO / 2.0;
@@ -609,8 +609,8 @@ static void initialize_enemies (unsigned int nivel)
  * Funcion que dependiendo del nivel que se esté jugando, inicializará a los enemigos con velocidades distintas
  * Se encarga de inicializar todos los campos de todos los enemigos.
  */
-    initialize_autos(nivel);
-    initialize_troncos(nivel);
+    initialize_autos(nivel);        //casa una recibe nivel, ya que a medida que es mayor el nivel
+    initialize_troncos(nivel);      //mayor será la dificultad
     initialize_tortugas(nivel);
 }
 
@@ -620,7 +620,7 @@ static void initialize_enemies (unsigned int nivel)
   *     Funcion que dependiendo del nivel que se esté jugando, inicializará a los autos con velocidades y posiciones distintas
   *  
  ****************************************************************************************************************/
-static void initialize_autos(unsigned int nivel)
+static void initialize_autos(unsigned int nivel)    //inicializa a los autos
 {
     int j;
     int k;
@@ -883,10 +883,10 @@ static void initialize_tortugas(unsigned int nivel)
 
 static void move_enemies(int nivel)
 {
-    move_autos(nivel);
-    move_troncos(nivel);
-    move_tortugas(nivel);
-    move_cocodrilo(nivel);
+    move_autos(nivel);      //mueve a los autos
+    move_troncos(nivel);    //mueve a los troncos
+    move_tortugas(nivel);   //mueve a las tortugas
+    move_cocodrilo(nivel);  //mueve a los cocodrilos
 }
 
 /*************************************************************************************
@@ -1347,17 +1347,17 @@ static int game_over (void)
     
 }
 
-static unsigned long int get_high_score(int * error)
+static unsigned long int get_high_score(int * error)        //toma el puntaje máximo
 {
     FILE * p_highscore;
-    int c;
-    unsigned long int high_score = 0;
+    int c;                  //se crea una variable para uso
+    unsigned long int high_score = 0;   //se usa una variable para el puntaje máximo
     
-    p_highscore = fopen("high_score.txt", "r");
+    p_highscore = fopen("high_score.txt", "r"); //se abre el archivo donde se aloja el puntaje máximo para escritura también
     
-    if(p_highscore == NULL)
+    if(p_highscore == NULL)     //caso de error con el archivo
     {
-        fprintf(stderr, "failed to open file p_highscore\n");
+        fprintf(stderr, "failed to open file p_highscore\n");   //mensaje de error
         *error = -1;
         return 0;
     }
@@ -1367,7 +1367,7 @@ static unsigned long int get_high_score(int * error)
     
     while ((c = fgetc(p_highscore)) != EOF && c != '\n') //mientras no se llegue al final del archivo o al final de una línea
     {
-        if(c >= '0' && c <= '9')
+        if(c >= '0' && c <= '9')    //trata de tomar el valor escrito en el archivo de high score
         {
             c = c -'0';
             high_score = high_score * 10 + c;
@@ -1376,23 +1376,23 @@ static unsigned long int get_high_score(int * error)
     
     fclose(p_highscore);
     
-    return high_score;
+    return high_score;      //devuelve el valor del puntaje máximo
 }
 
-static int save_new_highscore(unsigned long int new_high_score)
+static int save_new_highscore(unsigned long int new_high_score) //se ve para guardar un nuevo puntaje
 {
     FILE * p_highscore;
     int c;
     
-    p_highscore = fopen("high_score.txt", "w");
+    p_highscore = fopen("high_score.txt", "w"); //abre y se usa le archivo en modo escritura
     
-    if(p_highscore == NULL)
+    if(p_highscore == NULL)     //caso error
     {
         fprintf(stderr, "failed to open file p_highscore\n");
         return -1;
     }
     
-    fprintf(p_highscore, "%lu", new_high_score);
+    fprintf(p_highscore, "%lu", new_high_score);    //imrpime el valor del puntaje y sobreescribe los datos
     
     fclose(p_highscore);
     
