@@ -965,8 +965,13 @@ void allegro_redraw(void)
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/3)+SCREEN_H/10, al_map_rgb(247,220,110));
                 al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0-20, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3+5, ALLEGRO_ALIGN_CENTER, "SALIR");
+                
+                al_draw_filled_rectangle(SCREEN_W/3-SCREEN_W/10,(SCREEN_H/2)-SCREEN_H/40, SCREEN_W*2/3+SCREEN_W/10,(SCREEN_H/2)+SCREEN_H/10, al_map_rgb(247,220,110));
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
+                
+                al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H*2/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H*2/3)+SCREEN_H/10, al_map_rgb(247,220,110));
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
+                
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
                
                 //al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
@@ -975,21 +980,21 @@ void allegro_redraw(void)
             case LEVEL:
             {   
                   
-                al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150));
+                //al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150));
                 al_draw_filled_rectangle(SCREEN_W/3-SCREEN_W/10,(SCREEN_H/2)-SCREEN_H/40, SCREEN_W*2/3+SCREEN_W/10,(SCREEN_H/2)+SCREEN_H/10, al_map_rgb(247,220,110));
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
                 al_draw_text(font, al_map_rgb(255,255, 255), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
                 al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
-                al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
+                //al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
                 
                break;
             }
             case QUIT:      //caso
             {   
                   
-                al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150));
+                //al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150));
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H*2/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H*2/3)+SCREEN_H/10, al_map_rgb(247,220,110));
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
                 al_draw_text(font, al_map_rgb(255,255,255), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
@@ -998,7 +1003,7 @@ void allegro_redraw(void)
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
                 
              
-                al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
+                //al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
            
                 //           fuente         color               ancho          alto    flag            texto
                 break;
