@@ -42,6 +42,7 @@ static ALLEGRO_DISPLAY     * display;
 static ALLEGRO_BITMAP      * mundo_buffer;
 static ALLEGRO_FONT        * font;
 static ALLEGRO_BITMAP      * al_cocodrilo;
+static ALLEGRO_SAMPLE      * sample_rana_salto;
 
 /************************************************+
  * 
@@ -103,6 +104,21 @@ bool allegro_startup (void)
     {
         fprintf(stderr, "failed to initialize allegro!\n");
         return false;
+    }
+    
+    if (!al_install_audio()) {
+        fprintf(stderr, "failed to initialize audio!\n");
+        return -1;
+    }
+
+    if (!al_init_acodec_addon()) {
+        fprintf(stderr, "failed to initialize audio codecs!\n");
+        return -1;
+    }
+
+    if (!al_reserve_samples(1)) {
+        fprintf(stderr, "failed to reserve samples!\n");
+        return -1;
     }
     
     if (!al_init_font_addon()) // Inicializa el complemento de fuentes
@@ -644,6 +660,7 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_rene_perdio);
         return false;
     }
+
     
     display = al_create_display(SCREEN_W, SCREEN_H);
     if (!display)
@@ -676,6 +693,44 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_fila_segura);
         al_destroy_bitmap(sprites.al_rene_perdio);
         al_destroy_bitmap(al_cocodrilo);
+        al_destroy_display(display);
+        return false;
+    }
+    
+    
+    
+    sample_rana_salto = al_load_sample("sound-frogger-hop.wav");
+    if (!sample_rana_salto)
+    {
+        printf("Audio clip sample_rana_salto not loaded!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+        al_destroy_bitmap(sprites.al_calle);
+        al_destroy_bitmap(sprites.al_fila_segura);
+        al_destroy_bitmap(sprites.al_rene_perdio);
+        al_destroy_bitmap(al_cocodrilo);
+        al_destroy_display(display);
         return false;
     }
     
@@ -791,6 +846,7 @@ void allegro_redraw(void)
     
     if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL && estado_juego != PERDER)
     {
+        
         al_set_target_bitmap(mundo_buffer);
 
         //IMPRESION DEL FONDO
@@ -1044,6 +1100,7 @@ static void redraw_rana(void)
             al_draw_scaled_rotated_bitmap(sprites.al_rene[1],
             al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[1]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[1]),
             rene.direccion*ALLEGRO_PI/2, 0);
+            al_play_sample(sample_rana_salto, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         }
         else
         {
@@ -1244,6 +1301,7 @@ void allegro_destroy(void)
     al_destroy_bitmap(sprites.al_rene_perdio);
     al_destroy_bitmap(al_cocodrilo);
     al_destroy_display(display);
+    al_destroy_sample(sample_rana_salto);
 }
 
 #endif
