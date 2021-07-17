@@ -900,20 +900,28 @@ void allegro_redraw(void)
         switch(selector_menu)
         {
             case PLAY:
-            {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "PLAY");
-                //           fuente         color               ancho          alto    flag            texto
+            {   al_clear_to_color(al_map_rgb(93,173, 226));  
+                al_draw_filled_rectangle(SCREEN_W/2.4,SCREEN_H/1.76, SCREEN_W/1.7,SCREEN_H/2.03, al_map_rgba_f(3, 2, 2, 0.4));
+                al_draw_text(font, al_map_rgb(95, 158, 160), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "PLAY");
+                al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
+                // fuente  color  ancho  alto    flag texto
                 break;
             }
             case LEVEL:
-            {
+            {   al_clear_to_color(al_map_rgb(125,206, 160));
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "PRESIONE ENTER PARA SELECCIONAR NIVEL");
+                al_draw_filled_rectangle(0.3,SCREEN_H/1.76, SCREEN_W,SCREEN_H/2.03, al_map_rgba_f(1, 0, 1, 0.1));
+                al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 241, 197, 15));
+               
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
             case QUIT:
-            {
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SALIR");
+            {   al_clear_to_color(al_map_rgb(155,89, 182));
+                al_draw_filled_rectangle(SCREEN_W/2.4,SCREEN_H/1.76, SCREEN_W/1.7,SCREEN_H/2.03, al_map_rgba_f(3, 2, 2, 0.4));
+                al_draw_text(font, al_map_rgb(200, 50, 154), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SALIR");
+                al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 46, 64, 83));
+               
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
