@@ -49,7 +49,7 @@ int main (void)
                  * LÓGICA DEL JUEGO
                  ********************************************/
                
-                do_exit = frogger();
+                do_exit = frogger();        //practicamente entra en el juego
          
                 redraw = true;
             }
@@ -76,7 +76,7 @@ int main (void)
     }
 
     allegro_destroy();
-        return 0;
+        return 0;       //termina el juego
 }
     
 #else

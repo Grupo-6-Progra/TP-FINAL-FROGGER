@@ -234,7 +234,7 @@ static void menu_levels(void)
 
 }*/
 
-bool menu_pausa(void)
+bool menu_pausa(void)       //función para el menú de pausa
 {  
     static bool enter_prev = false;
     
@@ -248,24 +248,24 @@ bool menu_pausa(void)
     else
     {
         
-        if (key_pressed[KEY_DOWN] == true) 
+        if (key_pressed[KEY_DOWN] == true)  //ve si se presionó la tecla de abajo
         {
-            esperar = 10;
-            if(selector_menu == QUIT)
+            esperar = 10;   //hace una espera
+            if(selector_menu == QUIT)   //ve si el selector está en QUIT
             {
-                selector_menu = RESUME;
+                selector_menu = RESUME; //si es así cambia a estado resume
             }
             else
             {
                 selector_menu--;
             }
         }
-        else if (key_pressed[KEY_UP] == true)
+        else if (key_pressed[KEY_UP] == true)   //se ve si se presionó la tecla hacia arriba
         {
-            esperar = 10;
+            esperar = 10;       //hace una espera
             if(selector_menu == RESUME)
             {
-                selector_menu = QUIT;
+                selector_menu = QUIT;   //se mueve a la opción de Quit
             }
             else
             {
@@ -281,22 +281,22 @@ bool menu_pausa(void)
             else if (enter_prev == true && key_pressed[KEY_ENTER] == false)
             {
                 enter_prev = false;
-                esperar = 10;
+                esperar = 10;       //espera para la tecla 
                 switch(selector_menu)
                 {
-                    case RESUME:
+                    case RESUME:        //en el caso de elegir la opción resume el juego vuelve
                         estado_juego = JUEGO;
                         break;
 
-                    case MAIN_MENU:
-                        puntaje_juego = 0;
-                        nivel = 1;
+                    case MAIN_MENU:     //en el caso de la opcion de menu
+                        puntaje_juego = 0; //el puntaje se reinica
+                        nivel = 1;          //se vuelve al nivel 1
                         selector_menu = PLAY;
-                        estado_juego = MENU;
+                        estado_juego = MENU;    //se vuelve al estado de menú
                         break;
 
                     case QUIT:
-                        return true;
+                        return true;        //devuelve un true así termina el juego
                         break;
                 }
             }
@@ -304,7 +304,7 @@ bool menu_pausa(void)
         }
      
     }
-    return false;
+    return false;       //de lo contrario devuelve falso
     
 
 }
