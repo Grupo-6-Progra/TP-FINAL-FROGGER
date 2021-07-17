@@ -31,13 +31,13 @@ extern int timer_perder;
  * MUNDO Y VELOCIDAD DE JUEGO
 ***************************************************/
     
-#define REFRESCO            60.0
+#define REFRESCO            60.0        //define la tasa de refresco
 
-#define CASILLA_ANCHO       50.0
-#define CASILLA_ALTO        50.0
+#define CASILLA_ANCHO       50.0        //casillas en x
+#define CASILLA_ALTO        50.0        //casillas en y
 
-#define CANT_CASILLAS_FILA          14
-#define CANT_CASILLAS_COLUMNA       13
+#define CANT_CASILLAS_FILA          14  //define la cantidad de filas que va a tener
+#define CANT_CASILLAS_COLUMNA       13  //define la cantidad de columnas que va a tener
 
 #define MUNDO_ALTO          (CANT_CASILLAS_COLUMNA * CASILLA_ALTO)
 #define MUNDO_ANCHO         (CANT_CASILLAS_FILA * CASILLA_ANCHO)
@@ -66,7 +66,7 @@ extern bool key_pressed[TECLAS_MAX];
 #define RANA_ANCHO              (CASILLA_ANCHO - 20.0)         
 #define RANA_ALTO               (CASILLA_ALTO - 20.0)
               
-enum direcciones
+enum direcciones        //las posibles direcciones
 {
     IZQUIERDA = 1, ARRIBA, DERECHA, ABAJO
 };
@@ -95,7 +95,7 @@ extern RANA rene;
  **************************************************/
 #define CANT_ENEMIGOS 5 //Cantidad de filas que contienen enemigos "del mismo tipo" (autos o los que van sobre el agua)
 
-#define AUTOS_POR_FILA      5
+#define AUTOS_POR_FILA      5      
 #define FILAS_DE_AUTOS      5
 
 #define AUTO1_ANCHO              (CASILLA_ANCHO - 20)         
@@ -181,7 +181,7 @@ extern TORTUGAS tortugas[FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA]; //Defino una sol
 #define LLEGADA_ALTO                CASILLA_ALTO
 #define LLEGADA_ANCHO               (1.2 * CASILLA_ANCHO)
 
-typedef struct
+typedef struct              //una estructura para la llegada
 {
     double x,y;
     double ancho;
