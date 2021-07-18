@@ -4,7 +4,7 @@
  *              Autores:    Alegre, Marcos
  *                          Di Sanzo, Bruno
  *                          Hertter, José Iván
- *                          Ibáñez, Lucía
+ *                          Ibañez, Lucía
  * 
  *      
  *          El main del juego Frogger compila condicionalmente dependiendo de la plataforma en la que se quiera compilar.
