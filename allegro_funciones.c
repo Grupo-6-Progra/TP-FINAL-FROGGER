@@ -248,12 +248,16 @@ bool allegro_startup (void)
         return false;
     }
     
-    /*******************************************************************
-     *                                                                 *
-     *  Definición de las imágenes usadas para representar el juego a  *
-     *  partir de una sprite sheet                                     *
-     *                                                                 *
-     *******************************************************************/
+    /********************************************************************************
+     *                                                                              *
+     *  Definición de las imágenes usadas para representar el juego a               *
+     *  partir de una sprite sheet                                  
+     * 
+     * 
+     *   Descargado desde: http://www.classicgaming.cc/classics/frogger/graphics
+     *   Artist: herrrattentod                                                      *
+     *                                                                              *
+     ********************************************************************************/
     sprites._sheet = al_load_bitmap("spritesheet.png");
     if (!sprites._sheet) 
     {
@@ -699,6 +703,13 @@ bool allegro_startup (void)
         al_destroy_bitmap(sprites.al_fila_segura);
     }
     
+    
+    /*******************************************************************************
+     * Imagen cocodrilo descargada desde:
+     * https://pixabay.com/es/illustrations/cocodrilo-caim%c3%a1n-reptil-2573377/
+     * 
+     * 
+     *******************************************************************************/
     al_cocodrilo= al_load_bitmap("cocodrilo.png");
     if (!al_cocodrilo)
     {
