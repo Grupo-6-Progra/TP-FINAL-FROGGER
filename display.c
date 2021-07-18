@@ -499,8 +499,6 @@ static void vidas(void) //funcion que imprime las vidas restantes abajo a la der
     dcoord_t tresVidas = {13,15};
     dcoord_t dosVidas = {14,15};
     dcoord_t unaVida = {15,15};
-    int i;
-    int j;
     
     switch (vidas_restantes)
     {
@@ -597,9 +595,6 @@ void display_teclas (void) //funcion que analiza los movimientos del joystick y 
  
 static void redraw_rana_d (void)    //funcion que imprime a la rana en el display
 {
-    int i;
-    int j;
-    dcoord_t coord;
     if (rene.chocada == false)  //caso rana si no es chocada
     {
         if(rene.direccion == ARRIBA)    //si la rana esta subiendo
@@ -1025,9 +1020,6 @@ static void print_tortuga2(int coordx, int coordy, int direc) //impresion de tor
 
 static void print_tortuga3(int coordx, int coordy, int direc) //impresion de tortuga casi hundida
 {
-    dcoord_t coord;
-    int i;
-    int j;
     
     int mat[5][5]={{0,0,0,0,0},   
                    {0,0,0,0,0},
