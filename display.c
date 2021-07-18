@@ -16,9 +16,6 @@
  * 
  *  
  **************************************************************************************************************/
-//#define RASPI_DISPLAY
-#ifdef RASPI_DISPLAY 
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
@@ -1697,7 +1694,7 @@ static void print_numero (int mat[][5], int x, int y) //funcion que imprime los 
              }
          }
 }
-#endif
+
 
 
 

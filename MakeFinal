@@ -1,0 +1,28 @@
+
+frogger_pc: main.o juego.o allegro_funciones.o menu.o colisiones.o
+	gcc main.o juego.o allegro_funciones.o menu.o colisiones.o -o frogger_pc `pkg-config --libs allegro-5 ` `pkg-config --libs allegro_acodec-5` `pkg-config -- libs allegro_audio-5` `pkg-config --libs allegro_color-5` `pkg-config --libs allegro_dialog-5` `pkg-config --libs allegro_font-5` `pkg-config --libs allegro_image-5` `pkg-config --libs allegro_main-5` `pkg-config --libs allegro_memfile-5` `pkg-config --libs allegro_physfs-5`	`pkg-config --libs allegro_primitives-5` `pkg-config --libs allegro_ttf-5` `pkg-config --libs allegro_video-5` -Wall
+	
+frogger_raspi: main_raspi.o juego.o display.o menu.o colisiones.o
+	gcc  main_raspi.o juego.o display.o menu.o colisiones.o /home/pi/libs/joydisp/disdrv.o /home/pi/libs/joydisp/joydrv.o /home/pi/libs/joydisp/termlib.o -o frogger_raspi  -Wall
+	
+main.o: main.c juego.h allegro_funciones.h
+	gcc -c main.c -Wall
+	
+main_raspi.o: main.c juego.h allegro_funciones.h
+	gcc -D RASPI -c main.c -o main_raspi.o -Wall
+
+juego.o: juego.h juego.c colisiones.h menu.h
+	gcc -c juego.c -Wall
+	
+allegro_funciones.o: allegro_funciones.h menu.h juego.h
+	gcc -c allegro_funciones.c -Wall
+
+display.o: display.h juego.h colisiones.h menu.h
+	gcc -c display.c -Wall
+	
+menu.o: menu.c menu.h juego.h
+	gcc -c menu.c -Wall
+	
+colisiones.o: colisiones.c colisiones.h
+	gcc -c colisiones.c -Wall
+

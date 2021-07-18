@@ -1,8 +1,7 @@
-//#define RASPI2
-#ifndef RASPI2
 
-//#ifndef ALLEGRO_FUNCIONES_H
-//#define ALLEGRO_FUNCIONES_H
+
+#ifndef ALLEGRO_FUNCIONES_H
+#define ALLEGRO_FUNCIONES_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -49,5 +48,4 @@ void allegro_audio (void);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-//#endif /* ALLEGRO_FUNCIONES_H */
-#endif
+#endif /* ALLEGRO_FUNCIONES_H */

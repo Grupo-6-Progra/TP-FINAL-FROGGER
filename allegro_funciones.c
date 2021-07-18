@@ -1,5 +1,4 @@
-//#define RASPI_ALLEGRO
-#ifndef RASPI_ALLEGRO
+
 #include "allegro_funciones.h"
 #include "juego.h"
 #include "menu.h"
@@ -1802,7 +1801,3 @@ void allegro_destroy(void)
     al_destroy_display(display);
     
 }
-
-
-
-#endif
