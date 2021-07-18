@@ -1353,10 +1353,10 @@ static int game_over (void)
 static unsigned long int get_high_score(int * error)        //toma el puntaje máximo
 {
     FILE * p_highscore;
-    int c;                  //se crea una variable para uso
-    unsigned long int high_score = 0;   //se usa una variable para el puntaje máximo
+    int c;                                          //se crea una variable para uso
+    unsigned long int high_score = 0;               //se usa una variable para el puntaje máximo
     
-    p_highscore = fopen("high_score.txt", "r"); //se abre el archivo donde se aloja el puntaje máximo para escritura también
+    p_highscore = fopen("high_score.txt", "r");     //se abre el archivo donde se aloja el puntaje máximo para escritura también
     
     if(p_highscore == NULL)     //caso de error con el archivo
     {

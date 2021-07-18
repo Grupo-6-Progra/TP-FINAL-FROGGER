@@ -47,6 +47,8 @@ void allegro_fuentes (void);
 
 void allegro_redraw(void);
 
+void allegro_audio (void);
+
 /////////////////////////////////////////////////////////////////////////////////////////
 
 //#endif /* ALLEGRO_FUNCIONES_H */

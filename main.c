@@ -70,6 +70,7 @@ int main (void)
             redraw = false;
             
             allegro_redraw();
+            allegro_audio();
             
             //dibujar en display
         }
