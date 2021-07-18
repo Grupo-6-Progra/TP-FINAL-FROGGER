@@ -1,3 +1,20 @@
+/***************************************************************************************************************
+ *      FROGGER
+ * 
+ *      COLISIONES.C:
+ * 
+ *              Autores:    Alegre, Marcos
+ *                          Di Sanzo, Bruno
+ *                          Hertter, José Iván
+ *                          Ibáñez, Lucía
+ * 
+ *      Contiene las funciones referidas a la colisión de la rana con objetos
+ *      
+ * 
+ * 
+ *  
+ **************************************************************************************************************/
+
 #include <stdbool.h>
 #include "colisiones.h"
 /**********************************************************/
@@ -6,7 +23,7 @@ static bool choque (double x1, double y1, double ancho1, double alto1, double x2
 
 /***************************************************************************/
 
-bool colision (void)
+bool colision (void) //analiza choques con autos
 {
     int j, k;
     for(j= 0; j < FILAS_DE_AUTOS ; j++)
@@ -22,7 +39,7 @@ bool colision (void)
     return false; 
 }
 
-bool rana_sobre_tronco(void)
+bool rana_sobre_tronco(void) //analiza si está sobre un tronco
 {
     int j, k;
     for(j= 0; j < FILAS_DE_TRONCOS; j++)
@@ -41,7 +58,7 @@ bool rana_sobre_tronco(void)
     return false;
 }
 
-bool rana_sobre_tortuga(void)
+bool rana_sobre_tortuga(void) //analiza si está sobre tortugas
 {
     int j, k;
     for(j= 0; j < FILAS_DE_TORTUGAS; j++)
@@ -63,7 +80,7 @@ bool rana_sobre_tortuga(void)
     return false;
 }
 
-bool rana_llego (void)
+bool rana_llego (void) //analiza si está sobre una casilla de llegada
 {
     int i;
     
@@ -81,6 +98,10 @@ bool rana_llego (void)
     }
     return false;
 }
+
+/*
+ * Choque: dadas las coordenadas del centro de los rectángulos y sus dimensiones, se determina si chocaron o no
+ */
 
 static bool choque (double x1, double y1, double ancho1, double alto1, double x2, double y2, double ancho2, double alto2)
 {

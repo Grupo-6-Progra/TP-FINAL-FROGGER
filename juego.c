@@ -8,8 +8,8 @@
  *                          Hertter, José Iván
  *                          Ibáñez, Lucía
  * 
- *      
- *          
+ *      Dependiendo del estado del juego, se ejecutan las funciones referidas al juego, o a los menués de
+ *      inicio o pausa
  * 
  * 
  *  
