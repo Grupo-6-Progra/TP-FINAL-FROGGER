@@ -18,6 +18,7 @@
 #define THRESHOLD 40	//Límite a partir del cual se mueve el LED encendido
 
 #define APROX(x)                ((x>0) ? ((int)((x)+0.5)) : ((int)((x)-0.5)))
+#define SEGUNDO  (REFRESCO)
 
 static void redraw_rana_d (void);
 
@@ -46,7 +47,9 @@ static void vidas(void);
 
 static void delete_disp(void);
 
-static void print_num (char arr[], int largo);
+static void print_num (char arr[], int largo, int altura , int ret);
+
+static void print_decimal (char ,int, int);
 
 void init_display()
 {
@@ -87,12 +90,267 @@ void redraw_disp (void)
     
     else if (estado_juego == PASAR_NIVEL)
     {
-        snprintf(numeros,32*(sizeof(char)),"%lu",puntaje_juego);
-        print_num (numeros[],32);
+        
+        if(timer_pasar_nivel > 5*SEGUNDO)
+        {
+            
+            static int ret = 0;
+            if(timer_pasar_nivel > SEGUNDO*9.5)
+            {
+                ret = 0;
+            }
+            int mat[16][16] =  {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,1,1,1,0,1,1,0,1,1,1,0,1,1,1,0},
+                                {0,1,0,0,0,1,0,0,1,0,1,0,1,0,0,0},
+                                {0,1,1,1,0,1,0,0,1,1,1,0,1,1,1,0},
+                                {0,0,0,1,0,1,0,0,1,1,0,0,1,0,0,0},
+                                {0,1,1,1,0,1,1,0,1,0,1,0,1,1,1,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            int i,j;
+            dcoord_t coord;
+            for(i=0;i<DISP_CANT_Y_DOTS;i++)
+            {
+                for (j=0;j<DISP_CANT_X_DOTS;j++)
+                {
+                    if(mat[i][j]==1)
+                    {
+                        coord.x = j;
+                        coord.y = i;
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+
+            
+            snprintf(numeros,32*(sizeof(char)),"%lu",puntaje_juego);
+           
+            if (ret == 0)
+            {
+                print_num(numeros,32,10,ret);
+                ret = 1;
+            }
+            else
+            {
+                print_num(numeros,32,10,1);
+            }
+        }
+        
+        else 
+        {
+            static int ret = 0;
+            if(timer_pasar_nivel > SEGUNDO*4.5)
+            {
+                ret = 0;
+            }
+            int mat[16][16] =  {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                {1,1,0,1,1,0,0,1,0,0,1,1,0,1,1,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            int i,j;
+            dcoord_t coord;
+            for(i=0;i<DISP_CANT_Y_DOTS;i++)
+            {
+                for (j=0;j<DISP_CANT_X_DOTS;j++)
+                {
+                    if(mat[i][j]==1)
+                    {
+                        coord.x = j;
+                        coord.y = i;
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            
+            snprintf(numeros,32*(sizeof(char)),"%u",nivel+1);
+            if (ret == 0)
+            {
+                print_num(numeros,32,10,ret);
+                ret = 1;
+            }
+            else
+            {
+                print_num(numeros,32,10,1);
+            }
+        }
+
     }
     else if (estado_juego == PERDER)
     {
-         snprintf(numeros,32*(sizeof(char)),"%lu",puntaje_juego);       
+        if(timer_perder > SEGUNDO*7)
+        {
+            static int ret = 0;
+            if(timer_perder > SEGUNDO*9.5)
+            {
+                ret = 0;
+            }
+            int mat[16][16] =  {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                {1,1,0,1,1,0,0,1,0,0,1,1,0,1,1,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            int i,j;
+            dcoord_t coord;
+            for(i=0;i<DISP_CANT_Y_DOTS;i++)
+            {
+                for (j=0;j<DISP_CANT_X_DOTS;j++)
+                {
+                    if(mat[i][j]==1)
+                    {
+                        coord.x = j;
+                        coord.y = i;
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            
+            snprintf(numeros,32*(sizeof(char)),"%u",nivel);
+            if (ret == 0)
+            {
+                print_num(numeros,32,10,ret);
+                ret = 1;
+            }
+            else
+            {
+                print_num(numeros,32,10,1);
+            }
+
+        }
+        else if(timer_perder > 4*SEGUNDO)
+        {
+            static int ret = 0;
+            if(timer_perder > SEGUNDO*6.5)
+            {
+                ret = 0;
+            }
+            int mat[16][16] =  {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,0},
+                                {0,1,0,1,0,1,0,1,0,0,0,1,0,1,0,0},
+                                {0,1,1,1,0,1,0,1,1,1,0,1,1,1,0,0},
+                                {0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,0},
+                                {0,1,0,1,0,1,0,1,1,1,0,1,0,1,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            int i,j;
+            dcoord_t coord;
+            for(i=0;i<DISP_CANT_Y_DOTS;i++)
+            {
+                for (j=0;j<DISP_CANT_X_DOTS;j++)
+                {
+                    if(mat[i][j]==1)
+                    {
+                        coord.x = j;
+                        coord.y = i;
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+
+            
+            snprintf(numeros,32*(sizeof(char)),"%lu",high_score);
+           
+            if (ret == 0)
+            {
+                print_num(numeros,32,10,ret);
+                ret = 1;
+            }
+            else
+            {
+                print_num(numeros,32,10,1);
+            }
+        }
+        
+        else
+        {
+            static int ret = 0;
+            if(timer_perder > SEGUNDO*3.5)
+            {
+                ret = 0;
+            }
+            int mat[16][16] =  {{0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,1,1,1,0,1,1,0,1,1,1,0,1,1,1,0},
+                                {0,1,0,0,0,1,0,0,1,0,1,0,1,0,0,0},
+                                {0,1,1,1,0,1,0,0,1,1,1,0,1,1,1,0},
+                                {0,0,0,1,0,1,0,0,1,1,0,0,1,0,0,0},
+                                {0,1,1,1,0,1,1,0,1,0,1,0,1,1,1,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
+            int i,j;
+            dcoord_t coord;
+            for(i=0;i<DISP_CANT_Y_DOTS;i++)
+            {
+                for (j=0;j<DISP_CANT_X_DOTS;j++)
+                {
+                    if(mat[i][j]==1)
+                    {
+                        coord.x = j;
+                        coord.y = i;
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+
+            
+            snprintf(numeros,32*(sizeof(char)),"%lu",puntaje_juego);
+           
+            if (ret == 0)
+            {
+                print_num(numeros,32,10,ret);
+                ret = 1;
+            }
+            else
+            {
+                print_num(numeros,32,10,1);
+            }
+        }
+
     }
     else if (estado_juego == MENU || estado_juego == PAUSA)
     {
@@ -205,22 +463,22 @@ void redraw_disp (void)
             }
             case MENU_LEVELS:
             {
-                int mat[16][16] = { {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},
-                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
-                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
-                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
+                int mat[16][16] = { {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                    {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                    {1,0,0,1,1,0,1,0,1,0,1,1,0,1,0,0},
+                                    {1,0,0,1,0,0,1,0,1,0,1,0,0,1,0,0},
+                                    {1,1,0,1,1,0,0,1,0,0,1,1,0,1,1,0},
                                     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
                                     {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
-                                    {0,0,1,1,1,0,1,0,1,0,1,0,1,1,1,0},
-                                    {0,0,1,0,1,0,1,0,1,0,1,0,0,1,0,0},
-                                    {0,0,1,0,1,0,1,0,1,0,1,0,0,1,0,0},
-                                    {0,0,1,1,1,0,1,0,1,0,1,0,0,1,0,0},
-                                    {0,0,1,1,1,0,1,1,1,0,1,0,0,1,0,0},
-                                    {0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0},
-                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
-                                    {0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0},
-                                    {0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0},
-                                    {0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0}};
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+                                    {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}};
                 int i,j;
                 dcoord_t coord;
                 for(i=0;i<DISP_CANT_Y_DOTS;i++)
@@ -235,6 +493,10 @@ void redraw_disp (void)
                         }
                     }
                 }
+                
+                char decimal;
+                decimal = nivel+'0';
+                print_decimal(decimal,6,9);
                 break;
             }
             
@@ -1454,9 +1716,273 @@ static void redraw_tiempo_d(void)
     }
 }
 
-static void print_num (char arr[], int largo)
+static void print_num (char numeros[], int largo, int altura, int momento)
 {
+    int i;
+    static int conta = 0;
+    static int conta2 =0;
+    static int j=0;
     
+    if(momento == 0 || conta == 0)
+    {
+        conta2 = APROX(SEGUNDO/16.0);
+        conta = SEGUNDO + largo*SEGUNDO;
+        j=0;
+    }
+    else 
+    {   
+        if(conta2 == 0)
+        {
+            j++;
+            conta2 = APROX(SEGUNDO/16.0);
+        }
+        for (i=0 ; i<largo && numeros[i] != 0 ; i++)
+        {
+           print_decimal (numeros[i],15+5*i-j,altura) ;
+        }
+    }
+    conta--;
+    conta2--;
+
+    
+}
+
+static void print_decimal (char num, int x, int y)
+{
+    int i;
+    int j;
+    dcoord_t coord;
+    switch (num)
+    {
+        case '0':
+        {   
+         int mat[5][5]={{0,1,1,1,0},   
+                        {0,1,0,1,0},
+                        {0,1,0,1,0},
+                        {0,1,0,1,0},
+                        {0,1,1,1,0}}; 
+         for (i=0 ;i<5 ;i++)
+         {
+             for (j=0 ; j<5 ; j++)
+             {
+                 if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                 {
+                     coord.x = j + x;
+                     coord.y = i + y;
+                     
+                     disp_write(coord,D_ON);
+                 }
+             }
+         }
+        
+            break;
+        }    
+        case '1':
+        {
+            int mat[5][5]={{0,0,0,1,0},   
+                           {0,0,1,1,0},
+                           {0,1,0,1,0},
+                           {0,0,0,1,0},
+                           {0,0,0,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+        }
+            
+        case '2':
+        {
+            int mat[5][5]={{0,1,1,1,0},   
+                           {0,0,0,1,0},
+                           {0,1,1,1,0},
+                           {0,1,0,0,0},
+                           {0,1,1,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+        }
+        case '3':
+        {
+            int mat[5][5]={{0,1,1,1,0},   
+                           {0,0,0,1,0},
+                           {0,1,1,1,0},
+                           {0,0,0,1,0},
+                           {0,1,1,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+        }    
+            break;
+            
+        case '4':
+        {
+            int mat[5][5]={{0,1,0,1,0},   
+                           {0,1,0,1,0},
+                           {0,1,1,1,0},
+                           {0,0,0,1,0},
+                           {0,0,0,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+        }   
+        case '5':
+        {
+            int mat[5][5]={{0,1,1,1,0},   
+                           {0,1,0,0,0},
+                           {0,1,1,1,0},
+                           {0,0,0,1,0},
+                           {0,1,1,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+        }   
+        case '6':
+        {
+            int mat[5][5]={{0,1,1,1,0},   
+                           {0,1,0,0,0},
+                           {0,1,1,1,0},
+                           {0,1,0,1,0},
+                           {0,1,1,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+        }   
+        case '7':
+        {
+            int mat[5][5]={{1,1,1,0,0},   
+                           {0,0,1,0,0},
+                           {0,1,1,1,0},
+                           {0,0,1,0,0},
+                           {0,0,1,0,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+        }    
+        case '8':
+        {
+            int mat[5][5]={{0,1,1,1,0},   
+                           {0,1,0,1,0},
+                           {0,1,1,1,0},
+                           {0,1,0,1,0},
+                           {0,1,1,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+        }    
+        case '9':
+        {
+            int mat[5][5]={{0,1,1,1,0},   
+                           {0,1,0,1,0},
+                           {0,1,1,1,0},
+                           {0,0,0,1,0},
+                           {0,1,1,1,0}}; 
+            for (i=0 ;i<5 ;i++)
+            {
+                for (j=0 ; j<5 ; j++)
+                {
+                    if (mat[i][j] == 1 && j+x < DISP_CANT_X_DOTS && j+x>= 0 && i+y< DISP_CANT_Y_DOTS && i+y >= 0)
+                    {
+                        coord.x = j + x;
+                        coord.y = i + y;
+
+                        disp_write(coord,D_ON);
+                    }
+                }
+            }
+            break;
+            }
+            default:
+                break;
+            
+    }
+    
+
 }
 
 #endif
