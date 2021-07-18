@@ -788,7 +788,20 @@ bool allegro_startup (void)
 /******************************************************************
  *  Definición de sonidos                                         *
  *****************************************************************/
- 
+ /*
+  * las siguientes muestras de audio fueron descargadas de:
+  * http://www.classicgaming.cc/classics/frogger/sounds
+  *   -sound-frogger-hop.wav
+  *   -sound-frogger-squash.wav
+  *   -sound-frogger-plunk.wav
+  *   -sound-frogger-time.wav
+  *   -sound-frogger-coin-in.wav
+  *
+  * https://www.newgrounds.com/audio/listen/1052515 
+  *   -1052515_Peglin---Forest.wav
+  *
+  *     http://www.classicgaming.cc/classics/frogger/sounds
+  */
     
     sample_rana_salto = al_load_sample("sound-frogger-hop.wav");
     if (!sample_rana_salto)
