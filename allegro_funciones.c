@@ -880,21 +880,22 @@ void allegro_redraw(void)
         //ZONA DE PRUEBAS DE tratar de imprimir variables con allegro
         //***********************************************************************
         
-        sprintf(print_string, "%u", vidas_restantes);
-                                           
-        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 100, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
+        snprintf(print_string, 100, "%lu", vidas_restantes);
+                       
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 115, 0, ALLEGRO_ALIGN_LEFT, "Vidas:"); //Imprimo el "string" creado que contiene las vidas restantes       
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 40, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
         
         /* El mismo concepto lo puedo usar para imprimir el nivel actual, ya que está previsto que haya menos de 10 niveles*/
-        sprintf(print_string, "%u", nivel);
+        snprintf(print_string, 100, "%lu", nivel);
         
         al_draw_text(font, al_map_rgb(255, 255, 255), 5, 0, ALLEGRO_ALIGN_LEFT, "Nivel: "); //Imprimo el "string" creado que contiene las vidas restantes
-        al_draw_text(font, al_map_rgb(255, 255, 255), 100, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
+        al_draw_text(font, al_map_rgb(255, 255, 255), 80, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
 
         
-        sprintf(print_string, "%lu", puntaje_juego);
+        snprintf(print_string, 100, "%lu", puntaje_juego);
         
-        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, 0, ALLEGRO_ALIGN_LEFT, "Puntaje ");
-        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, 0, ALLEGRO_ALIGN_LEFT, p_to_string);
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, 0, ALLEGRO_ALIGN_CENTER, "Puntaje: ");
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3-30, 0, ALLEGRO_ALIGN_CENTER, p_to_string);
         
         
         
@@ -904,21 +905,25 @@ void allegro_redraw(void)
     else if(estado_juego == PASAR_NIVEL)
     {
         al_set_target_backbuffer(display);
-        al_clear_to_color(al_map_rgb(0,0,0));
+        redraw_fondo();
         
         if(timer_pasar_nivel > UN_SEGUNDO*5)
         {
-            sprintf(print_string, "%lu", puntaje_juego);
+            snprintf(print_string, 100, "%lu", puntaje_juego);
         
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, "Puntaje ");
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H*2/3, ALLEGRO_ALIGN_CENTER, p_to_string);
+            al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/2)+SCREEN_H/20, al_map_rgb(28,40,51));
+            
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "Puntaje ");
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H/2.2, ALLEGRO_ALIGN_CENTER, p_to_string);
         }
         else
         {
-            sprintf(print_string, "%u", nivel+1);
+            snprintf(print_string, 100, "%u", nivel+1);
   
+            al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/2)+SCREEN_H/20, al_map_rgb(28,40,51));
+            
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "Nivel ");
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, p_to_string);
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.2, ALLEGRO_ALIGN_CENTER, p_to_string);
         }
     }
     
@@ -929,7 +934,7 @@ void allegro_redraw(void)
         
         if(timer_perder > UN_SEGUNDO*5)
         {
-            sprintf(print_string, "%u", nivel);
+            snprintf(print_string, 100, "%lu", nivel);
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "NIVEL ALCANZADO");
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, p_to_string);
                        
@@ -937,12 +942,12 @@ void allegro_redraw(void)
         
         else
         {
-            sprintf(print_string, "%d", puntaje_juego);
+            snprintf(print_string, 100, "%lu", puntaje_juego);
         
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/3, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "SU PUNTAJE: ");
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/3, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, p_to_string);
             
-            sprintf(print_string, "%d", high_score);
+            snprintf(print_string, 100, "%lu", high_score);
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "HIGHSCORE: ");
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, p_to_string);
         }
@@ -1027,23 +1032,29 @@ void allegro_redraw(void)
     
     else if (estado_juego == PAUSA)
     {
+        al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150)); //imprime un rectángulo que permite ver bienm todo
         
-      switch(selector_menu)
+        snprintf(print_string, 100, "%lu", puntaje_juego);
+        
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, SCREEN_H * 4.0/5, ALLEGRO_ALIGN_CENTER, "SU PUNTAJE: ");
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W * 2.0/3, SCREEN_H * 4.0/5, ALLEGRO_ALIGN_CENTER, p_to_string);
+        
+        switch(selector_menu)
         {  
       
-       case RESUME:
-       {        al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150));
+            case RESUME:
+            {        
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/3)+SCREEN_H/10, al_map_rgb(247,220,110));
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
                 al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MAIN MENU");
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "PAUSA"); 
-                break;
-       }
-       case MAIN_MENU:
                 
-                al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150));
+                break;
+            }
+            case MAIN_MENU:
+                
                 al_draw_filled_rectangle(SCREEN_W/3-SCREEN_W/10,(SCREEN_H/2)-SCREEN_H/40, SCREEN_W*2/3+SCREEN_W/10,(SCREEN_H/2)+SCREEN_H/10, al_map_rgb(247,220,110));
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
                
@@ -1053,8 +1064,8 @@ void allegro_redraw(void)
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "PAUSA");
                 break;
     
-     case QUIT:
-            {    al_draw_filled_rectangle(SCREEN_W/10.0,SCREEN_H/10.0, SCREEN_W*9.0/10,SCREEN_H*9.0/10, al_map_rgb(250, 90, 150));
+            case QUIT:
+            {    
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H*2/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H*2/3)+SCREEN_H/10, al_map_rgb(247,220,110));
                 al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
                
@@ -1065,7 +1076,7 @@ void allegro_redraw(void)
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             } 
-      }
+        }
     }
     
     al_flip_display();
@@ -1327,11 +1338,13 @@ static void redraw_tiempo(void)
     xf = (SCREEN_W - 100) * ((TIEMPO_TOTAL - tiempo_restante)/TIEMPO_TOTAL); //le resto 100 para poder escribir la palabra "time" a la derecha
     al_draw_line(SCREEN_W  - 100, SCREEN_H, xf, SCREEN_H, al_color_name("darkgreen"), 20);
     //           x0            y0         xf        yf               color          thickness
-    al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 30, SCREEN_H - 40, ALLEGRO_ALIGN_RIGHT, "Time");
+    al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 100, SCREEN_H - 40, ALLEGRO_ALIGN_LEFT, "Tiempo");
     //           fuente         color               ancho          alto    flag            texto
     
     
 }
+
+
 
 
 
@@ -1363,5 +1376,7 @@ void allegro_destroy(void)
     al_destroy_display(display);
     al_destroy_sample(sample_rana_salto);
 }
+
+
 
 #endif

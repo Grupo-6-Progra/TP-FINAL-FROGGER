@@ -183,9 +183,11 @@ bool frogger (void)
         
         case PASAR_NIVEL:       //caso en el que se pasa de nivel
         {
+            
             if(timer_pasar_nivel == 0)  
             {
                 timer_pasar_nivel = UN_SEGUNDO*10;
+                
             }
             else
             {
@@ -196,6 +198,7 @@ bool frogger (void)
                     move_frog(true);    //
                     estado_juego = INICIO;  //se vuelve a iniciar el estado del juego ya que es un nuevo nivel
                 }
+                
             }
             
             break;
