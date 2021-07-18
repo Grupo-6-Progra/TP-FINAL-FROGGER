@@ -1343,15 +1343,15 @@ void allegro_redraw(void)
          */ 
             else
             {
-                al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3+20,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
+                al_draw_filled_rectangle(SCREEN_W/3.5,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3 + SCREEN_W / 20,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
-                al_draw_filled_rectangle((SCREEN_W/3),(SCREEN_H/2), SCREEN_W*2/3-50,(SCREEN_H/3)+SCREEN_H/5, al_map_rgb(25,25,112));
-        
+                
+                al_draw_filled_rectangle((SCREEN_W/3),(SCREEN_H/2), SCREEN_W*2/3,(SCREEN_H*16/28), al_map_rgb(25,25,112));
                 snprintf(print_string, 100, "%u", nivel);
                 
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0-20, ALLEGRO_ALIGN_CENTER, "NIVEL:");
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL:");
                 //           fuente         color               ancho          alto    flag            texto
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene el nivel preseleccionado
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W* 5/9, SCREEN_H/2.0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene el nivel preseleccionado
                 //           fuente         color               ancho          alto    flag      
         
         
