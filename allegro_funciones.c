@@ -43,12 +43,8 @@ static ALLEGRO_BITMAP      * mundo_buffer;
 static ALLEGRO_FONT        * font;
 static ALLEGRO_BITMAP      * al_cocodrilo;
 static ALLEGRO_SAMPLE      * sample_rana_salto;
-static ALLEGRO_SAMPLE      * sample_rana_ahogada;
-static ALLEGRO_SAMPLE      * sample_rana_chocada;
-static ALLEGRO_SAMPLE      * sample_tiempo;
 
-
-/*********************************************
+/************************************************+
  * 
  * SPRITES
  * 
@@ -96,14 +92,11 @@ static void redraw_fondo(void);
 
 
 
-
 /**********************************************************************************
  * 
  * DEFINICION DE FUNCIONES GLOBALES
  * 
  *******************************************************************************+**/
-
-
 
 bool allegro_startup (void)
 {
@@ -123,7 +116,7 @@ bool allegro_startup (void)
         return -1;
     }
 
-    if (!al_reserve_samples(4)) {
+    if (!al_reserve_samples(1)) {
         fprintf(stderr, "failed to reserve samples!\n");
         return -1;
     }
@@ -741,117 +734,6 @@ bool allegro_startup (void)
         return false;
     }
     
-    sample_rana_ahogada = al_load_sample("sound-frogger-squash.wav");
-    if (!sample_rana_ahogada)
-    {
-        printf("Audio clip sample_rana_salto not loaded!\n");
-        al_shutdown_font_addon();
-        al_shutdown_ttf_addon();
-        al_shutdown_primitives_addon();
-        al_shutdown_image_addon();
-        al_uninstall_keyboard();
-        al_destroy_timer(timer);
-        al_destroy_event_queue(event_queue);
-        al_destroy_bitmap(mundo_buffer);
-        al_destroy_bitmap(sprites.al_rene[0]);
-        al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(sprites.al_auto1);
-        al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(sprites.al_camion);
-        al_destroy_bitmap(sprites.al_tronco1);
-        al_destroy_bitmap(sprites.al_tronco2);
-        al_destroy_bitmap(sprites.al_tronco3);
-        al_destroy_bitmap(sprites.al_tortugas[0]);
-        al_destroy_bitmap(sprites.al_tortugas[1]);
-        al_destroy_bitmap(sprites.al_tortugas[2]);
-        al_destroy_bitmap(sprites.al_tortugas[3]);
-        al_destroy_bitmap(sprites.al_llegada);
-        al_destroy_bitmap(sprites.al_fila_superior);
-        al_destroy_bitmap(sprites.al_agua);
-        al_destroy_bitmap(sprites.al_calle);
-        al_destroy_bitmap(sprites.al_fila_segura);
-        al_destroy_bitmap(sprites.al_rene_perdio);
-        al_destroy_bitmap(al_cocodrilo);
-        al_destroy_display(display);
-        al_destroy_sample(sample_rana_salto);
-        return false;
-    }
-    
-    sample_rana_chocada = al_load_sample("sound-frogger-plunk.wav");
-    if (!sample_rana_chocada)
-    {
-        printf("Audio clip sample_rana_salto not loaded!\n");
-        al_shutdown_font_addon();
-        al_shutdown_ttf_addon();
-        al_shutdown_primitives_addon();
-        al_shutdown_image_addon();
-        al_uninstall_keyboard();
-        al_destroy_timer(timer);
-        al_destroy_event_queue(event_queue);
-        al_destroy_bitmap(mundo_buffer);
-        al_destroy_bitmap(sprites.al_rene[0]);
-        al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(sprites.al_auto1);
-        al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(sprites.al_camion);
-        al_destroy_bitmap(sprites.al_tronco1);
-        al_destroy_bitmap(sprites.al_tronco2);
-        al_destroy_bitmap(sprites.al_tronco3);
-        al_destroy_bitmap(sprites.al_tortugas[0]);
-        al_destroy_bitmap(sprites.al_tortugas[1]);
-        al_destroy_bitmap(sprites.al_tortugas[2]);
-        al_destroy_bitmap(sprites.al_tortugas[3]);
-        al_destroy_bitmap(sprites.al_llegada);
-        al_destroy_bitmap(sprites.al_fila_superior);
-        al_destroy_bitmap(sprites.al_agua);
-        al_destroy_bitmap(sprites.al_calle);
-        al_destroy_bitmap(sprites.al_fila_segura);
-        al_destroy_bitmap(sprites.al_rene_perdio);
-        al_destroy_bitmap(al_cocodrilo);
-        al_destroy_display(display);
-        al_destroy_sample(sample_rana_salto);
-        al_destroy_sample(sample_rana_ahogada);
-        return false;
-    }
-    
-    sample_tiempo = al_load_sample("sound-frogger-time.wav");
-    if (!sample_tiempo)
-    {
-        printf("Audio clip sample_rana_salto not loaded!\n");
-        al_shutdown_font_addon();
-        al_shutdown_ttf_addon();
-        al_shutdown_primitives_addon();
-        al_shutdown_image_addon();
-        al_uninstall_keyboard();
-        al_destroy_timer(timer);
-        al_destroy_event_queue(event_queue);
-        al_destroy_bitmap(mundo_buffer);
-        al_destroy_bitmap(sprites.al_rene[0]);
-        al_destroy_bitmap(sprites.al_rene[1]);
-        al_destroy_bitmap(sprites.al_auto1);
-        al_destroy_bitmap(sprites.al_auto2);
-        al_destroy_bitmap(sprites.al_camion);
-        al_destroy_bitmap(sprites.al_tronco1);
-        al_destroy_bitmap(sprites.al_tronco2);
-        al_destroy_bitmap(sprites.al_tronco3);
-        al_destroy_bitmap(sprites.al_tortugas[0]);
-        al_destroy_bitmap(sprites.al_tortugas[1]);
-        al_destroy_bitmap(sprites.al_tortugas[2]);
-        al_destroy_bitmap(sprites.al_tortugas[3]);
-        al_destroy_bitmap(sprites.al_llegada);
-        al_destroy_bitmap(sprites.al_fila_superior);
-        al_destroy_bitmap(sprites.al_agua);
-        al_destroy_bitmap(sprites.al_calle);
-        al_destroy_bitmap(sprites.al_fila_segura);
-        al_destroy_bitmap(sprites.al_rene_perdio);
-        al_destroy_bitmap(al_cocodrilo);
-        al_destroy_display(display);
-        al_destroy_sample(sample_rana_salto);
-        al_destroy_sample(sample_rana_ahogada);
-        al_destroy_sample(sample_rana_chocada);
-        return false;
-    }
-    
     return true;
 }
 
@@ -1048,23 +930,20 @@ void allegro_redraw(void)
     else if(estado_juego == PERDER)     //en el caso de que se pierde
     {
         al_set_target_backbuffer(display);
-        redraw_fondo();
+        al_clear_to_color(al_map_rgb(0,0,0));
         
         if(timer_perder > UN_SEGUNDO*5)
         {
-            snprintf(print_string, 100, "%u", nivel);
-            al_draw_filled_rectangle(SCREEN_W/3-15,(SCREEN_H/3.0), SCREEN_W*2/3 + 15 + 10,(SCREEN_H/2.0)-15, al_map_rgb(25,25,112));
+            snprintf(print_string, 100, "%lu", nivel);
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "NIVEL ALCANZADO");
-            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.5, ALLEGRO_ALIGN_CENTER, p_to_string);
+            al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, p_to_string);
                        
         }
         
         else
         {
             snprintf(print_string, 100, "%lu", puntaje_juego);
-            
-            al_draw_filled_rectangle(SCREEN_W/6,(SCREEN_H/3.0), SCREEN_W*5.0/6 ,(SCREEN_H/(8.0/5)), al_map_rgb(25,25,112));
-            
+        
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/3, SCREEN_H * 1 / 3.0, ALLEGRO_ALIGN_CENTER, "SU PUNTAJE: ");
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/3, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, p_to_string);
             
@@ -1077,18 +956,23 @@ void allegro_redraw(void)
     {
         al_set_target_backbuffer(display);
         redraw_fondo ();
+    
+    if (selector_menu!=MENU_LEVELS)    
+    {  
         al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
         al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(25,25,112));
+        
+        
         al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/2.0), SCREEN_W*2/3+20,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(25,25,112));      //recuardo de sleeción para los niveles
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
-                al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H*2.0/3), SCREEN_W*2/3-70,(SCREEN_H*2.0/3)+SCREEN_H/15, al_map_rgb(25,25,112));    
+        al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
+        al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H*2.0/3), SCREEN_W*2/3-70,(SCREEN_H*2.0/3)+SCREEN_H/15, al_map_rgb(25,25,112));    
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
+        al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
                      
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
+        al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
         
         switch(selector_menu)
         {
@@ -1136,55 +1020,63 @@ void allegro_redraw(void)
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             }
-            case MENU_LEVELS:
-            { 
-                
-                snprintf(print_string, 100, "%u", nivel);
-                
-                al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/2.0), SCREEN_W*2/3 + 10,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(25,25,112));
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "NIVEL");
-                //           fuente         color               ancho          alto    flag            texto
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0 + 100, SCREEN_H/2.0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
-                //           fuente         color               ancho          alto    flag            texto
-                break;
-            }
             
-         
+            
+        
         }
+        
+      }
+        
+    else
+    {
+                al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3+20,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
+                al_draw_filled_rectangle((SCREEN_W/3)+50,(SCREEN_H/2)-15, SCREEN_W*2/3-50,(SCREEN_H/3)+SCREEN_H/5, al_map_rgb(25,25,112));
+        
+                sprintf(print_string, "%u", nivel);
+                
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0-5, SCREEN_H/2.0-20, ALLEGRO_ALIGN_CENTER, "NIVEL:");
+                //           fuente         color               ancho          alto    flag            texto
+                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0 +40, SCREEN_H/2.0-20, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
+                //           fuente         color               ancho          alto    flag      
+        
+        
     }
+    }
+        
+    
     
        else if (estado_juego == PAUSA)     //muestra cuando el juego está en estado de pausa
     {
       al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/12)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/12)+SCREEN_H/10, al_map_rgb(28,40,51));   //ésta es la secuencia de título y caja de texto de pausa
       al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/12, ALLEGRO_ALIGN_CENTER, "PAUSA");                      //se colocan fuera del switch ya que se repiten en cada una de las secuencias
+      
+      al_draw_filled_rectangle(SCREEN_W/3+20,(SCREEN_H/3)-SCREEN_H/40, SCREEN_W*2/3-20,(SCREEN_H/3)+SCREEN_H/10, al_map_rgb(26,54,96));
+      al_draw_filled_rectangle((SCREEN_W/3),(SCREEN_H/2)-SCREEN_H/40, (SCREEN_W*2/3),(SCREEN_H/2)+SCREEN_H/10, al_map_rgb(26,54,96));
+      al_draw_filled_rectangle(SCREEN_W/3+65,(SCREEN_H*2/3)-SCREEN_H/30-10, SCREEN_W*2/3-70,(SCREEN_H*2/3)+SCREEN_H/10, al_map_rgb(26,54,96));
+      
+      al_draw_text(font, al_map_rgb(255,255,255), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");      //se imprimen los 3 textos de las opciones del menú
+      al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MAIN MENU");
+      al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");
       switch(selector_menu)
         {  
       
        case RESUME:         //caso en donde se selecciona la opción de resume
        {        
-                al_draw_filled_rectangle(SCREEN_W/3+20,(SCREEN_H/3)-SCREEN_H/40, SCREEN_W*2/3-20,(SCREEN_H/3)+SCREEN_H/10, al_map_rgb(26,54,96));
-                al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MAIN MENU");
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");
+                 al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");    //imprime el texto en color como seleccionado
+                
                  
                 break;
        }
-       case MAIN_MENU:
+       case MAIN_MENU:  //caso en el que se selecciona la opción de menú principal
                 
+                 al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MAIN MENU"); //imprime el texto en color como seleccionado
                 
-                al_draw_filled_rectangle((SCREEN_W/3),(SCREEN_H/2)-SCREEN_H/40, (SCREEN_W*2/3),(SCREEN_H/2)+SCREEN_H/10, al_map_rgb(26,54,96));
-                 
-                al_draw_text(font, al_map_rgb(255,255,255), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");
-                al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MAIN MENU");
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");
                 break;
     
-     case QUIT:
+     case QUIT:     //caso en el que se selecciona la opción de quit
             {   
-                al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H*2/3)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H*2/3)+SCREEN_H/10, al_map_rgb(26,54,96));
-                al_draw_text(font, al_map_rgb(255,255,255), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MAIN MENU");
-                al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");
+               al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");  //imprime el texto en color como seleccionado
                 //           fuente         color               ancho          alto    flag            texto
                 break;
             } 
@@ -1283,7 +1175,7 @@ static void redraw_rana(void)
             al_draw_scaled_rotated_bitmap(sprites.al_rene[1],
             al_get_bitmap_width(sprites.al_rene[0])/2, al_get_bitmap_height(sprites.al_rene[0])/2, rene.x, rene.y, RANA_ANCHO/al_get_bitmap_width(sprites.al_rene[1]), RANA_ALTO/al_get_bitmap_height(sprites.al_rene[1]),
             rene.direccion*ALLEGRO_PI/2, 0);
-            
+            al_play_sample(sample_rana_salto, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
         }
         else
         {
@@ -1457,29 +1349,6 @@ static void redraw_tiempo(void)
 }
 
 
-void allegro_audio (void)
-{
-    static bool primera_vez = true;
-    if(rene.saltando == true && rene.chocada == false && primera_vez == true)
-    {
-        primera_vez = false;
-        al_play_sample(sample_rana_salto, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-    }
-    if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 13 && rene.y >= CASILLA_ALTO*7) && primera_vez == true)
-    {
-        primera_vez = false;
-        al_play_sample(sample_rana_chocada, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-    }
-    if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO) && primera_vez == true)
-    {
-        primera_vez = false;
-        al_play_sample(sample_rana_ahogada, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
-    }
-    else if(rene.saltando == false && rene.chocada == false)
-    {
-        primera_vez = true;
-    }
-}
 
 
 
@@ -1510,10 +1379,6 @@ void allegro_destroy(void)
     al_destroy_bitmap(al_cocodrilo);
     al_destroy_display(display);
     al_destroy_sample(sample_rana_salto);
-    al_destroy_sample(sample_rana_ahogada);
-    al_destroy_sample(sample_rana_chocada);
-    al_destroy_sample(sample_tiempo);
-    
 }
 
 
