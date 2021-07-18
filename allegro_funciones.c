@@ -956,78 +956,59 @@ void allegro_redraw(void)
     {
         al_set_target_backbuffer(display);
         redraw_fondo ();
-  
-        
+         al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
+        al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
+        al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(25,25,112));
+        al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/2.0), SCREEN_W*2/3+20,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(25,25,112));      //recuardo de sleeción para los niveles
+                
+                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
+                al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H*2.0/3), SCREEN_W*2/3-70,(SCREEN_H*2.0/3)+SCREEN_H/15, al_map_rgb(25,25,112));    
+                
+                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
+                     
+                
+                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
         
         switch(selector_menu)
         {
            
-            case PLAY:
+            case PLAY:      //caso en donde se elige la opción de jugar directamente al juego e inicia en el nivel número 1
             {   
                  
-                //recuardo para la
-                al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
+              
+             
                 
-                al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(25,25,112));
                 al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(247,220,110));
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
+                al_draw_text(font, al_map_rgb(124,36,28), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY"); //imrpime el texto de la opción
                 
-                al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/2.0), SCREEN_W*2/3+20,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(25,25,112));      //recuardo de sleeción para los niveles
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
-                al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H*2.0/3), SCREEN_W*2/3-70,(SCREEN_H*2.0/3)+SCREEN_H/15, al_map_rgb(25,25,112));    
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
-                
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
                 //al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
                 break;
             }
-            case LEVEL:
+            case LEVEL: //opción de niveles para elegirlos en el menú
             {   
-                  
-                al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
                 
-                al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(25,25,112));
-             
+              
+                al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/2.0), SCREEN_W*2/3+20,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(247,220,110));      //recuardo de selección para los niveles
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
+                al_draw_text(font, al_map_rgb(124,36,28), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");                 //imrpime el texto de la opción
                 
-                al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/2.0), SCREEN_W*2/3+20,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(247,220,110));      //recuardo de sleeción para los niveles
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
-                al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H*2.0/3), SCREEN_W*2/3-70,(SCREEN_H*2.0/3)+SCREEN_H/15, al_map_rgb(25,25,112));    
-                
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
-                
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
                 //al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
                 
                break;
             }
-            case QUIT:      //caso
+            case QUIT:      //opción de terminado
             {   
-                  
-                
-                al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
-                
-                al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(25,25,112));
              
-                
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "PLAY");
-                
-                al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/2.0), SCREEN_W*2/3+20,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(25,25,112));      //recuardo de sleeción para los niveles
-                
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
+    
                 al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H*2.0/3), SCREEN_W*2/3-70,(SCREEN_H*2.0/3)+SCREEN_H/15, al_map_rgb(247,220,110));    
                 
-                al_draw_text(font, al_map_rgb(124,252, 0), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR");
+                al_draw_text(font, al_map_rgb(124,36,28), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "SALIR"); //imrpime el texto de la opción
                 
-                al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
+                
              
                 //al_draw_filled_circle(rand() % 640, rand() % 480, rand() % 64, al_map_rgb(rand() % 255, 127, 80));
            
@@ -1050,14 +1031,14 @@ void allegro_redraw(void)
         }
     }
     
-    else if (estado_juego == PAUSA)
+       else if (estado_juego == PAUSA)     //muestra cuando el juego está en estado de pausa
     {
-      al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/12)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/12)+SCREEN_H/10, al_map_rgb(28,40,51));   
-      al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/12, ALLEGRO_ALIGN_CENTER, "PAUSA");
+      al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/12)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/12)+SCREEN_H/10, al_map_rgb(28,40,51));   //ésta es la secuencia de título y caja de texto de pausa
+      al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/12, ALLEGRO_ALIGN_CENTER, "PAUSA");                      //se colocan fuera del switch ya que se repiten en cada una de las secuencias
       switch(selector_menu)
         {  
       
-       case RESUME:
+       case RESUME:         //caso en donde se selecciona la opción de resume
        {        
                 al_draw_filled_rectangle(SCREEN_W/3+20,(SCREEN_H/3)-SCREEN_H/40, SCREEN_W*2/3-20,(SCREEN_H/3)+SCREEN_H/10, al_map_rgb(26,54,96));
                 al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");
