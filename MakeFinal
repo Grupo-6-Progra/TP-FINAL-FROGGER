@@ -14,10 +14,10 @@ main_raspi.o: main.c juego.h allegro_funciones.h
 juego.o: juego.h juego.c colisiones.h menu.h
 	gcc -c juego.c -Wall
 	
-allegro_funciones.o: allegro_funciones.h menu.h juego.h
+allegro_funciones.o: allegro_funciones.h menu.h juego.h allegro_funciones.c
 	gcc -c allegro_funciones.c -Wall
 
-display.o: display.h juego.h colisiones.h menu.h
+display.o: display.h juego.h colisiones.h menu.h display.c
 	gcc -c display.c -Wall
 	
 menu.o: menu.c menu.h juego.h
