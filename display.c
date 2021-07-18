@@ -34,7 +34,7 @@ static void redraw_tortugas_d(void);
 static void print_tortuga1(int,int,int);
 static void print_tortuga2(int,int,int);
 static void print_tortuga3(int,int,int);
-//static void redraw_tiempo_d(void);
+static void redraw_tiempo_d(void);
 static void redraw_llegada_d(void);
 static void print_llegada_vacia(int, int);
 static void print_llegada_cocodrilo(int, int);
@@ -46,6 +46,8 @@ static void vidas(void);
 
 static void delete_disp(void);
 
+static void print_num (char arr[], int largo);
+
 void init_display()
 {
     joy_init();								//inicializa el joystick
@@ -55,8 +57,10 @@ void init_display()
 
 void redraw_disp (void) 
 {
+    
+    char numeros[32];
     delete_disp();
-    if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL)
+    if(estado_juego != MENU && estado_juego != PAUSA && estado_juego != PASAR_NIVEL && estado_juego != PERDER)
     {
 
         //IMPRESION DEL FONDO
@@ -72,11 +76,23 @@ void redraw_disp (void)
         redraw_tortugas_d();
         
         //IMPRESION DE LAS CASILLAS DE LLEGADA
-       // redraw_llegada_d();
+        redraw_llegada_d();
 
         //IMPRESIÓN DE LA RANA
         redraw_rana_d();
+        
+        redraw_tiempo_d();
         vidas();     
+    }
+    
+    else if (estado_juego == PASAR_NIVEL)
+    {
+        snprintf(numeros,32*(sizeof(char)),"%lu",puntaje_juego);
+        print_num (numeros[],32);
+    }
+    else if (estado_juego == PERDER)
+    {
+         snprintf(numeros,32*(sizeof(char)),"%lu",puntaje_juego);       
     }
     else if (estado_juego == MENU || estado_juego == PAUSA)
     {
@@ -427,17 +443,123 @@ static void redraw_rana_d (void)
     int i;
     int j;
     dcoord_t coord;
-    for (i=0 ; i<ANCHO_RENE ; i++)
+    if (rene.chocada == false)
     {
-        for (j=0 ; j<ALTO_RENE ; j++)
+        if(rene.direccion == ARRIBA)
         {
-            coord.x = i+6;
-            coord.y = j+6;
-            disp_write(coord, D_ON);
+            int mat[3][3] = {{0,1,0},
+                             {1,1,1},
+                             {1,0,1}};
+            for (i=0 ; i<ALTO_RENE ; i++)
+            {
+                for (j=0 ; j<ANCHO_RENE ; j++)
+                {
+                    if (mat[i][j] ==1)
+                    {
+                        coord.x = j+6;
+                        coord.y = i+6;
+                        disp_write(coord, D_ON); 
+                    }
+                }
+            } 
+        }
+        else if (rene.direccion == ABAJO)
+        {
+             int mat[3][3] = {{1,0,1},
+                              {1,1,1},
+                              {0,1,0}}; 
+            for (i=0 ; i<ALTO_RENE ; i++)
+            {
+                for (j=0 ; j<ANCHO_RENE ; j++)
+                {
+                    if (mat[i][j] ==1)
+                    {
+                        coord.x = j+6;
+                        coord.y = i+6;
+                        disp_write(coord, D_ON); 
+                    }
+                }
+            } 
+        }
+
+        else if (rene.direccion == DERECHA)
+        {
+            int mat[3][3] = {{1,1,0},
+                             {0,1,1},
+                             {1,1,0}};
+            for (i=0 ; i<ALTO_RENE ; i++)
+            {
+                for (j=0 ; j<ANCHO_RENE ; j++)
+                {
+                    if (mat[i][j] ==1)
+                    {
+                        coord.x = j+6;
+                        coord.y = i+6;
+                        disp_write(coord, D_ON); 
+                    }
+                }
+            }        
+        }
+        else if (rene.direccion == IZQUIERDA)
+        {
+            int mat[3][3] = {{0,1,1},
+                             {1,1,0},
+                             {0,1,1}};    
+            for (i=0 ; i<ALTO_RENE ; i++)
+            {
+                for (j=0 ; j<ANCHO_RENE ; j++)
+                {
+                    if (mat[i][j] ==1)
+                    {
+                        coord.x = j+6;
+                        coord.y = i+6;
+                        disp_write(coord, D_ON); 
+                    }
+
+                }
+            }
         }
     }
+    
+    else if (rene.chocada != false)
+    {
+       
+        int mat[3][3] = {{1,0,1},
+                         {0,1,0},
+                         {1,0,1}};
+        for (i=0 ; i<ALTO_RENE ; i++)
+        {
+            for (j=0 ; j<ANCHO_RENE ; j++)
+            {
+                if (mat[i][j] ==1)
+                {
+                    coord.x = j+6;
+                    coord.y = i+6;
+                    disp_write(coord, D_ON); 
+                }
+            }
+        } 
+
+    }
+       
+        
+    
+
+
 
 }
+/*
+ .  
+...
+. .  
+ 
+ */
+
+
+
+    
+ 
+ 
 
 static void redraw_autos_d (void)
 {
@@ -899,10 +1021,10 @@ static void redraw_fondo_d(void)
 
     dcoord_t coord;
     
-    derecha = APROX((MUNDO_ANCHO - rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
-    abajo = APROX((MUNDO_ALTO - rene.y)/TAM_PIXEL)+7;
-    izquierda = APROX((0- rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
-    arriba = APROX((0- rene.y)/TAM_PIXEL)+7;
+    derecha = APROX((MUNDO_ANCHO - rene.x)/TAM_PIXEL)+6;//coordenadas del centro del auto
+    abajo = APROX((MUNDO_ALTO - rene.y)/TAM_PIXEL)+6;
+    izquierda = APROX((0- rene.x)/TAM_PIXEL)+8;//coordenadas del centro del auto
+    arriba = APROX((0- rene.y)/TAM_PIXEL)+8;
     
     int i;
     int j;
@@ -1031,7 +1153,7 @@ static void redraw_fondo_d(void)
      * fila inferior    
      */
     
-    if(abajo - 4 < DISP_CANT_Y_DOTS - 1)
+    if(abajo - 4 < DISP_CANT_Y_DOTS - 1 && abajo-4>=0)
     {
         if(derecha < DISP_CANT_X_DOTS)
         {
@@ -1067,8 +1189,8 @@ static void redraw_fondo_d(void)
      * Fila del medio
      * 
      */
-    
-    if(abajo - 30 < DISP_CANT_Y_DOTS - 1)
+  
+    if(abajo - 30 < DISP_CANT_Y_DOTS - 1 && abajo-30>=0)
     {
         if(derecha < DISP_CANT_X_DOTS)
         {
@@ -1099,14 +1221,14 @@ static void redraw_fondo_d(void)
         }
     }
     
-    if(abajo - 35 < DISP_CANT_Y_DOTS - 1)
+    if(abajo - 34 < DISP_CANT_Y_DOTS - 1 && abajo-34>=0)
     {
         if(derecha < DISP_CANT_X_DOTS)
         {
             for (i=0; i<=derecha ; i++)//for de abajo
             {                
                 coord.x = i;
-                coord.y = abajo - 35;
+                coord.y = abajo - 34;
                 disp_write(coord, D_ON);
             }
         }
@@ -1115,7 +1237,7 @@ static void redraw_fondo_d(void)
            for (i=izquierda; i < DISP_CANT_X_DOTS ; i++)//for de abajo
             {                
                 coord.x = i;
-                coord.y = abajo - 35;
+                coord.y = abajo - 34;
                 disp_write(coord, D_ON);
             } 
         }
@@ -1124,7 +1246,7 @@ static void redraw_fondo_d(void)
             for (i=0; i < DISP_CANT_X_DOTS ; i++)//for de abajo
             {                
                 coord.x = i;
-                coord.y = abajo - 35;
+                coord.y = abajo - 34;
                 disp_write(coord, D_ON);
             } 
         }
@@ -1135,8 +1257,8 @@ static void redraw_fondo_d(void)
      * Fila superior
      * 
      */
-    
-    if(arriba + 4 >= 0)
+  
+    if(arriba + 4 >= 0 && arriba + 4 < DISP_CANT_Y_DOTS -1)
     {
         if(derecha < DISP_CANT_X_DOTS)
         {
@@ -1166,7 +1288,7 @@ static void redraw_fondo_d(void)
             } 
         }
     }
-    
+   
     
 }
 
@@ -1177,7 +1299,7 @@ static void redraw_llegada_d(void)
     int coordx;
     int coordy;
     //impresión de troncos
-    for(i=0; i < CANT_CASILLAS_LLEGADA; j++)
+    for(i=0; i < CANT_CASILLAS_LLEGADA; i++)
     {
         coordx = APROX((llegadas[i].x - rene.x)/TAM_PIXEL)+7;//coordenadas del centro del auto
         coordy = APROX((llegadas[i].y - rene.y)/TAM_PIXEL)+7;
@@ -1314,6 +1436,26 @@ static void print_llegada_llena(int coordx, int coordy)
         }
     }
     
+    
+}
+
+static void redraw_tiempo_d(void)
+{
+    int xf;
+    int i;
+    dcoord_t coord;
+    
+    xf = APROX((12.0) * (tiempo_restante/TIEMPO_TOTAL)); 
+    for (i=0 ; i< xf ; i++)
+    {
+       coord.x = i;
+       coord.y = 15;
+       disp_write(coord,D_ON);
+    }
+}
+
+static void print_num (char arr[], int largo)
+{
     
 }
 
