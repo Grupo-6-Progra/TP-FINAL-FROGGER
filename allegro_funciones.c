@@ -47,6 +47,7 @@ static ALLEGRO_SAMPLE      * sample_rana_ahogada;
 static ALLEGRO_SAMPLE      * sample_rana_chocada;
 static ALLEGRO_SAMPLE      * sample_tiempo;
 static ALLEGRO_SAMPLE      * sample_musica_fondo;
+static ALLEGRO_SAMPLE      * sample_coin;
 
 
 
@@ -897,7 +898,7 @@ bool allegro_startup (void)
     sample_musica_fondo = al_load_sample("1052515_Peglin---Forest.wav");
     if (!sample_musica_fondo)
     {
-        printf("Audio clip sample_menu not loaded!\n");
+        printf("Audio clip sample_musica_fondo not loaded!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
         al_destroy_font(font);
@@ -933,6 +934,46 @@ bool allegro_startup (void)
         al_destroy_sample(sample_tiempo);
         return false;
     }    
+    
+    sample_coin = al_load_sample("sound-frogger-coin-in.wav");
+    if (!sample_coin)
+    {
+        printf("Audio clip sample_coin not loaded!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_destroy_font(font);
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+        al_destroy_bitmap(sprites.al_calle);
+        al_destroy_bitmap(sprites.al_fila_segura);
+        al_destroy_bitmap(sprites.al_rene_perdio);
+        al_destroy_bitmap(al_cocodrilo);
+        al_destroy_display(display);
+        al_destroy_sample(sample_rana_salto);
+        al_destroy_sample(sample_rana_ahogada);
+        al_destroy_sample(sample_rana_chocada);
+        al_destroy_sample(sample_tiempo);
+        return false;
+    }
     
     return true;
 }
@@ -1546,10 +1587,9 @@ void allegro_audio (void)
     static bool primera_vez_salto = true;
     static bool primera_vez_tiempo = true;
     static bool primera_vez_musica = true;
-    static bool primera_vez_inicio = true;
     
     
-    if (estado_juego == MENU && primera_vez_musica == true) //Esto se ejecuta una sola vez y dura todo el programa.
+    if (estado_juego == MENU && primera_vez_musica == true) //Esto se ejecuta una sola vez y dura todo el programa, COMIENZA LA MUSICA DE FONDO AL MOSTRAR EL MENU
     {
         primera_vez_musica = false;
         al_play_sample(sample_musica_fondo, 0.05, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
@@ -1575,9 +1615,10 @@ void allegro_audio (void)
         primera_vez_tiempo = false;
         al_play_sample(sample_tiempo, 0.4, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-    else
+    else if (rene.llego == true && primera_vez_choque == true)
     {
-        
+        primera_vez_choque = false;
+        al_play_sample(sample_coin, 0.4, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
     
     
@@ -1588,7 +1629,7 @@ void allegro_audio (void)
     {
         primera_vez_salto = true;
     }
-    else if (rene.chocada == false )
+    else if (rene.chocada == false && rene.llego == false)
     {
         primera_vez_choque = true;
         primera_vez_ahogada = true;
@@ -1603,7 +1644,6 @@ void allegro_audio (void)
 
 void allegro_destroy(void)
 {
-
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
     al_destroy_bitmap(sprites.al_rene[0]);
@@ -1630,6 +1670,7 @@ void allegro_destroy(void)
     al_destroy_sample(sample_rana_chocada);
     al_destroy_sample(sample_tiempo);
     al_destroy_sample(sample_musica_fondo);
+    al_destroy_sample(sample_coin);
     al_destroy_font(font);
     al_destroy_bitmap(mundo_buffer);
     al_destroy_display(display);
