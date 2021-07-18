@@ -17,15 +17,21 @@
 
 #include "juego.h"
 
+
+
+/***************************************************
+ * DECLARACIÓN DE FUNCIONES GLOBALES
+***************************************************/
+bool menu_pausa(void);
+bool menu_start(void);
+    
+/***************************************************
+ * DEFINICION DE CONSTANTES PARA EL MENU
+***************************************************/
 enum SELECTOR
 {
     MENU_LEVELS, PLAY, LEVEL, QUIT, MAIN_MENU, RESUME
 };
-
-
-bool menu_pausa(void);
-bool menu_start(void);
-    
     
 
 #endif /* MENU_H */

@@ -1,4 +1,21 @@
-
+/***************************************************************************************************************
+ *      FROGGER
+ * 
+ *      DISPLAY.C:
+ * 
+ *              Autores:    Alegre, Marcos
+ *                          Di Sanzo, Bruno
+ *                          Hertter, José Iván
+ *                          Ibáñez, Lucía
+ * 
+ *      Contiene las funciones para poder jugar en la RPI con el display y el joystick. 
+ *      En el display, en vez de mostrar todo el juego dentro de una matriz de 16x16, se muestra un entorno de la 
+ *      rana de aproximadamente un radio de 75 pixeles. Tanto la rana como las tortugas y los autos tienen formas 
+ *      diferentes que denotan la direccion en la que se estan desplazando. De la misma manera que en Allegro, 
+ *      pruede aparecer un cocodrilo en las casillas de llegada y las tortugas se pueden hundir. 
+ * 
+ *  
+ **************************************************************************************************************/
 //#define RASPI_DISPLAY
 #ifdef RASPI_DISPLAY 
 
@@ -15,7 +32,7 @@
 #include "/home/pi/libs/joydisp/joydrv.h"
 #include "/home/pi/libs/joydisp/termlib.h"
 /********************************************
-*  CONSTATNTES PARA RPI                     *
+*  CONSTANTES PARA RPI                     *
 *********************************************/
 #define THRESHOLD 40	//Límite a partir del cual se mueve el LED encendido
 
