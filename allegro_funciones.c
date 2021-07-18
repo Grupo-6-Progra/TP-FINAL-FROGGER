@@ -998,13 +998,13 @@ void allegro_redraw(void)
         //ZONA DE PRUEBAS DE tratar de imprimir variables con allegro
         //***********************************************************************
         
-        snprintf(print_string, 100, "%lu", vidas_restantes);
+        snprintf(print_string, 100, "%u", vidas_restantes);
                        
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 115, 0, ALLEGRO_ALIGN_LEFT, "Vidas:"); //Imprimo el "string" creado que contiene las vidas restantes       
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W - 40, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
         
         /* El mismo concepto lo puedo usar para imprimir el nivel actual, ya que está previsto que haya menos de 10 niveles*/
-        snprintf(print_string, 100, "%lu", nivel);
+        snprintf(print_string, 100, "%u", nivel);
         
         al_draw_text(font, al_map_rgb(255, 255, 255), 5, 0, ALLEGRO_ALIGN_LEFT, "Nivel: "); //Imprimo el "string" creado que contiene las vidas restantes
         al_draw_text(font, al_map_rgb(255, 255, 255), 80, 0, ALLEGRO_ALIGN_LEFT, p_to_string); //Imprimo el "string" creado que contiene las vidas restantes
@@ -1014,15 +1014,14 @@ void allegro_redraw(void)
         
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2, 0, ALLEGRO_ALIGN_CENTER, "Puntaje: ");
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3-30, 0, ALLEGRO_ALIGN_CENTER, p_to_string);
-        
-        
-        
+
         
     }
     
     else if(estado_juego == PASAR_NIVEL)
     {
         al_set_target_backbuffer(display);
+        al_clear_to_color(al_map_rgb(0,0,0));
         redraw_fondo();
         
         if(timer_pasar_nivel > UN_SEGUNDO*5)
@@ -1048,6 +1047,7 @@ void allegro_redraw(void)
     else if(estado_juego == PERDER)     //en el caso de que se pierde
     {
         al_set_target_backbuffer(display);
+        al_clear_to_color(al_map_rgb(0,0,0));
         redraw_fondo();
         
         if(timer_perder > UN_SEGUNDO*5)
@@ -1073,12 +1073,15 @@ void allegro_redraw(void)
             al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W*2/3, SCREEN_H/2, ALLEGRO_ALIGN_CENTER, p_to_string);
         }
     }
-       else if (estado_juego == MENU)      //casos del menú visualmente
+    
+    else if (estado_juego == MENU)      //casos del menú visualmente
     {
         al_set_target_backbuffer(display);
+        al_clear_to_color(al_map_rgb(0,0,0));
+        
         redraw_fondo ();
         if (selector_menu!=MENU_LEVELS)    
-    {  
+        {  
         al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
         al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(25,25,112));
@@ -1149,7 +1152,7 @@ void allegro_redraw(void)
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "SELECCIONAR NIVEL");
                 al_draw_filled_rectangle((SCREEN_W/3)+50,(SCREEN_H/2)-15, SCREEN_W*2/3-50,(SCREEN_H/3)+SCREEN_H/5, al_map_rgb(25,25,112));
         
-                sprintf(print_string, "%u", nivel);
+                snprintf(print_string, 100, "%u", nivel);
                 
                 al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0-5, SCREEN_H/2.0-20, ALLEGRO_ALIGN_CENTER, "NIVEL:");
                 //           fuente         color               ancho          alto    flag            texto
@@ -1161,7 +1164,7 @@ void allegro_redraw(void)
        }
     
     
-       else if (estado_juego == PAUSA)     //muestra cuando el juego está en estado de pausa
+    else if (estado_juego == PAUSA)     //muestra cuando el juego está en estado de pausa
     {
       al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/12)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/12)+SCREEN_H/10, al_map_rgb(28,40,51));   //ésta es la secuencia de título y caja de texto de pausa
       al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/12, ALLEGRO_ALIGN_CENTER, "PAUSA");                      //se colocan fuera del switch ya que se repiten en cada una de las secuencias
@@ -1173,8 +1176,9 @@ void allegro_redraw(void)
       al_draw_text(font, al_map_rgb(255,255,255), SCREEN_W/2.0, SCREEN_H/3.0, ALLEGRO_ALIGN_CENTER, "RESUME");      //se imprimen los 3 textos de las opciones del menú
       al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H/2.0, ALLEGRO_ALIGN_CENTER, "MAIN MENU");
       al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");
+      
       switch(selector_menu)
-        {  
+      {  
       
        case RESUME:         //caso en donde se selecciona la opción de resume
        {        
@@ -1189,13 +1193,13 @@ void allegro_redraw(void)
                 
                 break;
     
-     case QUIT:     //caso en el que se selecciona la opción de quit
-            {   
-               al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");  //imprime el texto en color como seleccionado
-                //           fuente         color               ancho          alto    flag            texto
-                break;
-            } 
-      }
+        case QUIT:     //caso en el que se selecciona la opción de quit
+               {   
+                  al_draw_text(font, al_map_rgb(33,153, 84), SCREEN_W/2.0, SCREEN_H*2.0/3, ALLEGRO_ALIGN_CENTER, "QUIT");  //imprime el texto en color como seleccionado
+                   //           fuente         color               ancho          alto    flag            texto
+                   break;
+               } 
+         }
     }
     al_flip_display();
 }
