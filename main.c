@@ -64,7 +64,7 @@ int main (void)
     
     allegro_event_register(); //registramos la cola de eventos
 
-    allegro_initialize_bitmaps(); //inicializamos el display en negro
+    allegro_initialize_display(); //inicializamos el display en negro
     
     al_start_timer(timer);
     
@@ -99,10 +99,11 @@ int main (void)
 
         if (redraw && al_is_event_queue_empty(event_queue)) //si hay que redibujar
         {
+            allegro_audio(); //reproducimos el audio
             redraw = false; //indicamos que ya se dibujó
             
             allegro_redraw(); //mostramos las imágenes
-            allegro_audio(); //mostramos el audio
+            
             
 
         }

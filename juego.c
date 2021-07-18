@@ -120,23 +120,23 @@ static int save_new_highscore(unsigned long int);
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
-int estado_juego = MENU;       //es una variable que definirá en qué estado se encuentra el juego (VER "juego.h")
+int estado_juego = MENU;                //es una variable que definirá en qué estado se encuentra el juego (VER "juego.h")
 
-double tiempo_restante = TIEMPO_TOTAL;         
+double tiempo_restante = TIEMPO_TOTAL;  //variable que indica el tiempo restante de juego actual
 
-unsigned int vidas_restantes = 3;   //variable que se inicializa con la cantidad de vidas de la rana
+unsigned int vidas_restantes = 3;       //variable que se inicializa con la cantidad de vidas de la rana
 
-unsigned int nivel = 1;         //variable que indica el nivel en el que se encuentra
+unsigned int nivel = 1;                 //variable que indica el nivel en el que se encuentra
 
-unsigned long int puntaje_juego = 0;  //es la variable que indicará el puntaje a medida que avance la rana
+unsigned long int puntaje_juego = 0;    //es la variable que indicará el puntaje a medida que avance la rana
 
-unsigned long int high_score;      //variable que almacena el puntaje máximo (al ser leida desde el archivo correspondiente)
+unsigned long int high_score;           //variable que almacena el puntaje máximo (al ser leida desde el archivo correspondiente)
 
-int selector_menu = PLAY;       //varibale que cambia el estado del menú
+int selector_menu = PLAY;               //varibale que cambia el estado del menú
 
-int timer_pasar_nivel = 0;      //es un timer para esperar a pasar entre niveles
+int timer_pasar_nivel = 0;              //es un timer para esperar a pasar entre niveles
 
-int timer_perder = 0;       //timer para esperar entre perder y volver a empezar.
+int timer_perder = 0;                   //timer para esperar entre perder y volver a empezar.
 
 
 bool key_pressed[TECLAS_MAX] = {false,false,false,false,false}; //arreglo donde se almacenan las teclas ingresadas (ver "juego.h")

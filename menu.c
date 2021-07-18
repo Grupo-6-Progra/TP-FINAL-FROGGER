@@ -139,7 +139,6 @@ bool menu_start(void)  //funcion que inicializa todos los menues
                             break;
                     }
                 }
-
             }
         }
         else //si estoy dentro de MENU_LEVELS
@@ -158,10 +157,8 @@ bool menu_start(void)  //funcion que inicializa todos los menues
                     estado_juego = INICIO;//se va a inicio para arrancar a jugar en el nivel pedido
                     selector_menu = RESUME;//en caso de ir a pausa, lo primero que aparece es RESUME
                 }
-            }
-            
+            } 
         }
-        
     }
     return false;
     
@@ -236,11 +233,7 @@ bool menu_pausa(void)       //función para el menú de pausa
                         break;
                 }
             }
-
         }
-     
     }
     return false;       //de lo contrario devuelve falso
-    
-
 }

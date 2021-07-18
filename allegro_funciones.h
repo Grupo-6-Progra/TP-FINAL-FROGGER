@@ -37,7 +37,7 @@ bool allegro_startup (void);
 
 void allegro_event_register(void);
 
-void allegro_initialize_bitmaps(void);
+void allegro_initialize_display(void);
 
 void allegro_destroy(void);
 
