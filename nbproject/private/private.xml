@@ -6,6 +6,14 @@
     </data>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/home/bruno/ITBA/Programación%20I/TP-FINAL-FROGGER/juego.h</file>
+            <file>file:/home/bruno/ITBA/Programación%20I/TP-FINAL-FROGGER/menu.h</file>
+            <file>file:/home/bruno/ITBA/Programación%20I/TP-FINAL-FROGGER/juego.c</file>
+            <file>file:/home/bruno/ITBA/Programación%20I/TP-FINAL-FROGGER/menu.c</file>
+            <file>file:/home/bruno/ITBA/Programación%20I/TP-FINAL-FROGGER/allegro_funciones.c</file>
+            <file>file:/home/bruno/ITBA/Programación%20I/TP-FINAL-FROGGER/main.c</file>
+            <file>file:/home/bruno/ITBA/Programación%20I/TP-FINAL-FROGGER/display.c</file>
+        </group>
     </open-files>
 </project-private>
