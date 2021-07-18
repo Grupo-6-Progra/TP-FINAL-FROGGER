@@ -122,7 +122,7 @@ static int save_new_highscore(unsigned long int);
 
 int estado_juego = MENU;       //es una variable que definirá en qué estado se encuentra el juego (VER "juego.h")
 
-double tiempo_restante;        //almacena el tiempo restante para perder
+double tiempo_restante = TIEMPO_TOTAL;         
 
 unsigned int vidas_restantes = 3;   //variable que se inicializa con la cantidad de vidas de la rana
 

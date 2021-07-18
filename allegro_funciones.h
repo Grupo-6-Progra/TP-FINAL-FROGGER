@@ -43,8 +43,6 @@ void allegro_destroy(void);
 
 bool allegro_teclas (ALLEGRO_EVENT *);
 
-void allegro_fuentes (void);
-
 void allegro_redraw(void);
 
 void allegro_audio (void);

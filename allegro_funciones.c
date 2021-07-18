@@ -46,6 +46,8 @@ static ALLEGRO_SAMPLE      * sample_rana_salto;
 static ALLEGRO_SAMPLE      * sample_rana_ahogada;
 static ALLEGRO_SAMPLE      * sample_rana_chocada;
 static ALLEGRO_SAMPLE      * sample_tiempo;
+static ALLEGRO_SAMPLE      * sample_musica_fondo;
+
 
 
 /*********************************************
@@ -123,7 +125,7 @@ bool allegro_startup (void)
         return -1;
     }
 
-    if (!al_reserve_samples(4)) {
+    if (!al_reserve_samples(5)) {
         fprintf(stderr, "failed to reserve samples!\n");
         return -1;
     }
@@ -142,11 +144,21 @@ bool allegro_startup (void)
         
     }
     
+    font = al_load_ttf_font("Karumbi-Regular.ttf", 40, 0); //Asigna la fuente que se va a usar
+    if (!font)
+    {
+        fprintf(stderr, "Could not load 'Karumbi-Regular.ttf'.\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        return false;
+    }
+    
     if (!al_init_primitives_addon()) // Inicializa el complemento que permite reconocer fuentes ttf
     {
         fprintf(stderr, "failed to initialize the primitives addon!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         return false;
         
     }
@@ -156,6 +168,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to initialize allegro images!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         return false;
     }
@@ -165,6 +178,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to initialize the keyboard!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         return false;
@@ -176,6 +190,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create timer!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -188,6 +203,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create event_queue!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -201,6 +217,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create buffer!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -215,6 +232,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create !sprites._sheet!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -230,6 +248,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_rene[0]!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -244,6 +263,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_rene[1]!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -260,6 +280,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_auto_fila1!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -277,6 +298,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_auto_fila1!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -295,6 +317,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_camion!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -314,6 +337,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_tronco1!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -334,6 +358,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_tronco2!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -355,6 +380,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_tronco3!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -377,6 +403,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_tortugas[0]!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -399,6 +426,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_tortugas[1]!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -421,6 +449,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_tortugas[2]!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -445,6 +474,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_tortugas[3]!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -470,6 +500,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_llegada!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -496,6 +527,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_fila_superior!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -523,6 +555,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_agua!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -551,6 +584,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_calle!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -580,6 +614,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_fila_segura!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -610,6 +645,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_rene_perdio!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -641,6 +677,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create al_cocodrilo!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -675,6 +712,7 @@ bool allegro_startup (void)
         fprintf(stderr, "failed to create display!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -712,6 +750,7 @@ bool allegro_startup (void)
         printf("Audio clip sample_rana_salto not loaded!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -744,9 +783,10 @@ bool allegro_startup (void)
     sample_rana_ahogada = al_load_sample("sound-frogger-squash.wav");
     if (!sample_rana_ahogada)
     {
-        printf("Audio clip sample_rana_salto not loaded!\n");
+        printf("Audio clip sample_rana_ahogada not loaded!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -780,9 +820,10 @@ bool allegro_startup (void)
     sample_rana_chocada = al_load_sample("sound-frogger-plunk.wav");
     if (!sample_rana_chocada)
     {
-        printf("Audio clip sample_rana_salto not loaded!\n");
+        printf("Audio clip sample_rana_chocada not loaded!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -817,9 +858,10 @@ bool allegro_startup (void)
     sample_tiempo = al_load_sample("sound-frogger-time.wav");
     if (!sample_tiempo)
     {
-        printf("Audio clip sample_rana_salto not loaded!\n");
+        printf("Audio clip sample_tiempo not loaded!\n");
         al_shutdown_font_addon();
         al_shutdown_ttf_addon();
+        al_destroy_font(font);
         al_shutdown_primitives_addon();
         al_shutdown_image_addon();
         al_uninstall_keyboard();
@@ -852,6 +894,46 @@ bool allegro_startup (void)
         return false;
     }
     
+    sample_musica_fondo = al_load_sample("1052515_Peglin---Forest.wav");
+    if (!sample_musica_fondo)
+    {
+        printf("Audio clip sample_menu not loaded!\n");
+        al_shutdown_font_addon();
+        al_shutdown_ttf_addon();
+        al_destroy_font(font);
+        al_shutdown_primitives_addon();
+        al_shutdown_image_addon();
+        al_uninstall_keyboard();
+        al_destroy_timer(timer);
+        al_destroy_event_queue(event_queue);
+        al_destroy_bitmap(mundo_buffer);
+        al_destroy_bitmap(sprites.al_rene[0]);
+        al_destroy_bitmap(sprites.al_rene[1]);
+        al_destroy_bitmap(sprites.al_auto1);
+        al_destroy_bitmap(sprites.al_auto2);
+        al_destroy_bitmap(sprites.al_camion);
+        al_destroy_bitmap(sprites.al_tronco1);
+        al_destroy_bitmap(sprites.al_tronco2);
+        al_destroy_bitmap(sprites.al_tronco3);
+        al_destroy_bitmap(sprites.al_tortugas[0]);
+        al_destroy_bitmap(sprites.al_tortugas[1]);
+        al_destroy_bitmap(sprites.al_tortugas[2]);
+        al_destroy_bitmap(sprites.al_tortugas[3]);
+        al_destroy_bitmap(sprites.al_llegada);
+        al_destroy_bitmap(sprites.al_fila_superior);
+        al_destroy_bitmap(sprites.al_agua);
+        al_destroy_bitmap(sprites.al_calle);
+        al_destroy_bitmap(sprites.al_fila_segura);
+        al_destroy_bitmap(sprites.al_rene_perdio);
+        al_destroy_bitmap(al_cocodrilo);
+        al_destroy_display(display);
+        al_destroy_sample(sample_rana_salto);
+        al_destroy_sample(sample_rana_ahogada);
+        al_destroy_sample(sample_rana_chocada);
+        al_destroy_sample(sample_tiempo);
+        return false;
+    }    
+    
     return true;
 }
 
@@ -860,19 +942,6 @@ void allegro_event_register(void)
     al_register_event_source(event_queue, al_get_display_event_source(display));
     al_register_event_source(event_queue, al_get_timer_event_source(timer));
     al_register_event_source(event_queue, al_get_keyboard_event_source());
-}
-
-void allegro_fuentes(void)
-{
-    font = al_load_ttf_font("Karumbi-Regular.ttf", 40, 0); //asigno la fuente que voy a usar
-
-    if (!font)
-    {
-
-        fprintf(stderr, "Could not load 'Karumbi-Regular.ttf'.\n");
-
-        return;
-    }
 }
 
 bool allegro_teclas (ALLEGRO_EVENT * ev)
@@ -1468,27 +1537,65 @@ static void redraw_tiempo(void)
 }
 
 
+
+
 void allegro_audio (void)
 {
-    static bool primera_vez = true;
-    if(rene.saltando == true && rene.chocada == false && primera_vez == true)
+    static bool primera_vez_choque = true;
+    static bool primera_vez_ahogada = true;
+    static bool primera_vez_salto = true;
+    static bool primera_vez_tiempo = true;
+    static bool primera_vez_musica = true;
+    static bool primera_vez_inicio = true;
+    
+    
+    if (estado_juego == MENU && primera_vez_musica == true) //Esto se ejecuta una sola vez y dura todo el programa.
     {
-        primera_vez = false;
-        al_play_sample(sample_rana_salto, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        primera_vez_musica = false;
+        al_play_sample(sample_musica_fondo, 0.05, 0.0, 1.0, ALLEGRO_PLAYMODE_LOOP, NULL);
     }
-    if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 13 && rene.y >= CASILLA_ALTO*7) && primera_vez == true)
+    
+    else if(rene.saltando == true && rene.chocada == false && primera_vez_salto == true)
     {
-        primera_vez = false;
-        al_play_sample(sample_rana_chocada, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        primera_vez_salto = false;
+        al_play_sample(sample_rana_salto, 0.3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-    if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO) && primera_vez == true)
+    else if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 13 && rene.y >= CASILLA_ALTO*7) && primera_vez_choque == true)
     {
-        primera_vez = false;
-        al_play_sample(sample_rana_ahogada, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        primera_vez_choque = false;
+        al_play_sample(sample_rana_chocada, 0.4, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-    else if(rene.saltando == false && rene.chocada == false)
+    else if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO) && primera_vez_ahogada == true)
     {
-        primera_vez = true;
+        primera_vez_ahogada = false;
+        al_play_sample(sample_rana_ahogada, 0.4, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+    else if (tiempo_restante < ((TIEMPO_TOTAL) / 4.0) && primera_vez_tiempo == true)
+    {
+        primera_vez_tiempo = false;
+        al_play_sample(sample_tiempo, 0.4, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+    else
+    {
+        
+    }
+    
+    
+    /*
+     *  RESET DE VARIABLES DE ESTADO 
+     */
+    if(rene.saltando == false)
+    {
+        primera_vez_salto = true;
+    }
+    else if (rene.chocada == false )
+    {
+        primera_vez_choque = true;
+        primera_vez_ahogada = true;
+    }
+    else if (tiempo_restante > ((TIEMPO_TOTAL) / 4.0))
+    {
+        primera_vez_tiempo = true;
     }
 }
 
@@ -1499,7 +1606,6 @@ void allegro_destroy(void)
 
     al_destroy_timer(timer);
     al_destroy_event_queue(event_queue);
-    al_destroy_bitmap(mundo_buffer);
     al_destroy_bitmap(sprites.al_rene[0]);
     al_destroy_bitmap(sprites.al_rene[1]);
     al_destroy_bitmap(sprites.al_auto1);
@@ -1519,11 +1625,14 @@ void allegro_destroy(void)
     al_destroy_bitmap(sprites.al_fila_segura);
     al_destroy_bitmap(sprites.al_rene_perdio);
     al_destroy_bitmap(al_cocodrilo);
-    al_destroy_display(display);
     al_destroy_sample(sample_rana_salto);
     al_destroy_sample(sample_rana_ahogada);
     al_destroy_sample(sample_rana_chocada);
     al_destroy_sample(sample_tiempo);
+    al_destroy_sample(sample_musica_fondo);
+    al_destroy_font(font);
+    al_destroy_bitmap(mundo_buffer);
+    al_destroy_display(display);
     
 }
 
