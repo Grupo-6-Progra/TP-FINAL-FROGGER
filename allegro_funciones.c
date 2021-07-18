@@ -1577,6 +1577,7 @@ static void redraw_tiempo(void)
     
 }
 
+ALLEGRO_SAMPLE_ID id_salto;
 
 
 
@@ -1598,14 +1599,15 @@ void allegro_audio (void)
     else if(rene.saltando == true && rene.chocada == false && primera_vez_salto == true)
     {
         primera_vez_salto = false;
-        al_play_sample(sample_rana_salto, 0.3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        al_play_sample(sample_rana_salto, 0.3, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, &id_salto);
     }
-    else if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 13 && rene.y >= CASILLA_ALTO*7) && primera_vez_choque == true)
+    else if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 13 && rene.y >= CASILLA_ALTO*6 + CASILLA_ALTO/2.0) && primera_vez_choque == true)
     {
         primera_vez_choque = false;
+        al_stop_sample(&id_salto);
         al_play_sample(sample_rana_chocada, 0.4, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
     }
-    else if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO) && primera_vez_ahogada == true)
+    else if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 6 + CASILLA_ALTO/2.0 && rene.y >= CASILLA_ALTO) && primera_vez_ahogada == true)
     {
         primera_vez_ahogada = false;
         al_play_sample(sample_rana_ahogada, 0.4, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
