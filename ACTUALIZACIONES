@@ -1,7 +1,0 @@
-Versión 0.0.1: 
-  * Los enemigos se mueven en un ancho de DOS mundos
-      -El motivo de hacer esto es que tarden en reaparecer del lado contrario al que desaparecieron
-  * La inicialización, modificación de las coordenadas y la impresión de enemigos se realiza mediante una matriz de estructuras "AUTO", cuyas columnas
-  * corresponden a cada enemigo de una fila en particular (las filas se representan con las filas de la matriz).
-
-  
