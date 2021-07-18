@@ -66,6 +66,7 @@ int main (void)
 
     allegro_initialize_bitmaps(); //inicializamos el display en negro
     
+    allegro_fuentes();
     
     al_start_timer(timer); //inicializamos el timer
     

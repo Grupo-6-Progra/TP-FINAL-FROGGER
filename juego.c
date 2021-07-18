@@ -1,3 +1,22 @@
+/***************************************************************************************************************
+ *      FROGGER
+ * 
+ *      JUEGO.C:
+ * 
+ *              Autores:    Alegre, Marcos
+ *                          Di Sanzo, Bruno
+ *                          Hertter, José Iván
+ *                          Ibáñez, Lucía
+ * 
+ *      
+ *          
+ * 
+ * 
+ *  
+ **************************************************************************************************************/
+
+
+
 #include "juego.h"
 #include "colisiones.h"
 #include "menu.h"
@@ -96,45 +115,41 @@ static void sumar_puntaje_salto(void);
 static unsigned long int get_high_score(int *);
 
 static int save_new_highscore(unsigned long int);
-    
-
-
-static int game_over(void);
 
 /***************************************************
  *  DEFINICIÓN DE VARIABLES GLOBALES
 ***************************************************/
 
-int estado_juego = MENU;       //es una variable que definirá en qué estado se encuentra el juego,si en menúnpausa,etc
+int estado_juego = MENU;       //es una variable que definirá en qué estado se encuentra el juego (VER "juego.h")
 
-double tiempo_restante;         
+double tiempo_restante;        //almacena el tiempo restante para perder
 
-unsigned int vidas_restantes = 3;   //varaible que se inicializa con la cantidad de vidas de la rana
+unsigned int vidas_restantes = 3;   //variable que se inicializa con la cantidad de vidas de la rana
 
-unsigned int nivel = 1;         //varaible que indica el nivel en el que se encuentra
+unsigned int nivel = 1;         //variable que indica el nivel en el que se encuentra
 
-unsigned long int puntaje_juego=0;  //es la variable que indicará el puntaje a medida que avance la rana
+unsigned long int puntaje_juego = 0;  //es la variable que indicará el puntaje a medida que avance la rana
 
-unsigned long int high_score;      //variable del puntaje máximo
+unsigned long int high_score;      //variable que almacena el puntaje máximo (al ser leida desde el archivo correspondiente)
 
-int selector_menu = PLAY;       
+int selector_menu = PLAY;       //varibale que cambia el estado del menú
 
 int timer_pasar_nivel = 0;      //es un timer para esperar a pasar entre niveles
 
-int timer_perder = 0;
+int timer_perder = 0;       //timer para esperar entre perder y volver a empezar.
 
 
-bool key_pressed[TECLAS_MAX] = {false,false,false,false,false};
+bool key_pressed[TECLAS_MAX] = {false,false,false,false,false}; //arreglo donde se almacenan las teclas ingresadas (ver "juego.h")
 
 RANA rene;  //estructura de la rana
 
-AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];    //estructura de autos 
+AUTOS autos[FILAS_DE_AUTOS][AUTOS_POR_FILA];    //matriz con estructuras de autos 
 
-TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA];
+TRONCO troncos [FILAS_DE_TRONCOS][TRONCOS_POR_FILA]; //matriz con estructuras de troncos
 
-TORTUGAS tortugas [FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA];
+TORTUGAS tortugas [FILAS_DE_TORTUGAS][TORTUGAS_POR_FILA]; //matriz con estructuras de tortugas
 
-LLEGADA llegadas [CANT_CASILLAS_LLEGADA];
+LLEGADA llegadas [CANT_CASILLAS_LLEGADA]; //matriz con estructuras de casillas de llegada
 
 
 /******************************************************************************************
@@ -154,15 +169,25 @@ LLEGADA llegadas [CANT_CASILLAS_LLEGADA];
 bool frogger (void)
 {
     static bool salir = false; //variable que indica si el programa debe terminar
-    static int choque_en_proceso = 0;
-    static int esperar_menu = 0;
     
-    static bool enter_prev = false;
+    static int choque_en_proceso = 0; //contador de frames si hubo choque
     
-    bool choque = false;
+    static bool enter_prev = false; //variable necesaria para detectar cuando se soltó el enter
+    
+    bool choque = false; //variable que almacena si hubo un choque reciente
+    
+    /***************************************************
+     *
+     * Se analizan los posibles estados del juego
+     *       
+     ****************************************************/
+    
     switch(estado_juego)        //se analizan los posibles estados del juego y dependiendo de cada uno se realizan operaciones
     {
         
+        /**************************************
+         * MENU DE INICIO
+         **************************************/ 
         case MENU: //menu de inicio
         {
             salir = menu_start();   //se llama al menú del inicio
@@ -170,6 +195,9 @@ bool frogger (void)
             break;
         }
         
+        /**************************************
+         * INICIO DE NIVEL
+         **************************************/
         case INICIO: //inicio de un nivel
         {
             vidas_restantes = 3;    //se inicializan las vidas en 3 
@@ -181,12 +209,15 @@ bool frogger (void)
             break;
         }
         
+        /******************************************
+         * PASAR DE NIVEL (mostrar puntaje y nivel)
+         *****************************************/
         case PASAR_NIVEL:       //caso en el que se pasa de nivel
         {
             
             if(timer_pasar_nivel == 0)  
             {
-                timer_pasar_nivel = UN_SEGUNDO*10;
+                timer_pasar_nivel = TIEMPO_PASAR_NIVEL; //se pierde timepo para mostrar puntaje y nivel
                 
             }
             else
@@ -195,7 +226,7 @@ bool frogger (void)
                 if(timer_pasar_nivel == 0)
                 {
                     nivel++;            //se pasa de nivel
-                    move_frog(true);    //
+                    move_frog(true);    //se inicializan los contadores que mueven la rana
                     estado_juego = INICIO;  //se vuelve a iniciar el estado del juego ya que es un nuevo nivel
                 }
                 
@@ -204,28 +235,33 @@ bool frogger (void)
             break;
         }
         
+        
+        /**************************************
+         * JUEGO (RANA VIVA)
+         **************************************/
         case JUEGO: //caso en el que la rana está viva
         {
 
-            if((key_pressed[KEY_ENTER] == true) || (enter_prev == true))
+            if((key_pressed[KEY_ENTER] == true) || (enter_prev == true)) //se detecta enter presionado y espera que se suelte, para entrar en la pausa
             {
                 if (enter_prev == false)
                 {
-                    enter_prev = true;
+                    enter_prev = true; //si recién se presionó, se indica
                 }
-                else if (enter_prev == true && key_pressed[KEY_ENTER] == false) //se analiza si se tocaron las teclas correspondientes
+                else if (enter_prev == true && key_pressed[KEY_ENTER] == false) //se analiza si está presionado y se soltó
                 {
-                    enter_prev = false;
+                    enter_prev = false; //se indica que se soltó
                     estado_juego = PAUSA;   //el juego se pone en estado de pausa
                 }
             }
-            else if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante
+            
+            else if (tiempo_restante-- > 0) //Decremento una vez por FPS el tiempo restante. Si no es 0, no se perdió
             {
-                move_enemies(nivel);
+                move_enemies(nivel); //movemos los enemigos según el nivel
                 
-                move_frog(false);
+                move_frog(false); //movemos la rana
 
-                choque = colision();
+                choque = colision(); //detectamos si hubo colisión con autos
 
                 if(choque == true)      //se ve si la rana efectivamente chocó
                 {
@@ -236,39 +272,43 @@ bool frogger (void)
 
                 if((rana_sobre_tronco() == false) && (rana_sobre_tortuga() == false) && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO))
                 {
-                        vidas_restantes--;      //se resta una vida
-                        rene.chocada = true;
-                        estado_juego = REINICIO;    //se reinicia el juego
+                    /*
+                     * se detecta si la rana se subió a una tortuga o tronco cuando está sobre el agua, en caso contario, se hundió
+                    */
+                    vidas_restantes--;      //se resta una vida
+                    rene.chocada = true;
+                    estado_juego = REINICIO;    //se reinicia el juego
                 }
 
-                if((rene.y <= CASILLA_ALTO))        
+                if((rene.y <= CASILLA_ALTO))        //se analiza si la rana llegó o chocó con el pasto de la fila superior
                 {
-                    if(rana_llego() == true)        //se ve el caso en el que la rana llega
+                    if(rana_llego() == true)        //se ve el caso en el que la rana llega (sin chocar contra el pasto o cocodrilo)
                     {
                         rene.llego = true;          //cambia el estado de la rana
                         if(nivel <= 5)              //se ve que el nivel esté dentro de la cantidad posible de niveles
                         {
                             puntaje_juego += APROX(100 * nivel * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1));     //se realiza una suma al puntaje por haber llegado y además dependiendo del tiempo que le quedaba
                         }
-                        else        //caso en el que superó el último nivel
+                        else        //caso en el que superó el último nivel (a partir de acá, la dificultad se mantiene)
                         {
                             puntaje_juego += APROX(100 * 6 * (((tiempo_restante*1.0 / TIEMPO_TOTAL)) + 1)); //se suma el puntaje correspondiente
                         }
-                        estado_juego = REINICIO;    // se reinicia el juego directamente
+                        estado_juego = REINICIO;    // se va a analizar si se ganó o hay que seguir jugando
                     }
 
-                    else        //en caso contrario es porque no llegó
+                    else        //en caso contrario es porque no llegó (perdió)
                     {
-                        vidas_restantes--;
-                        rene.chocada = true;
-                        estado_juego = REINICIO;
+                        vidas_restantes--; //pierde una vida
+                        rene.chocada = true; //se inidica que chocó
+                        estado_juego = REINICIO; //se analiza si se perdió todas las vidas
                     }
                 }
                 
-                sumar_puntaje_salto();
+                sumar_puntaje_salto(); // se suma puntaje dependiendo de la fila a la que haya legado
                 
             }
-            else
+            
+            else //si se acabó el tiempo, se pierde
             {
                 vidas_restantes--;
                 rene.chocada = true;
@@ -278,21 +318,27 @@ bool frogger (void)
             break;
         }
         
+        /**************************************************************
+         * REINICIO DE RANA (al llegar a casilla de llegada o perder)
+         *************************************************************/
         case REINICIO: //caso al que se entra cuando se pierde una vida
         {
             if(rene.llego == true)
             {                              
                 if (choque_en_proceso == 0) //significa que acabo de ganar
                 {
-                    choque_en_proceso = FRAMES_CHOQUE;
+                    choque_en_proceso = FRAMES_CHOQUE; // inicializo el timer para mostrar animación al llegar
                 }
+                
                 else if (choque_en_proceso > 0) 
                 {
                     choque_en_proceso--;
-                    move_enemies(nivel);
+                    
+                    move_enemies(nivel); //seguimos moviendo enemigos
+                    
                     if (choque_en_proceso == 0)
                     {
-                        rene.llego = false;
+                        rene.llego = false; //se reinicia el indicador de llegar
                         int casillas_llegadas = 0;
                         int i;
 
@@ -300,14 +346,23 @@ bool frogger (void)
                         {
                             if(llegadas[i].ocupado == true)
                             {
-                                casillas_llegadas++;
+                                casillas_llegadas++; //se analiza la cantidad de casillas llegadas
                             }
                         }
 
                         if(casillas_llegadas == 5) //se completaron todas las casillas y se pasó de nivel
                         {
-                            puntaje_juego += 500*nivel;
-                            estado_juego = PASAR_NIVEL;
+                            //se suman los puntos al llegar
+                            if(nivel <= 5)
+                            {
+                                puntaje_juego += 500*nivel;
+                            }
+                            else
+                            {
+                                puntaje_juego += 500*6;
+                            }
+                            
+                            estado_juego = PASAR_NIVEL; //pasamos de nivel
                         }
 
                         else //se llegó al otro lado, pero no se completaron todas las casillas
@@ -337,7 +392,7 @@ bool frogger (void)
 
                 else if (choque_en_proceso > 0)
                 {
-                    choque_en_proceso--; //pierdo la cantidad de frames que quiera (por ahora) (la intención es hacer alguna animación después)
+                    choque_en_proceso--; //pierdo frames para dar tiempo a mostrar imagen
                     
                     move_enemies(nivel);
                     
@@ -346,12 +401,13 @@ bool frogger (void)
                         rene.chocada = false;
                     }
                 }
+                
                 else
                 {
                     initialize_frog();
                     move_frog(true);
                     tiempo_restante = TIEMPO_TOTAL;
-                    estado_juego = JUEGO;
+                    estado_juego = JUEGO; //vuelve a abajo
                 }
             }
            
@@ -359,19 +415,25 @@ bool frogger (void)
             break;
         }
         
+        /**************************************
+         * MENU DE PAUSA
+         **************************************/
         case PAUSA:     //el juego entra en el estado de pausa
         {
             salir = menu_pausa();   //entra a la función del menú de pausa
             break;
         }   
         
+        /**********************************************************
+         * PERDER (se reinicia el juego + mostrar nivel + puntajes)
+         **********************************************************/
         case PERDER:    //caso en el que el jugador pierde
         {
-            int error;
+            int error; //variable por si no se puede leer el high_score
             
             if(timer_perder == 0)       //caso en el que el tiempo se termine
             {
-                timer_perder = UN_SEGUNDO*10;
+                timer_perder = TIEMPO_PERDER; //tardamos 10 segundos para mostrar nivel y puntajes maximo y propio
                 
                 high_score = get_high_score(&error); //busco el puntaje máximo hasta el momento
                 if(error != 0)
@@ -400,12 +462,6 @@ bool frogger (void)
                 }
             }
             
-           /* if(game_over() == 0)
-            {
-                
-                selector_menu = PLAY;
-                estado_juego = MENU;
-            }*/
             break;
         }
         
@@ -423,7 +479,6 @@ bool frogger (void)
  * 
  ******************************************************************************************
 *******************************************************************************************/
-
 
  /******************************************************************************************
  * 
@@ -483,6 +538,15 @@ static void move_frog (bool choque)
     else
     {
 
+        /*
+         * Dependiendo de la tecla presionada y de los timers, se mueve la rana y se da tiempo entre salto y salto
+         * para dar la sensación de salto y tener una buena lectura de las teclas presionadas
+         */
+        
+        
+        /*
+         * Arriba
+         */
         if ((key_pressed[KEY_UP] == true || timer_up != 0 ) && timer_down == 0 && timer_right == 0 && timer_left == 0)
         {
             if(timer_up == 0)
@@ -504,6 +568,9 @@ static void move_frog (bool choque)
 
         }
 
+        /*
+         * Abajo
+         */
         if ( (key_pressed[KEY_DOWN] == true || timer_down != 0 ) && timer_up == 0 && timer_right == 0 && timer_left == 0)
         {
             if(timer_down == 0)
@@ -525,6 +592,10 @@ static void move_frog (bool choque)
             timer_down--;
         }
 
+        
+        /*
+         * Derecha
+         */
         if ((key_pressed[KEY_RIGHT] == true || timer_right != 0 ) && timer_down == 0 && timer_up== 0 && timer_left == 0)
         {
             if(timer_right == 0)
@@ -548,6 +619,9 @@ static void move_frog (bool choque)
             timer_right--;
         }
 
+        /*
+         * Izquierda
+         */
         if ((key_pressed[KEY_LEFT] == true || timer_left != 0 ) && timer_down == 0 && timer_right == 0 && timer_up == 0)
         {
             if(timer_left == 0)
@@ -641,32 +715,32 @@ static void initialize_autos(unsigned int nivel)    //inicializa a los autos
                 
                 if(j == 0) //inicializamos la primera fila de autos
                 {
-                    if(nivel <= 4) //
+                    if(nivel <= 4)
                     {
-                        autos[j][k].dx = - (( 1 + (((double)nivel) / 2.0) ) * VELOCIDAD_UNITARIA_ANCHO) ;
-                        autos[j][k].x = (k - k % 3) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%3);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].dx = - (( 1 + (((double)nivel) / 2.0) ) * VELOCIDAD_UNITARIA_ANCHO) ; // la velocidad aumenta segun el nivel
+                        autos[j][k].x = (k - k % 3) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%3);          //ubicamos en forma 3 y 2
                         autos[j][k].direccion = IZQUIERDA;
                     }
                     else //del nivel 5 en adelante, la configuración será la misma
                     {
                         autos[j][k].dx = -3 * VELOCIDAD_UNITARIA_ANCHO;
-                        autos[j][k].x = (k - k % 3) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%3);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].x = (k - k % 3) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%3);                    
                         autos[j][k].direccion = IZQUIERDA;
                     }
                 }
                 
-                else if (j == 1)
+                else if (j == 1) //inicializamos la segunda fila de autos
                 {
                     if(nivel <= 4)
                     {
-                        autos[j][k].dx = ((0.5 + (((double)nivel) / 2.0)) * VELOCIDAD_UNITARIA_ANCHO) ;
-                        autos[j][k].x =  k * MUNDO_ANCHO/3.0;                  //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].dx = ((0.5 + (((double)nivel) / 2.0)) * VELOCIDAD_UNITARIA_ANCHO) ; // la velocidad aumenta segun el nivel
+                        autos[j][k].x =  k * MUNDO_ANCHO/3.0;                  //Hago que aparezcan igual de espaciados
                         autos[j][k].direccion = DERECHA;
                     }
-                    else
+                    else //del nivel 5 en adelante, la configuración será la misma
                     {
                         autos[j][k].dx = 2.5 * VELOCIDAD_UNITARIA_ANCHO;
-                        autos[j][k].x = k * MUNDO_ANCHO/3.0;                       //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].x = k * MUNDO_ANCHO/3.0;                       
                         autos[j][k].direccion = DERECHA;
                     }
                 }
@@ -675,14 +749,14 @@ static void initialize_autos(unsigned int nivel)    //inicializa a los autos
                 {
                     if(nivel <= 4)
                     {
-                        autos[j][k].dx = - ( (1 + (((double)nivel) / 2.0)) * VELOCIDAD_UNITARIA_ANCHO) ;
-                        autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].dx = - ( (1 + (((double)nivel) / 2.0)) * VELOCIDAD_UNITARIA_ANCHO) ; // la velocidad aumenta segun el nivel
+                        autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);                     //ubicamos en forma 4 y 1 
                         autos[j][k].direccion = IZQUIERDA;
                     }
-                    else
+                    else //del nivel 5 en adelante, la configuración será la misma
                     {
                         autos[j][k].dx = -3 * VELOCIDAD_UNITARIA_ANCHO;
-                        autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);                    //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].x = (k - k % 4) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/4.0 * (k%4);
                         autos[j][k].direccion = IZQUIERDA;
                     }
                 }
@@ -691,14 +765,14 @@ static void initialize_autos(unsigned int nivel)    //inicializa a los autos
                 {
                     if(nivel <= 4)
                     {
-                        autos[j][k].dx = (2 + ((double)nivel)) * VELOCIDAD_UNITARIA_ANCHO;
-                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/5.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].dx = (2 + ((double)nivel)) * VELOCIDAD_UNITARIA_ANCHO;                      // la velocidad aumenta segun el nivel
+                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/5.0 * (k%2);                    //ubicamos en forma 2 y 2
                         autos[j][k].direccion = DERECHA;
                     }
-                    else
+                    else //del nivel 5 en adelante, la configuración será la misma
                     {
                         autos[j][k].dx = 6 * VELOCIDAD_UNITARIA_ANCHO;
-                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/5.0 * (k%2);                    //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                        autos[j][k].x = (k - k % 2) * MUNDO_ANCHO/3.0 + MUNDO_ANCHO/5.0 * (k%2);                    
                         autos[j][k].direccion = DERECHA;
                     }
                 }
@@ -716,15 +790,15 @@ static void initialize_autos(unsigned int nivel)    //inicializa a los autos
                 
                 if(nivel <= 4)
                 {
-                    autos[j][k].dx = - ((1.5 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO) ;
+                    autos[j][k].dx = - ((1.5 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO) ; // la velocidad aumenta segun el nivel
                     autos[j][k].direccion = IZQUIERDA;
-                    autos[j][k].x = k * MUNDO_ANCHO / (nivel);                  //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                    autos[j][k].x = k * MUNDO_ANCHO / (nivel);                  //ubicamos igual de espaciados, pero con el paso de los niveles se acercan
                 }
-                else
+                else //del nivel 5 en adelante, la configuración será la misma
                 {
                     autos[j][k].dx = -2.5 * VELOCIDAD_UNITARIA_ANCHO;
                     autos[j][k].direccion = IZQUIERDA;
-                    autos[j][k].x = k * MUNDO_ANCHO / 4.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                    autos[j][k].x = k * MUNDO_ANCHO / 4.0;                      
                 }
             }
         }
@@ -743,41 +817,41 @@ static void initialize_troncos(unsigned int nivel)
     int k;
     for(j=0; j < FILAS_DE_TRONCOS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
     {
-        if(j == 0)
+        if(j == 0) //fila 1
         {       
-            for(k = 0; k < TRONCOS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+            for(k = 0; k < TRONCOS_POR_FILA; k++)
             {
                 if(nivel <= 4)
                 {
-                    troncos[j][k].dx = (0.5 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO;
-                    troncos[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3) - MUNDO_ANCHO/2;
+                    troncos[j][k].dx = (0.5 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO; // la velocidad aumenta segun el nivel
+                    troncos[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3) - MUNDO_ANCHO/2; //ubicamos en forma 3 y 2
                 }
-                else
+                else //del nivel 5 en adelante, la configuración será la misma
                 {
                     troncos[j][k].dx = (0.5 + 1) * VELOCIDAD_UNITARIA_ANCHO;
                     troncos[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3) - MUNDO_ANCHO/2;
                 }
                 
-                troncos[j][k].fila = 8;                                                                                 //necesito que los autos empiecen en la fila 1
+                troncos[j][k].fila = 8;                                                                                 
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                troncos[j][k].largo = TRONCO1_ANCHO ;                          //Cada enemigo será tan ancho como una casilla
+                troncos[j][k].largo = TRONCO1_ANCHO ;                         
                 troncos[j][k].alto = TRONCO1_ALTO;
             }
         }
         
-        if(j == 1)
+        if(j == 1) //fila 2
         {
             for(k = 0; k < TRONCOS_POR_FILA; k++) 
             {
                 if(nivel <= 4)
                 {
-                    troncos[j][k].dx = (2 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO;
-                    troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                    troncos[j][k].dx = (2 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO; // la velocidad aumenta segun el nivel
+                    troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      
                 }
-                else
+                else //del nivel 5 en adelante, la configuración será la misma
                 {
                     troncos[j][k].dx = (2 + 1) * VELOCIDAD_UNITARIA_ANCHO;
-                    troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                    troncos[j][k].x = k * MUNDO_ANCHO / 2.0;                      //igual de espaciados
                 }
 
                 
@@ -788,24 +862,24 @@ static void initialize_troncos(unsigned int nivel)
             }
         }
         
-        if(j == 2)
+        if(j == 2) //fila 3
         {
             for(k = 0; k < TRONCOS_POR_FILA; k++) 
             {
                 if(nivel <= 4)
                 {
-                    troncos[j][k].dx = (1 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO;
-                    troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                    troncos[j][k].dx = (1 + (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO;        // la velocidad aumenta segun el nivel
+                    troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     //ubicamos 2 y 2 y 1
                 }
-                else
+                else //del nivel 5 en adelante, la configuración será la misma
                 {
                     troncos[j][k].dx = (1 + 1) * VELOCIDAD_UNITARIA_ANCHO;
-                    troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                    troncos[j][k].x = (k - k % 2) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%2);                     
                 }
                 
-                troncos[j][k].fila = 11;                                                                                      //necesito que los autos empiecen en la fila 1
+                troncos[j][k].fila = 11;                                                                                      
                 troncos[j][k].y = (CANT_CASILLAS_COLUMNA - troncos[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                troncos[j][k].largo = TRONCO3_ANCHO ;                          //Cada enemigo será tan ancho como una casilla
+                troncos[j][k].largo = TRONCO3_ANCHO ;
                 troncos[j][k].alto = TRONCO3_ALTO;
             }
         }
@@ -825,50 +899,50 @@ static void initialize_tortugas(unsigned int nivel)
     int k;
     for(j=0; j < FILAS_DE_TORTUGAS; j++)                                   //Cada ciclo de este loop trabaja sobre una fila distinta
     {
-        if(j == 0)
+        if(j == 0) //fila 1
         {       
-            for(k = 0; k < TORTUGAS_POR_FILA; k++)                               //Acá se inicializan los autos DE CADA FILA
+            for(k = 0; k < TORTUGAS_POR_FILA; k++)                               
             {
                 if(nivel <= 4)
                 {
-                    tortugas[j][k].dx = (-2 - (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO;
+                    tortugas[j][k].dx = (-2 - (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO; //velocidad auenta según el nivel
                 }
-                else
+                else //del nivel 5 en adelante, la configuración será la misma
                 {
                     tortugas[j][k].dx = (-2 - 1) * VELOCIDAD_UNITARIA_ANCHO;
                 }
-                tortugas[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3);                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].x = (k - k % 3) * MUNDO_ANCHO/2.5 + MUNDO_ANCHO/3.0 * (k%3);                      //ubicación 3 y 2
                 tortugas[j][k].direccion = IZQUIERDA;
                 
-                tortugas[j][k].fila = 7;                                                                                 //necesito que los autos empiecen en la fila 1
+                tortugas[j][k].fila = 7;                                                                                 
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                tortugas[j][k].largo = TORTUGAS_ANCHO*3;                          //Cada enemigo será tan ancho como una casilla
+                tortugas[j][k].largo = TORTUGAS_ANCHO*3;                          
                 tortugas[j][k].alto = TORTUGAS_ALTO;
                 tortugas[j][k].hundirse = false;
                 tortugas[j][k].frames = 0;
             }
         }
         
-        if(j == 1)
+        if(j == 1)//fila 2
         {
             for(k = 0; k < TORTUGAS_POR_FILA; k++) 
             {
                 if(nivel <= 4)
                 {
-                    tortugas[j][k].dx = (-1 - (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO;
+                    tortugas[j][k].dx = (-1 - (((double)nivel) / 4.0)) * VELOCIDAD_UNITARIA_ANCHO; //velocidad auenta según el nivel
                 }
-                else
+                else //del nivel 5 en adelante, la configuración será la misma
                 {
                     tortugas[j][k].dx = (-1 - 1) * VELOCIDAD_UNITARIA_ANCHO;
                 }
 
-                tortugas[j][k].x = k * MUNDO_ANCHO / 3.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
+                tortugas[j][k].x = k * MUNDO_ANCHO / 3.0;                      //misma distancia entre tortugas
                 tortugas[j][k].direccion = IZQUIERDA;
                 
                 tortugas[j][k].fila = 10;    //necesito que los autos empiecen en la fila 1
                 tortugas[j][k].y = (CANT_CASILLAS_COLUMNA - tortugas[j][k].fila) * CASILLA_ALTO - CASILLA_ALTO / 2.0;
-                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                      //Hago que aparezcan como máximo 3 enemigos por fila a la vez
-                tortugas[j][k].largo = TORTUGAS_ANCHO*2;                          //Cada enemigo será tan ancho como una casilla
+                tortugas[j][k].x = k * MUNDO_ANCHO / 2.0;                     
+                tortugas[j][k].largo = TORTUGAS_ANCHO*2;                         
                 tortugas[j][k].alto = TORTUGAS_ALTO;
                 tortugas[j][k].hundirse = false;
                 tortugas[j][k].frames = 0;
@@ -930,12 +1004,12 @@ static void move_autos(int nivel)
     }
 
     
-    if (nivel >= 3) //autos que cambien de carril
+    if (nivel >= 3) //auto que cambia de carril
     {
 
-        if(contador_cambiar_carril == 0)
+        if(contador_cambiar_carril == 0) //si hay que cambiar de carril
         {
-            if(autos[0][3].fila == 1)
+            if(autos[0][3].fila == 1) //si está en la fila 1, se lo sube a la 3
             {
                 if(autos[0][3].y > CASILLA_ALTO * 10 - CASILLA_ALTO/2)
                 {
@@ -951,7 +1025,7 @@ static void move_autos(int nivel)
                     contador_cambiar_carril = FRAMES_CAMBIAR_CARRIL ;
                 }
             }
-            else if (autos[0][3].fila == 3)
+            else if (autos[0][3].fila == 3) //si está en la fila 3, se lo baja a la 1
             {
                 if(autos[0][3].y < CASILLA_ALTO * 12 - CASILLA_ALTO/2)
                 {
@@ -969,7 +1043,7 @@ static void move_autos(int nivel)
         }
         else
         {
-            contador_cambiar_carril--;
+            contador_cambiar_carril--; //se decrementa tiempo para cambiar de carril
         }
     }
     
@@ -987,21 +1061,21 @@ static void move_autos(int nivel)
             case ACELERA:
             {
                 int random;
-                random = rand()%2;
+                random = rand()%2; //generamos random si se acelera o desacelera cuando la velocidad es 0 (a partir del nivel 6)
                 
                 if(autos[1][0].dx < 4 * VELOCIDAD_UNITARIA_ANCHO)
                 {
                     for(i=0; i < AUTOS_POR_FILA; i++)
                     {
-                        if (autos[1][0].dx > -0.005 && autos[1][0].dx < 0.005)
+                        if (autos[1][0].dx > -0.01 * VELOCIDAD_UNITARIA_ANCHO && autos[1][0].dx < 0.01 * VELOCIDAD_UNITARIA_ANCHO) //si la velocidad es prácticamente 0
                         {
-                            if(nivel <= 5)
+                            if(nivel <= 5) //se aumenta la velocidad
                             {
                                autos[1][i].dx += 0.01 * VELOCIDAD_UNITARIA_ANCHO;    
                             }
-                            else
+                            else 
                             {
-                                if(random == 0)
+                                if(random == 0) //dependiendo del valor de radom, acelera o desacelera
                                 {
                                     autos[1][i].dx += 0.01 * VELOCIDAD_UNITARIA_ANCHO;
                                 }
@@ -1015,7 +1089,7 @@ static void move_autos(int nivel)
                         }
                         else
                         {
-                            autos[1][i].dx += 0.01 * VELOCIDAD_UNITARIA_ANCHO;
+                            autos[1][i].dx += 0.01 * VELOCIDAD_UNITARIA_ANCHO; //se aumenta la velocidad
                         }
                     }
                 }
@@ -1039,15 +1113,15 @@ static void move_autos(int nivel)
                     
                     for(i=0; i < AUTOS_POR_FILA; i++)
                     {
-                        if (autos[1][0].dx > -0.005 && autos[1][0].dx < 0.005)
+                        if (autos[1][0].dx > -0.01 * VELOCIDAD_UNITARIA_ANCHO && autos[1][0].dx < 0.01 * VELOCIDAD_UNITARIA_ANCHO) //si la velocidad es prácticamente 0
                         {
-                            if(nivel <= 5)
+                            if(nivel <= 5) 
                             {
                                autos[1][i].dx -= 0.01 * VELOCIDAD_UNITARIA_ANCHO;    
                             }
                             else
                             {
-                                if(random == 0)
+                                if(random == 0) //dependiendo del valor de radom, acelera o desacelera
                                 {
                                     autos[1][i].dx -= 0.01 * VELOCIDAD_UNITARIA_ANCHO;
                                 }
@@ -1150,7 +1224,7 @@ static void move_tortugas(int nivel)
         }
     }
     
-    if(timer_moverse == 0)
+    if(timer_moverse == 0) //indicamos de cambiar de frame de animación de nadar
     {
         int j,k;
         
@@ -1172,7 +1246,11 @@ static void move_tortugas(int nivel)
         timer_moverse = FRAMES_HASTA_HUNDIRSE / 4;
     }
     
-    if(timer_hundirse == (int)(FRAMES_HASTA_HUNDIRSE * (3.0/4.0)) )
+    /*
+     * Sólo se hunde una tanda de tortugas por fila
+     */
+    
+    if(timer_hundirse == (int)(FRAMES_HASTA_HUNDIRSE * (3.0/4.0)) ) //indicamos que tiene que nadar
     {
         int i;
         for (i=0; i<2; i++)
@@ -1183,7 +1261,7 @@ static void move_tortugas(int nivel)
             }
         }
     }    
-    if(timer_hundirse == FRAMES_HASTA_HUNDIRSE / 2)
+    if(timer_hundirse == FRAMES_HASTA_HUNDIRSE / 2) //indicamos que tiene que hundirse 
     {
         int i;
         for (i=0; i<2; i++)
@@ -1199,13 +1277,13 @@ static void move_tortugas(int nivel)
         int i;
         for (i=0; i<2; i++)
         {
-            if (tortugas[i][0].hundirse == false)
+            if (tortugas[i][0].hundirse == false) //indicamos que tiene que a está prácticamente hundida
             {
                 tortugas[i][0].frames = 3;
             }
         }
     }
-    if (timer_hundirse == 0)
+    if (timer_hundirse == 0) //indicamos que tiene que está hundida
     {
         int i;
         for (i=0; i<2; i++)
@@ -1246,7 +1324,7 @@ static void move_cocodrilo(int nivel)
     
     if (nivel <= 4)
     {
-        tiempo = FRAMES_SIN_COCODRILO/ nivel;
+        tiempo = FRAMES_SIN_COCODRILO/ nivel; //el tiempo que tarda el cocodrilo en aparecer dismuye hasta el nivel 4
     }
     
     else
@@ -1259,14 +1337,14 @@ static void move_cocodrilo(int nivel)
         if (timer_con_cocodrilo == FRAMES_CON_COCODRILO)
         {
             int i;
-            i = rand() % CANT_CASILLAS_LLEGADA;
+            i = rand() % CANT_CASILLAS_LLEGADA; //de manera random, vemos qué casilla poner el cocodrilo
             
-            if(llegadas[i].ocupado == false)
+            if(llegadas[i].ocupado == false) //si está vacía, se la ocupa
             {
                 llegadas[i].cocodrilo = true;
                 timer_con_cocodrilo--;
             }
-            else
+            else //si está llena, simplemente vuelve a empezar el timer
             {
                 timer_con_cocodrilo = FRAMES_CON_COCODRILO;
                 timer_sin_cocodrilo = tiempo;
@@ -1275,7 +1353,7 @@ static void move_cocodrilo(int nivel)
         else
         {
             timer_con_cocodrilo--;
-            if(timer_con_cocodrilo == 0)
+            if(timer_con_cocodrilo == 0) //si se acabó el tiempo, se cambia el estado de la casilla con cocodrilo a sin cocodrilo
             {
                 int j;
                 for (j = 0; j < CANT_CASILLAS_LLEGADA; j++)
@@ -1297,11 +1375,22 @@ static void move_cocodrilo(int nivel)
     }
 }
 
+/**********************************************************************
+ * 
+ * SUMAR_PUNTAJE_SALTO:
+ *      suma puntaje según la posición máxima alcanzada por la rana
+ * 
+ *********************************************************************/
 
 static void sumar_puntaje_salto(void)
 {
     int i;
     int fila_actual;
+    
+    /*
+     * Dependiendo de la fila actual, se suma puntos a la rana
+     */
+    
     
     for (i = 0; i < CANT_CASILLAS_COLUMNA; i++)
     {
@@ -1317,38 +1406,17 @@ static void sumar_puntaje_salto(void)
     }
     
     
-}
-
-
-/**************************************
- * 
- * GAMER_OVER():
- *      funcion al perder todas las vidas
- *  
- ***************************************/
-
-static int game_over (void)
-{
-    static int contador_de_frames = 0;
-    if (contador_de_frames == 0)
-    {
-        contador_de_frames = CANT_CASILLAS_FILA * (CANT_CASILLAS_COLUMNA + 1);
-        rene.x = CASILLA_ANCHO / 2.0;
-        rene.y = CASILLA_ALTO / 2.0;
-    }
-    contador_de_frames--;
-    if(rene.x <= MUNDO_ANCHO - RANA_ANCHO / 2.0)
-    {
-        rene.x += rene.dx * TARDA_SALTO;
-    }
-    else
-    {
-        rene.x = CASILLA_ANCHO / 2.0;
-        rene.y += CASILLA_ALTO;
-    }
-    return contador_de_frames;
     
 }
+
+
+/**************************************************************************************
+ * 
+ * get_high_score:
+ *      - recibe un puntero a una variable sobre la cual devolverá si hubo un error
+ *      - devuelve el high_score encontrado
+ * 
+ *************************************************************************************/
 
 static unsigned long int get_high_score(int * error)        //toma el puntaje máximo
 {
@@ -1382,10 +1450,17 @@ static unsigned long int get_high_score(int * error)        //toma el puntaje m�
     return high_score;      //devuelve el valor del puntaje máximo
 }
 
+/**************************************************************************************
+ * 
+ * save_new_score:
+ *      - recibe el high_score a guardar
+ *      - devuelve un int en -1 si hubo error o 0 si no lo hubo
+ * 
+ *************************************************************************************/
+
 static int save_new_highscore(unsigned long int new_high_score) //se ve para guardar un nuevo puntaje
 {
     FILE * p_highscore;
-    int c;
     
     p_highscore = fopen("high_score.txt", "w"); //abre y se usa le archivo en modo escritura
     
