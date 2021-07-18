@@ -1,5 +1,8 @@
-#ifndef ALLEGRO_FUNCIONES_H
-#define ALLEGRO_FUNCIONES_H
+//#define RASPI2
+#ifndef RASPI2
+
+//#ifndef ALLEGRO_FUNCIONES_H
+//#define ALLEGRO_FUNCIONES_H
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -22,15 +25,8 @@
  * 
  ***********************************************************************/
 
-extern ALLEGRO_DISPLAY * display;
 extern ALLEGRO_EVENT_QUEUE *event_queue;
 extern ALLEGRO_TIMER * timer;
-extern ALLEGRO_BITMAP * mundo_buffer;
-extern ALLEGRO_BITMAP * al_rene;
-extern ALLEGRO_BITMAP * al_auto_fila1;
-extern ALLEGRO_FONT * font;
-
-extern char vidas_restantes;
 
 
 /***************************************************
@@ -53,5 +49,5 @@ void allegro_redraw(void);
 
 /////////////////////////////////////////////////////////////////////////////////////////
 
-#endif /* ALLEGRO_FUNCIONES_H */
-
+//#endif /* ALLEGRO_FUNCIONES_H */
+#endif

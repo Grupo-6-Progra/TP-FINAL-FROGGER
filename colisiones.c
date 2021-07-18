@@ -1,4 +1,3 @@
-
 #include <stdbool.h>
 #include "colisiones.h"
 /**********************************************************/
@@ -39,6 +38,47 @@ bool rana_sobre_tronco(void)
         }
     } // si choca un tronco, adquiere su velocidad
     rene.dx_extra = 0;
+    return false;
+}
+
+bool rana_sobre_tortuga(void)
+{
+    int j, k;
+    for(j= 0; j < FILAS_DE_TORTUGAS; j++)
+    {
+        for(k=0; k < TORTUGAS_POR_FILA; k++)
+        {
+            if (tortugas[j][k].hundirse == false)
+            {
+                if (choque (tortugas[j][k].x, tortugas[j][k].y, tortugas[j][k].largo, tortugas[j][k].alto, rene.x, rene.y, RANA_ANCHO, RANA_ALTO) == true)
+                {
+                    rene.dx_extra = tortugas[j][k].dx;
+
+                    return true;
+                }
+            }
+        }
+    } // si choca un tronco, adquiere su velocidad
+    rene.dx_extra = 0;
+    return false;
+}
+
+bool rana_llego (void)
+{
+    int i;
+    
+    for (i = 0; i < CANT_CASILLAS_LLEGADA; i++)
+    {   
+        if (llegadas[i].ocupado == false && llegadas[i].cocodrilo == false)
+        {
+            if (choque (llegadas[i].x, llegadas[i].y, llegadas[i].ancho, llegadas[i].alto, rene.x, rene.y, 1, 1) == true)
+            {
+                llegadas[i].ocupado = true;
+
+                return true;
+            }
+        }
+    }
     return false;
 }
 
