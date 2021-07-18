@@ -1077,7 +1077,7 @@ void allegro_redraw(void)
     {
         al_set_target_backbuffer(display);
         redraw_fondo ();
-         al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
+        al_draw_filled_rectangle(SCREEN_W/3,(SCREEN_H/16)-SCREEN_H/40, SCREEN_W*2/3,(SCREEN_H/16)+SCREEN_H/10, al_map_rgb(28,40,51));
         al_draw_text(font, al_map_rgb(255, 255, 255), SCREEN_W/2.0, SCREEN_H*1.0/16, ALLEGRO_ALIGN_CENTER, "MENU PRINCIPAL");
         al_draw_filled_rectangle(SCREEN_W/3+70,(SCREEN_H/3), SCREEN_W*2/3-70,(SCREEN_H/3)+SCREEN_H/15, al_map_rgb(25,25,112));
         al_draw_filled_rectangle(SCREEN_W/3-20,(SCREEN_H/2.0), SCREEN_W*2/3+20,(SCREEN_H/2.0)+SCREEN_H/15, al_map_rgb(25,25,112));      //recuardo de sleeción para los niveles
@@ -1459,9 +1459,25 @@ static void redraw_tiempo(void)
 
 void allegro_audio (void)
 {
-    if(rene.saltando == true && rene.chocada == false)
+    static bool primera_vez = true;
+    if(rene.saltando == true && rene.chocada == false && primera_vez == true)
     {
-        al_play_sample(sample_rana_salto, 1.0, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+        primera_vez = false;
+        al_play_sample(sample_rana_salto, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+    if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 13 && rene.y >= CASILLA_ALTO*7) && primera_vez == true)
+    {
+        primera_vez = false;
+        al_play_sample(sample_rana_chocada, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+    if (rene.chocada == true && (rene.y <= CASILLA_ALTO * 6 && rene.y >= CASILLA_ALTO) && primera_vez == true)
+    {
+        primera_vez = false;
+        al_play_sample(sample_rana_ahogada, 0.5, 0.0, 1.0, ALLEGRO_PLAYMODE_ONCE, NULL);
+    }
+    else if(rene.saltando == false && rene.chocada == false)
+    {
+        primera_vez = true;
     }
 }
 
